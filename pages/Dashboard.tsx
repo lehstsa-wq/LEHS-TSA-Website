@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Bell, Download, FileText, Calendar, Trophy, ChevronRight, User, BookOpen, Sparkles, Zap, Star, CheckCircle, XCircle, AlertTriangle, ExternalLink, Lock, Key } from 'lucide-react';
+import { Shield, Bell, Download, FileText, Calendar, Trophy, ChevronRight, User, BookOpen, Sparkles, Zap, Star, CheckCircle, XCircle, AlertTriangle, ExternalLink, Lock, Key, CreditCard, MessageSquare, Building, FileCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import AIAdvisor from '../components/AIAdvisor';
@@ -16,19 +16,58 @@ const Dashboard: React.FC = () => {
   // Membership Status Check
   const isFullyActive = isOfficer || (user?.status === 'active' && user?.duesPaid && user?.appCompleted && user?.remindJoined);
   
-  // Requirement Item Component
-  const RequirementItem = ({ completed, label, actionLink, actionText }: { completed: boolean, label: string, actionLink?: string, actionText?: string }) => (
-     <div className={`flex items-center justify-between p-3 rounded-lg border ${completed ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900/30'}`}>
-        <div className="flex items-center gap-3">
-           {completed ? <CheckCircle size={18} className="text-green-600 dark:text-green-400" /> : <XCircle size={18} className="text-red-500" />}
-           <span className={`text-sm font-medium ${completed ? 'text-green-900 dark:text-green-300' : 'text-red-900 dark:text-red-300'}`}>{label}</span>
+  // Chip Link Component for Membership Steps
+  const ActionChip = ({ 
+    icon: Icon, 
+    step, 
+    label, 
+    sublabel, 
+    href, 
+    completed 
+  }: { 
+    icon: any, 
+    step: string, 
+    label: string, 
+    sublabel: string, 
+    href: string, 
+    completed: boolean 
+  }) => (
+     <a 
+        href={href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 group relative overflow-hidden ${
+            completed 
+            ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30 opacity-70' 
+            : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border hover:border-accent-blue/50 hover:shadow-md'
+        }`}
+     >
+        {/* Progress Bar for Incomplete Items */}
+        {!completed && <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent-blue"></div>}
+        
+        <div className="flex items-center gap-4">
+           <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+               completed 
+               ? 'bg-green-100 dark:bg-green-900/30 text-green-600' 
+               : 'bg-accent-blue/10 text-accent-blue'
+           }`}>
+               {completed ? <CheckCircle size={20} /> : <Icon size={20} />}
+           </div>
+           <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                      completed ? 'bg-green-200 dark:bg-green-900/40 text-green-700' : 'bg-gray-100 dark:bg-white/10 text-gray-500'
+                  }`}>
+                      {step}
+                  </span>
+                  {completed && <span className="text-[10px] font-bold text-green-600">Done</span>}
+              </div>
+              <h3 className={`font-bold text-sm ${completed ? 'text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-white'}`}>{label}</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{sublabel}</p>
+           </div>
         </div>
-        {!completed && actionLink && (
-            <a href={actionLink} target={actionLink.startsWith('http') ? '_blank' : '_self'} className="text-xs font-bold bg-white dark:bg-black/20 px-3 py-1.5 rounded hover:bg-gray-50 transition-colors shadow-sm">
-                {actionText || 'Complete'}
-            </a>
-        )}
-     </div>
+        <ExternalLink size={16} className={`text-gray-300 dark:text-gray-600 ${!completed && 'group-hover:text-accent-blue'} transition-colors`} />
+     </a>
   );
 
   return (
@@ -80,43 +119,51 @@ const Dashboard: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         
-        {/* MEMBERSHIP CHECKLIST CARD */}
+        {/* MEMBERSHIP CHECKLIST CHIPS */}
         {!isFullyActive && (
-            <div className="mb-10 bg-white dark:bg-dark-surface border border-red-200 dark:border-red-900/30 rounded-2xl p-6 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="md:w-1/3">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                           <AlertTriangle className="text-red-500" /> Action Required
-                        </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                           Complete the following steps to unlock full member access, including competition registration and resources.
-                        </p>
-                        <div className="text-xs text-gray-500 italic">
-                            Wait for an officer to verify your steps.
-                        </div>
-                    </div>
-                    <div className="md:w-2/3 space-y-3">
-                        <RequirementItem 
-                            completed={!!user?.appCompleted} 
-                            label="Submit Membership Application" 
-                            actionLink="/join"
-                            actionText="Apply"
-                        />
-                        <RequirementItem 
-                            completed={!!user?.duesPaid} 
-                            label="Pay Annual Dues ($50)" 
-                            actionLink="#" // Add actual payment link if available
-                            actionText="Pay Now"
-                        />
-                        <RequirementItem 
-                            completed={!!user?.remindJoined} 
-                            label="Join REMIND Group" 
-                            actionLink={siteSettings?.remindLink}
-                            actionText="Join Remind"
-                        />
-                    </div>
+            <div className="mb-10">
+                <div className="flex items-center gap-2 mb-4">
+                    <AlertTriangle className="text-red-500" size={20} />
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Complete Your Registration</h2>
                 </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                     <ActionChip 
+                        icon={FileCheck} 
+                        step="Step 1" 
+                        label="TSA Application" 
+                        sublabel="Fill out via JotForm" 
+                        href={siteSettings.jotformLink} 
+                        completed={!!user?.appCompleted} 
+                     />
+                     <ActionChip 
+                        icon={Building} 
+                        step="Step 2" 
+                        label="District Club App" 
+                        sublabel="Submit district requirements" 
+                        href={siteSettings.districtAppLink} 
+                        completed={false} // No specific flag for district yet, rely on user
+                     />
+                     <ActionChip 
+                        icon={MessageSquare} 
+                        step="Step 3" 
+                        label="Join Remind" 
+                        sublabel="Get text updates" 
+                        href={siteSettings.remindLink} 
+                        completed={!!user?.remindJoined} 
+                     />
+                     <ActionChip 
+                        icon={CreditCard} 
+                        step="Step 4" 
+                        label="Pay Dues" 
+                        sublabel="Secure payment via SuccessFund" 
+                        href={siteSettings.successFundLink} 
+                        completed={!!user?.duesPaid} 
+                     />
+                </div>
+                <p className="text-xs text-gray-500 mt-3 text-right">
+                    * Status updates may take 24-48 hours to reflect after completion.
+                </p>
             </div>
         )}
 

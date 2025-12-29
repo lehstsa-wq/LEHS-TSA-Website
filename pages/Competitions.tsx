@@ -11,6 +11,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { COMPETITIONS } from '../data/competitions';
+import { LazyImage } from '../components/LazyImage';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Categories', icon: Trophy },
@@ -132,27 +133,43 @@ const Competitions: React.FC = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
            {filteredCompetitions.map(comp => (
-             <div key={comp.id} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 hover:border-accent-blue/40 transition-all flex flex-col h-full group relative overflow-hidden">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{comp.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow line-clamp-3">
-                   {comp.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="text-xs bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded flex items-center gap-1">
-                        <Users size={12} /> Max {comp.details.maxTeamSize}
-                    </span>
-                    {comp.details.timeLimit !== 'N/A' && (
-                        <span className="text-xs bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded flex items-center gap-1">
-                            <Clock size={12} /> {comp.details.timeLimit}
-                        </span>
-                    )}
+             <div key={comp.id} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl hover:border-accent-blue/40 transition-all flex flex-col h-full group relative overflow-hidden shadow-sm hover:shadow-lg">
+                <div className="h-48 w-full relative overflow-hidden">
+                    <LazyImage 
+                        src={comp.imageUrl || "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"} 
+                        alt={comp.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80"></div>
+                    <div className="absolute bottom-4 left-4 right-4">
+                        <div className="flex items-center gap-2 mb-2">
+                             <span className="text-[10px] font-bold uppercase bg-accent-blue/90 text-white px-2 py-0.5 rounded shadow-sm">{comp.category}</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-white leading-tight">{comp.title}</h3>
+                    </div>
                 </div>
-                <button 
-                  onClick={() => setSelectedEvent(comp)}
-                  className="w-full mt-auto bg-gray-50 dark:bg-white/5 hover:bg-accent-blue hover:text-white text-gray-900 dark:text-white border border-gray-200 dark:border-dark-border py-2 rounded-lg transition-all text-sm flex items-center justify-center"
-                >
-                   Event Details <ChevronRight size={16} className="ml-1" />
-                </button>
+                
+                <div className="p-6 flex flex-col flex-grow">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow line-clamp-3">
+                    {comp.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="text-xs bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded flex items-center gap-1 border border-gray-200 dark:border-white/5">
+                            <Users size={12} /> Max {comp.details.maxTeamSize}
+                        </span>
+                        {comp.details.timeLimit !== 'N/A' && (
+                            <span className="text-xs bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded flex items-center gap-1 border border-gray-200 dark:border-white/5">
+                                <Clock size={12} /> {comp.details.timeLimit}
+                            </span>
+                        )}
+                    </div>
+                    <button 
+                    onClick={() => setSelectedEvent(comp)}
+                    className="w-full mt-auto bg-gray-50 dark:bg-white/5 hover:bg-accent-blue hover:text-white text-gray-900 dark:text-white border border-gray-200 dark:border-dark-border py-2.5 rounded-lg transition-all text-sm font-bold flex items-center justify-center"
+                    >
+                    Event Details <ChevronRight size={16} className="ml-1" />
+                    </button>
+                </div>
              </div>
            ))}
         </div>
@@ -161,18 +178,24 @@ const Competitions: React.FC = () => {
       {selectedEvent && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
            <div className="bg-white dark:bg-[#1A2235] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl relative">
-              <button onClick={() => setSelectedEvent(null)} className="absolute top-4 right-4 p-2 bg-gray-100 dark:bg-white/5 rounded-full z-10 hover:bg-gray-200">
-                 <X size={20} className="text-gray-500 dark:text-white" />
+              <button onClick={() => setSelectedEvent(null)} className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full z-10 text-white transition-colors">
+                 <X size={20} />
               </button>
               
-              <div className="p-8">
-                 <div className="flex items-start justify-between mb-6">
-                    <div>
-                        <span className="text-xs font-bold text-accent-blue uppercase tracking-wider mb-2 block">{selectedEvent.category === 'ict' ? 'Computer Science' : selectedEvent.category.toUpperCase()}</span>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{selectedEvent.title}</h2>
-                    </div>
-                 </div>
+              <div className="h-64 w-full relative">
+                  <LazyImage 
+                    src={selectedEvent.imageUrl || "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"} 
+                    alt={selectedEvent.title} 
+                    className="w-full h-full object-cover" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A2235] to-transparent"></div>
+                  <div className="absolute bottom-6 left-8">
+                     <span className="text-xs font-bold text-accent-blue uppercase tracking-wider mb-2 block bg-white/10 w-fit px-2 py-1 rounded backdrop-blur-sm border border-white/10">{selectedEvent.category === 'ict' ? 'Computer Science' : selectedEvent.category.toUpperCase()}</span>
+                     <h2 className="text-3xl md:text-4xl font-bold text-white">{selectedEvent.title}</h2>
+                  </div>
+              </div>
 
+              <div className="p-8">
                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-8 border-b border-gray-200 dark:border-dark-border pb-8">
                     {selectedEvent.details.fullDescription}
                  </p>

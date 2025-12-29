@@ -1,12 +1,40 @@
+
 import React, { useState } from 'react';
-import { CheckCircle, Trophy, Users, Lightbulb, ChevronDown, ChevronUp, Send } from 'lucide-react';
+import { CheckCircle, Trophy, Users, Lightbulb, ChevronDown, ChevronUp, ExternalLink, FileCheck, Building, MessageSquare, CreditCard } from 'lucide-react';
+import { useData } from '../context/DataContext';
 
 const Join: React.FC = () => {
+  const { siteSettings } = useData();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };
+
+  const StepCard = ({ number, title, desc, icon: Icon, href, action }: { number: string, title: string, desc: string, icon: any, href: string, action: string }) => (
+     <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 relative overflow-hidden group hover:border-accent-blue/40 transition-all shadow-sm">
+         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+             <Icon size={64} className="text-accent-blue" />
+         </div>
+         <div className="flex items-start gap-4 relative z-10">
+             <div className="w-10 h-10 bg-accent-blue/10 rounded-full flex items-center justify-center text-accent-blue font-bold shrink-0">
+                 {number}
+             </div>
+             <div>
+                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{title}</h3>
+                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{desc}</p>
+                 <a 
+                    href={href} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm font-bold text-accent-blue hover:text-accent-hover"
+                 >
+                    {action} <ExternalLink size={14} className="ml-1" />
+                 </a>
+             </div>
+         </div>
+     </div>
+  );
 
   return (
     <div className="animate-fade-in bg-gray-50 dark:bg-dark-bg min-h-screen transition-colors duration-300">
@@ -24,7 +52,7 @@ const Join: React.FC = () => {
       </section>
 
       {/* Feature Cards */}
-      <section className="py-16">
+      <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-6">
              <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-8 text-center hover:border-accent-blue/30 dark:hover:border-accent-blue/30 transition-colors shadow-sm hover:shadow-md group">
@@ -52,113 +80,57 @@ const Join: React.FC = () => {
         </div>
       </section>
 
-      {/* Application & Details */}
-      <section className="py-12 bg-white dark:bg-[#0E1320] border-y border-gray-200 dark:border-dark-border transition-colors duration-300">
+      {/* 4-Step Process Section */}
+      <section className="py-16 bg-white dark:bg-[#0E1320] border-y border-gray-200 dark:border-dark-border transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12">
-               
-               {/* Application Form */}
-               <div>
-                  <span className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-4 block">Apply Now</span>
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Membership Application</h2>
-                  
-                  <div className="bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border rounded-xl p-8 shadow-sm">
-                     <form className="space-y-6">
-                        <div>
-                           <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Full Name</label>
-                           <input type="text" placeholder="Your full name" className="w-full bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-accent-blue focus:ring-1 focus:ring-accent-blue outline-none transition-colors placeholder-gray-400 dark:placeholder-gray-600" />
-                        </div>
-                        <div>
-                           <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Email Address</label>
-                           <input type="email" placeholder="your.email@student.littleelmisd.net" className="w-full bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-accent-blue focus:ring-1 focus:ring-accent-blue outline-none transition-colors placeholder-gray-400 dark:placeholder-gray-600" />
-                        </div>
-                        <div>
-                           <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Grade Level</label>
-                           <div className="relative">
-                             <select className="w-full bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-accent-blue focus:ring-1 focus:ring-accent-blue outline-none transition-colors appearance-none cursor-pointer">
-                               <option>Select your grade</option>
-                               <option>9th Grade</option>
-                               <option>10th Grade</option>
-                               <option>11th Grade</option>
-                               <option>12th Grade</option>
-                             </select>
-                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                                <ChevronDown size={16} />
-                             </div>
-                           </div>
-                        </div>
-                        <div>
-                           <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Interests & Experience</label>
-                           <textarea rows={4} placeholder="Tell us about your interests in technology, any relevant experience, and which TSA events interest you..." className="w-full bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-accent-blue focus:ring-1 focus:ring-accent-blue outline-none transition-colors placeholder-gray-400 dark:placeholder-gray-600 resize-none"></textarea>
-                        </div>
-                        
-                        <button type="button" className="w-full bg-accent-blue hover:bg-accent-hover text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-accent-blue/20">
-                           <Send size={16} className="mr-2" /> Submit Application
-                        </button>
-                     </form>
-                  </div>
-               </div>
+            <div className="text-center mb-12">
+               <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Registration Checklist</h2>
+               <p className="text-gray-600 dark:text-gray-400 mt-2">Complete all 4 steps to become an official member.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <StepCard 
+                    number="1"
+                    title="TSA Application"
+                    desc="Fill out the official chapter application form via JotForm."
+                    icon={FileCheck}
+                    href={siteSettings.jotformLink}
+                    action="Open Application"
+                />
+                <StepCard 
+                    number="2"
+                    title="District Club App"
+                    desc="Complete the required LEISD district club paperwork."
+                    icon={Building}
+                    href={siteSettings.districtAppLink}
+                    action="District Form"
+                />
+                <StepCard 
+                    number="3"
+                    title="Join Remind"
+                    desc="Sign up for text alerts to stay updated on meetings."
+                    icon={MessageSquare}
+                    href={siteSettings.remindLink}
+                    action="Join Class"
+                />
+                <StepCard 
+                    number="4"
+                    title="Pay Dues"
+                    desc="Pay your annual membership dues securely via SuccessFund."
+                    icon={CreditCard}
+                    href={siteSettings.successFundLink}
+                    action="Pay Now"
+                />
+            </div>
 
-               {/* Sidebar Info */}
-               <div className="space-y-8">
-                  
-                  {/* Meeting Info */}
-                  <div>
-                    <span className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-4 block bg-gray-100 dark:bg-dark-surface w-fit px-2 py-1 rounded border border-gray-200 dark:border-dark-border">📅 Meeting Times</span>
-                    <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 shadow-sm">
-                       <h3 className="text-gray-900 dark:text-white font-bold mb-4 border-b border-gray-200 dark:border-dark-border pb-4">When We Meet</h3>
-                       <div className="space-y-4 text-sm">
-                          <div className="flex justify-between">
-                             <span className="text-gray-600 dark:text-gray-400">Days:</span>
-                             <span className="text-gray-900 dark:text-white font-medium">Every Tuesday and Thursday</span>
-                          </div>
-                          <div className="flex justify-between">
-                             <span className="text-gray-600 dark:text-gray-400">Time:</span>
-                             <span className="text-gray-900 dark:text-white font-medium">3:30 PM - 5:00 PM</span>
-                          </div>
-                          <div className="flex justify-between">
-                             <span className="text-gray-600 dark:text-gray-400">Location:</span>
-                             <span className="text-gray-900 dark:text-white font-medium">Room 204, Technology Building</span>
-                          </div>
-                       </div>
-                       <p className="text-xs text-gray-500 dark:text-gray-500 mt-4 italic">Competition teams may have additional practice sessions as needed.</p>
-                    </div>
-                  </div>
-
-                  {/* Dues Info */}
-                  <div>
-                    <span className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-4 block bg-gray-100 dark:bg-dark-surface w-fit px-2 py-1 rounded border border-gray-200 dark:border-dark-border">💲 Membership Dues</span>
-                    <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 shadow-sm">
-                       <div className="flex justify-between items-center mb-6">
-                         <h3 className="text-gray-900 dark:text-white font-bold text-lg">Annual Dues</h3>
-                         <span className="bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-bold px-3 py-1 rounded border border-gray-200 dark:border-white/5">$XX</span>
-                       </div>
-                       
-                       <p className="text-sm text-gray-600 dark:text-gray-400 font-bold mb-3">Dues include:</p>
-                       <ul className="space-y-2 mb-6">
-                         {[
-                           'National and State TSA membership',
-                           'Access to all chapter events and workshops',
-                           'Competition registration fees',
-                           'Chapter t-shirt',
-                           'Team supplies and materials'
-                         ].map((item, i) => (
-                           <li key={i} className="flex items-start text-sm text-gray-600 dark:text-gray-400">
-                             <CheckCircle size={14} className="text-accent-blue mr-2 mt-0.5 shrink-0" />
-                             {item}
-                           </li>
-                         ))}
-                       </ul>
-
-                       <div className="text-xs text-gray-500 border-t border-gray-200 dark:border-dark-border pt-4 space-y-1">
-                          <p>Payment deadline: <span className="text-gray-900 dark:text-white">October 15, 2024</span></p>
-                          <p>Accepted: Cash, Check (payable to LEHS TSA), Online payment (SchoolCash)</p>
-                       </div>
-                    </div>
-                  </div>
-
-               </div>
-
+            <div className="max-w-4xl mx-auto mt-12 bg-gray-50 dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="text-left">
+                    <h4 className="font-bold text-gray-900 dark:text-white mb-1">Have an Access Code?</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">If you've completed these steps and received an Access Code from an officer, create your portal account now.</p>
+                </div>
+                <a href="/signup" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap">
+                    Create Portal Account
+                </a>
             </div>
          </div>
       </section>

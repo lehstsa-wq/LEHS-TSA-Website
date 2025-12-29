@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
-import { Filter, Image as ImageIcon } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { LazyImage } from '../components/LazyImage';
 
 const Gallery: React.FC = () => {
   const { galleryList } = useData();
@@ -45,7 +46,7 @@ const Gallery: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
           {filteredList.map((item, index) => (
             <div key={item.id} className={`bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl relative overflow-hidden group aspect-square shadow-sm`}>
-               <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+               <LazyImage src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                  <div>
                     <p className="text-white text-sm font-bold">{item.title}</p>

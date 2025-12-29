@@ -2,6 +2,7 @@
 import React from 'react';
 import { User, Instagram, Linkedin, GraduationCap, Mail } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { LazyImage } from '../components/LazyImage';
 
 const Officers: React.FC = () => {
   const { officersList } = useData();
@@ -43,7 +44,7 @@ const Officers: React.FC = () => {
               <div key={officer.id} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden p-6 flex flex-col sm:flex-row gap-6 hover:border-accent-blue/30 dark:hover:border-accent-blue/30 transition-all shadow-sm group">
                  <div className="w-full sm:w-32 h-32 bg-gray-50 dark:bg-dark-bg rounded-lg border border-gray-200 dark:border-dark-border flex flex-col items-center justify-center shrink-0 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/10 transition-colors overflow-hidden">
                     {officer.imageUrl ? (
-                        <img src={officer.imageUrl} alt={officer.name} className="w-full h-full object-cover" />
+                        <LazyImage src={officer.imageUrl} alt={officer.name} className="w-full h-full object-cover" />
                     ) : (
                         <>
                             <User size={32} className="text-accent-blue mb-2" />
@@ -94,7 +95,7 @@ const Officers: React.FC = () => {
                <div key={lead.id} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl p-6 text-center hover:border-gray-300 dark:hover:border-gray-600 transition-colors shadow-sm relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-full h-1 bg-accent-blue opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/10 rounded-full flex items-center justify-center text-accent-blue mx-auto mb-4 border border-blue-200 dark:border-blue-900/30 overflow-hidden">
-                     {lead.imageUrl ? <img src={lead.imageUrl} className="w-full h-full object-cover"/> : <User size={24} />}
+                     {lead.imageUrl ? <LazyImage src={lead.imageUrl} alt={lead.name} className="w-full h-full object-cover"/> : <User size={24} />}
                   </div>
                   <span className="bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 text-[10px] font-bold uppercase px-2 py-0.5 rounded mb-3 inline-block">{lead.role}</span>
                   <h3 className="text-gray-900 dark:text-white font-bold text-lg mb-0.5">{lead.name}</h3>
@@ -132,7 +133,7 @@ const Officers: React.FC = () => {
            <div key={adv.id} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-xl max-w-4xl mb-8">
              <div className="md:w-2/5 bg-gray-100 dark:bg-[#141B2D] flex flex-col items-center justify-center p-12 text-center border-b md:border-b-0 md:border-r border-gray-200 dark:border-dark-border min-h-[300px]">
                 <div className="text-accent-blue mb-4 opacity-80 rounded-full overflow-hidden w-32 h-32 flex items-center justify-center bg-gray-200 dark:bg-white/5">
-                  {adv.imageUrl ? <img src={adv.imageUrl} className="w-full h-full object-cover"/> : <GraduationCap size={60} strokeWidth={1.5} />}
+                  {adv.imageUrl ? <LazyImage src={adv.imageUrl} alt={adv.name} className="w-full h-full object-cover"/> : <GraduationCap size={60} strokeWidth={1.5} />}
                 </div>
              </div>
 

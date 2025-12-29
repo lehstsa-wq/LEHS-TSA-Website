@@ -166,11 +166,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [galleryList, setGalleryList] = useState<GalleryItem[]>(MOCK_GALLERY);
   const [accessCodes, setAccessCodes] = useState<AccessCode[]>([]);
 
+  // ------------------------------------------------------------------
+  // SITE SETTINGS & LINKS CONFIGURATION
+  // ------------------------------------------------------------------
+  // EDIT THE LINKS BELOW TO UPDATE THE BUTTONS ON THE JOIN PAGE
   const [siteSettings, setSiteSettings] = useState<SiteSettings>({
     id: 'global',
     primaryColor: '#00205B', 
     fontFamily: 'Inter',
-    remindLink: '#'
+    
+    // LINK 1: Remind Class Join Link (e.g., https://www.remind.com/join/classcode)
+    remindLink: 'https://www.remind.com/join/INSERT_REMIND_CODE',
+    
+    // LINK 2: Official TSA Application (JotForm)
+    jotformLink: 'https://form.jotform.com/253622211875051', 
+    
+    // LINK 3: District Permission Slip / Club Paperwork URL
+    districtAppLink: 'https://INSERT_DISTRICT_LINK',
+    
+    // LINK 4: Payment Portal (SuccessFund, RevTrak, etc.)
+    successFundLink: 'https://www.successfund.com/INSERT_YOUR_LINK'
   });
 
   const { user } = useAuth();

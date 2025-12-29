@@ -128,6 +128,9 @@ export interface SiteSettings {
   primaryColor: string; // Hex
   fontFamily: string;
   remindLink: string;
+  jotformLink: string;
+  districtAppLink: string;
+  successFundLink: string;
 }
 
 export interface CompetitionInterest {

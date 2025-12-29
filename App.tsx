@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
@@ -32,6 +33,19 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Analytics Tracker Placeholder
+const RouteTracker = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // This is where you would trigger Google Analytics or Plausible
+    // e.g., ga('send', 'pageview', location.pathname);
+    // console.log(`Page view: ${location.pathname}`);
+  }, [location]);
+
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <AuthProvider>
@@ -39,6 +53,7 @@ const App: React.FC = () => {
         <ThemeProvider>
           <Router>
             <ScrollToTop />
+            <RouteTracker />
             <Layout>
               <Routes>
                 {/* Public Routes */}
