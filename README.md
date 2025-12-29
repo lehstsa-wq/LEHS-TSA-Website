@@ -1,11 +1,42 @@
-<div align="center">
+# Little Elm High School TSA Website
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+This is the official website codebase for the Little Elm High School Technology Student Association. It is built using React, Vite, and Tailwind CSS.
 
-  <h1>Built with AI Studio</h2>
+## Prerequisites
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+Before you begin, ensure you have **Node.js** installed on your computer.
+1. Go to [nodejs.org](https://nodejs.org/).
+2. Download the **LTS** version.
+3. Install it.
+4. **Restart VS Code** after installation.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## How to Run Locally
 
-</div>
+1. **Open the Terminal** in VS Code:
+   - Click `Terminal` > `New Terminal` in the top menu.
+   - Or press `Ctrl` + `~` (tilde).
+
+2. **Install Dependencies** (do this once):
+   ```bash
+   npm install
+   ```
+
+3. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **View the Website**:
+   - Hold `Ctrl` (or `Cmd` on Mac) and click the link shown in the terminal (usually `http://localhost:5173`).
+
+## Project Structure
+
+- `pages`: Individual pages (Home, About, Events, etc.).
+- `components`: Reusable components (Navbar, Footer).
+- `App.tsx`: Main application router.
+
+## Customization
+
+- **Colors**: Update the configuration in `index.html` (Tailwind script) to change the `accent-blue` or `dark-bg` colors.
+- **Content**: Edit the text inside the files in `pages`.
+- **Images**: Replace SVG placeholders with `<img>` tags pointing to real assets.
