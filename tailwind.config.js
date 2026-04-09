@@ -49,17 +49,17 @@ export default {
           700: '#a83030',
           glow: '0 0 24px rgba(224,92,92,0.4)',
         },
-        // Amber/Orange — warm accent
+        // Yellow — warm accent
         amber: {
-          DEFAULT: '#f59e0b',
-          50: 'rgba(245,158,11,0.05)',
-          100: 'rgba(245,158,11,0.1)',
-          200: 'rgba(245,158,11,0.2)',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          glow: '0 0 24px rgba(245,158,11,0.4)',
+          DEFAULT: '#eab308',
+          50: 'rgba(234,179,8,0.05)',
+          100: 'rgba(234,179,8,0.1)',
+          200: 'rgba(234,179,8,0.2)',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04',
+          glow: '0 0 24px rgba(234,179,8,0.4)',
         },
         // Purple — tertiary
         violet: {
@@ -97,14 +97,14 @@ export default {
         // Gradient presets
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'hero-mesh': 'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(59,130,246,0.25), transparent), radial-gradient(ellipse 60% 80% at 80% 50%, rgba(139,92,246,0.15), transparent), radial-gradient(ellipse 60% 50% at 20% 80%, rgba(224,92,92,0.12), transparent), radial-gradient(ellipse 40% 40% at 65% 85%, rgba(245,158,11,0.08), transparent)',
+        'hero-mesh': 'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(59,130,246,0.25), transparent), radial-gradient(ellipse 60% 80% at 80% 50%, rgba(139,92,246,0.15), transparent), radial-gradient(ellipse 60% 50% at 20% 80%, rgba(224,92,92,0.12), transparent), radial-gradient(ellipse 40% 40% at 65% 85%, rgba(234,179,8,0.08), transparent)',
         'card-shine': 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(255,255,255,0.02) 100%)',
         'noise': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E\")",
       },
       boxShadow: {
         'glow-blue': '0 0 20px rgba(59,130,246,0.35), 0 0 60px rgba(59,130,246,0.1)',
         'glow-gold': '0 0 20px rgba(224,92,92,0.35), 0 0 60px rgba(224,92,92,0.1)',
-        'glow-amber': '0 0 20px rgba(245,158,11,0.35), 0 0 60px rgba(245,158,11,0.1)',
+        'glow-amber': '0 0 20px rgba(234,179,8,0.35), 0 0 60px rgba(234,179,8,0.1)',
         'glow-purple': '0 0 20px rgba(139,92,246,0.35), 0 0 60px rgba(139,92,246,0.1)',
         'card': '0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04) inset',
         'card-hover': '0 12px 40px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset, 0 0 0 1px rgba(59,130,246,0.2)',

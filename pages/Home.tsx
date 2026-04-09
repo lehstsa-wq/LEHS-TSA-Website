@@ -85,12 +85,12 @@ const Terminal: React.FC = () => {
       {/* Content */}
       <div className="p-5 space-y-2 min-h-[200px]">
         {lines.map((line, i) => (
-          <div key={i} className={line.startsWith('$') ? 'text-gold-400' : 'text-green-400'}>
+          <div key={i} className={line.startsWith('$') ? 'text-amber-400' : 'text-green-400'}>
             {line}
           </div>
         ))}
         {currentLine < TERMINAL_LINES.length && (
-          <div className={TERMINAL_LINES[currentLine].startsWith('$') ? 'text-gold-400' : 'text-green-400'}>
+          <div className={TERMINAL_LINES[currentLine].startsWith('$') ? 'text-amber-400' : 'text-green-400'}>
             {activeText}
             <span className="animate-pulse border-r-2 border-current ml-0.5">&nbsp;</span>
           </div>
@@ -162,8 +162,8 @@ const MarqueeRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
       <div className={`flex gap-3 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} whitespace-nowrap`}>
         {items.map((c, i) => (
           <span key={i}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-space-500/60 bg-space-800/50 text-sm text-ink-dim font-medium flex-shrink-0">
-            <Trophy size={12} className="text-gold-500" />
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-space-800/50 text-sm text-amber-400 font-medium flex-shrink-0">
+            <Trophy size={12} className="text-amber-400" />
             {c}
           </span>
         ))}
@@ -425,7 +425,7 @@ const Home: React.FC = () => {
               icon={Layers}
               title="Design & Create"
               body="Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent."
-              accent="#f97316"
+              accent="#eab308"
               link="/competitions"
             />
           </motion.div>
@@ -460,7 +460,7 @@ const Home: React.FC = () => {
             {[
               { val: 75,  suffix: '+',  label: 'Active Members',      icon: Users,  color: '#3b82f6' },
               { val: 50,  suffix: '+',  label: 'State Qualifiers',    icon: Trophy, color: '#e05c5c' },
-              { val: 15,  suffix: '+',  label: 'National Qualifiers', icon: Award,  color: '#f59e0b' },
+              { val: 15,  suffix: '+',  label: 'National Qualifiers', icon: Award,  color: '#eab308' },
               { val: 3,   suffix: '',   label: 'Years of Excellence', icon: Star,   color: '#22c55e' },
             ].map((stat, i) => {
               const Icon = stat.icon;
@@ -636,7 +636,7 @@ const Home: React.FC = () => {
                 icon: Lightbulb,
                 title: 'Pick Events',
                 body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
-                color: '#f97316',
+                color: '#eab308',
               },
               {
                 num: '03',
