@@ -204,6 +204,7 @@ const Home: React.FC = () => {
         <div className="orb orb-blue w-[600px] h-[600px] top-[-100px] right-[-100px] opacity-40 animate-orb-float-1" />
         <div className="orb orb-purple w-[400px] h-[400px] bottom-[50px] left-[-80px] opacity-30 animate-orb-float-2" />
         <div className="orb orb-gold w-[300px] h-[300px] bottom-[-50px] right-[30%] opacity-20 animate-orb-float-3" />
+        <div className="orb orb-amber w-[250px] h-[250px] top-[20%] left-[15%] opacity-15 animate-orb-float-1" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -424,7 +425,7 @@ const Home: React.FC = () => {
               icon={Layers}
               title="Design & Create"
               body="Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent."
-              accent="#ec4899"
+              accent="#f97316"
               link="/competitions"
             />
           </motion.div>
@@ -459,7 +460,7 @@ const Home: React.FC = () => {
             {[
               { val: 75,  suffix: '+',  label: 'Active Members',      icon: Users,  color: '#3b82f6' },
               { val: 50,  suffix: '+',  label: 'State Qualifiers',    icon: Trophy, color: '#e05c5c' },
-              { val: 15,  suffix: '+',  label: 'National Qualifiers', icon: Award,  color: '#8b5cf6' },
+              { val: 15,  suffix: '+',  label: 'National Qualifiers', icon: Award,  color: '#f59e0b' },
               { val: 3,   suffix: '',   label: 'Years of Excellence', icon: Star,   color: '#22c55e' },
             ].map((stat, i) => {
               const Icon = stat.icon;
@@ -635,7 +636,7 @@ const Home: React.FC = () => {
                 icon: Lightbulb,
                 title: 'Pick Events',
                 body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
-                color: '#e05c5c',
+                color: '#f97316',
               },
               {
                 num: '03',

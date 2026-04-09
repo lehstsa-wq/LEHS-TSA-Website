@@ -17,6 +17,8 @@
   --c-blue-bright: #60a5fa;
   --c-gold:        #e05c5c;
   --c-gold-bright: #ef7878;
+  --c-amber:       #f59e0b;
+  --c-amber-bright: #fbbf24;
   --c-purple:      #8b5cf6;
   --c-green:       #22c55e;
   --c-red:         #ef4444;
@@ -29,6 +31,7 @@
   /* Glow effects */
   --glow-blue:   0 0 24px rgba(59,130,246,0.45), 0 0 64px rgba(59,130,246,0.15);
   --glow-gold:   0 0 24px rgba(224,92,92,0.45), 0 0 64px rgba(224,92,92,0.15);
+  --glow-amber:  0 0 24px rgba(245,158,11,0.45), 0 0 64px rgba(245,158,11,0.15);
   --glow-purple: 0 0 24px rgba(139,92,246,0.45), 0 0 64px rgba(139,92,246,0.15);
 
   /* Fonts */
@@ -128,7 +131,7 @@
   }
 
   .text-gradient-hero {
-    background: linear-gradient(135deg, #e8f0fe 0%, #60a5fa 40%, #e05c5c 100%);
+    background: linear-gradient(135deg, #e8f0fe 0%, #60a5fa 35%, #f97316 70%, #e05c5c 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -159,6 +162,11 @@
   .border-glow-gold {
     border-color: rgba(224, 92, 92, 0.4);
     box-shadow: 0 0 0 1px rgba(224, 92, 92, 0.15), inset 0 0 0 1px rgba(224, 92, 92, 0.05);
+  }
+
+  .border-glow-amber {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.15), inset 0 0 0 1px rgba(245, 158, 11, 0.05);
   }
 
   /* --- BUTTON VARIANTS --- */
@@ -246,6 +254,12 @@
     border: 1px solid rgba(34,197,94,0.25);
   }
 
+  .badge-amber {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.25);
+  }
+
   /* --- SECTION HEADINGS --- */
   .section-label {
     @apply badge badge-blue mb-4 uppercase tracking-widest text-[11px];
@@ -309,6 +323,10 @@
     background: radial-gradient(ellipse, rgba(139,92,246,0.25), transparent 70%);
   }
 
+  .orb-amber {
+    background: radial-gradient(ellipse, rgba(245,158,11,0.25), transparent 70%);
+  }
+
   /* Grid lines decoration */
   .grid-bg {
     background-image:
@@ -344,7 +362,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(59,130,246,0.5), rgba(139,92,246,0.3), rgba(224,92,92,0.2));
+    background: linear-gradient(135deg, rgba(59,130,246,0.5), rgba(139,92,246,0.3), rgba(245,158,11,0.25), rgba(224,92,92,0.2));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
