@@ -73,9 +73,11 @@ export interface User {
   avatar?: string;
   status?: 'active' | 'pending' | 'suspended' | 'archived';
   joinDate?: string;
+  bio?: string;
   interests?: string[];
   skills?: string[];
   achievements?: string;
+  avatarColor?: string;
   
   // Membership Requirements
   duesPaid?: boolean;
