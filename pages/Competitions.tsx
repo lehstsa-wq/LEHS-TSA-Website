@@ -129,7 +129,7 @@ const Competitions: React.FC = () => {
     );
   };
 
-  const currentResourceLink = selectedEvent ? competitionLinks[selectedEvent.id] : null;
+  const currentResourceLinks = selectedEvent ? (competitionLinks[selectedEvent.id] ?? []) : [];
   const meta = selectedEvent ? (CATEGORY_META[selectedEvent.category] ?? CATEGORY_META['stem']) : null;
 
   return (
@@ -154,7 +154,7 @@ const Competitions: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <div className="section-label inline-flex mb-5"><Trophy size={12} /> 2024–2025 Season</div>
+            <div className="section-label inline-flex mb-5"><Trophy size={12} /> 2025–2026 Season</div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance">
               Compete.{' '}
@@ -364,9 +364,9 @@ const Competitions: React.FC = () => {
                       <span
                         className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg backdrop-blur-sm border"
                         style={{
-                          background: catMeta.bg,
+                          background: 'rgba(4, 8, 15, 0.65)',
                           color: catMeta.color,
-                          borderColor: `${catMeta.color}40`,
+                          borderColor: `${catMeta.color}55`,
                         }}
                       >
                         {catMeta.label}
@@ -525,6 +525,34 @@ const Competitions: React.FC = () => {
             })}
           </div>
 
+          {/* TEAMS resource links (admin-managed) */}
+          {(competitionLinks['teams'] ?? []).length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="glass-card rounded-2xl p-6 border border-violet-500/25 mb-5"
+            >
+              <h3 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
+                <Download size={14} className="text-violet-400" /> TEAMS Resources
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {(competitionLinks['teams'] ?? []).map((link, i) => (
+                  <a
+                    key={i}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
+                  >
+                    <FileText size={11} /> {link.name || 'TEAMS Resource'}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {/* CTA / info banner */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -604,7 +632,7 @@ const Competitions: React.FC = () => {
                   <div className="flex gap-2 mb-3 flex-wrap">
                     <span
                       className="text-[10px] font-bold uppercase px-3 py-1 rounded-lg border backdrop-blur-sm"
-                      style={{ background: meta?.bg, color: meta?.color, borderColor: `${meta?.color}40` }}
+                      style={{ background: 'rgba(4, 8, 15, 0.65)', color: meta?.color, borderColor: `${meta?.color}55` }}
                     >
                       {meta?.label}
                     </span>
@@ -659,15 +687,20 @@ const Competitions: React.FC = () => {
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
                       <Download size={14} className="text-violet-400" /> Resources
                     </h4>
-                    {currentResourceLink?.url ? (
-                      <a
-                        href={currentResourceLink.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
-                      >
-                        <FileText size={11} /> {currentResourceLink.name || 'Download Official Guide'}
-                      </a>
+                    {currentResourceLinks.length > 0 ? (
+                      <div className="flex flex-col gap-2">
+                        {currentResourceLinks.map((link, i) => (
+                          <a
+                            key={i}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
+                          >
+                            <FileText size={11} /> {link.name || 'Download Official Guide'}
+                          </a>
+                        ))}
+                      </div>
                     ) : (
                       <p className="text-xs text-ink-muted italic">No resource link yet — check back soon.</p>
                     )}

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { useModal } from '../context/ModalContext';
-import { User, Shield, Hash, GraduationCap, Sun, Moon, LogOut, Edit2, Save, X, Phone, Star, Award } from 'lucide-react';
+import { User, Shield, Hash, GraduationCap, LogOut, Edit2, Save, X, Phone, Star, Award } from 'lucide-react';
 import { SEO } from '../components/SEO';
 
 const Settings: React.FC = () => {
   const { user, logout, updateProfile } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const { alert: showAlert } = useModal();
   
   const [isEditing, setIsEditing] = useState(false);
@@ -204,29 +202,6 @@ const Settings: React.FC = () => {
                 <p className="text-gray-900 dark:text-white font-medium whitespace-pre-wrap">{user.achievements || <span className="text-gray-400 italic">No achievements listed</span>}</p>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Preferences */}
-        <div className="bg-white dark:bg-dark-surface rounded-2xl shadow-sm border border-gray-200 dark:border-dark-border p-8 mb-8">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Preferences</h3>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-gray-100 dark:bg-white/5 rounded-lg text-gray-600 dark:text-gray-300">
-                {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
-              </div>
-              <div>
-                <p className="font-bold text-gray-900 dark:text-white">Appearance</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Toggle between light and dark mode</p>
-              </div>
-            </div>
-            <button 
-              onClick={toggleTheme}
-              className="px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg text-sm font-bold text-gray-700 dark:text-white transition-colors"
-            >
-              {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
-            </button>
           </div>
         </div>
 

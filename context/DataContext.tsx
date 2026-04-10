@@ -118,9 +118,9 @@ interface DataContextType {
   competitionInterests: CompetitionInterest[];
   problemReports: ProblemReport[];
   
-  // NEW: Dynamic Competition Resources Map
-  competitionLinks: Record<string, { url: string; name: string }>;
-  updateCompetitionLink: (compId: string, url: string, name: string) => void;
+  // Dynamic Competition Resources Map (multiple links per competition)
+  competitionLinks: Record<string, Array<{ url: string; name: string }>>;
+  updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
 
   officersList: Officer[];
   eventsList: Event[];
@@ -185,11 +185,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [competitionInterests, setCompetitionInterests] = useState<CompetitionInterest[]>([]);
   const [problemReports, setProblemReports] = useState<ProblemReport[]>(MOCK_REPORTS);
   
-  // NEW: State for Competition Links
-  const [competitionLinks, setCompetitionLinks] = useState<Record<string, { url: string; name: string }>>({
-    'webmaster': { url: 'https://tsaweb.org/competitions', name: 'Webmaster Guide' },
-    'coding': { url: 'https://tsaweb.org/competitions', name: 'Coding Guide' }
-  });
+  // State for Competition Links (multiple per competition)
+  const [competitionLinks, setCompetitionLinks] = useState<Record<string, Array<{ url: string; name: string }>>>({});
   
   const [officersList, setOfficersList] = useState<Officer[]>(MOCK_OFFICERS);
   const [eventsList, setEventsList] = useState<Event[]>(MOCK_EVENTS);
@@ -305,7 +302,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "settings", "competition_links"), (doc) => {
       if (doc.exists()) {
-        setCompetitionLinks(doc.data() as Record<string, { url: string; name: string }>);
+        setCompetitionLinks(doc.data() as Record<string, Array<{ url: string; name: string }>>);
       }
     });
     return () => unsubscribe();
@@ -519,13 +516,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   };
 
-  // NEW: Update Competition Link Action
-  const updateCompetitionLink = async (compId: string, url: string, name: string) => {
+  // Update multiple competition links for a single competition
+  const updateCompetitionLinks = async (compId: string, links: Array<{ url: string; name: string }>) => {
       const newLinks = { ...competitionLinks };
-      if (!url && !name) {
+      const filtered = links.filter(l => l.url.trim());
+      if (filtered.length === 0) {
           delete newLinks[compId];
       } else {
-          newLinks[compId] = { url, name };
+          newLinks[compId] = filtered;
       }
       setCompetitionLinks(newLinks);
       try {
@@ -754,7 +752,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <DataContext.Provider value={{ 
       announcements, members, resources, officerNotes, internalDeadlines, siteSettings, competitionInterests, problemReports,
-      competitionLinks, updateCompetitionLink,
+      competitionLinks, updateCompetitionLinks,
       officersList, eventsList, projectsList, galleryList, accessCodes,
       addAnnouncement, updateAnnouncement, deleteAnnouncement,
       updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,

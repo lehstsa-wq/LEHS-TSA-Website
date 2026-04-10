@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Menu, X, Sun, Moon, Instagram, Twitter, MapPin, Mail,
+  Menu, X, Instagram, Twitter, MapPin, Mail,
   LogIn, LayoutDashboard, LogOut, ChevronDown,
   Search, Zap, Trophy, Users, Calendar, BookOpen,
   Newspaper, Image, Cpu, ExternalLink, ArrowRight,
@@ -10,7 +10,6 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import { useTheme } from '../context/ThemeContext';
 
 /* ─────────────────────────────────────────────────────────────
    NAV LINK DEFINITIONS
@@ -60,7 +59,6 @@ export const Navbar: React.FC = () => {
   const location   = useLocation();
   const navigate   = useNavigate();
   const { logout, isAuthenticated } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const { siteSettings } = useData();
 
   /* Scroll shadow */
@@ -232,15 +230,6 @@ export const Navbar: React.FC = () => {
                 </a>
               )}
 
-              {/* Theme toggle */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg text-ink-muted hover:text-ink hover:bg-space-600/50 transition-all"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-              </button>
-
               {/* Auth */}
               {isAuthenticated ? (
                 <div className="flex items-center gap-3 ml-1 pl-3 border-l border-space-500/50">
@@ -282,9 +271,6 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2 lg:hidden">
               <button onClick={() => setSearchOpen(true)} className="p-2 text-ink-dim hover:text-ink">
                 <Search size={20} />
-              </button>
-              <button onClick={toggleTheme} className="p-2 text-ink-dim hover:text-ink">
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
               </button>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}

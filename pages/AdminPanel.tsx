@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, Users, Bell, Calendar, Settings, 
-  Plus, Trash2, 
+import {
+  Shield, Users, Bell, Calendar, Settings,
+  Plus, Trash2, X,
   Briefcase, FolderOpen, Image as ImageIcon,
   TrendingUp, AlertCircle, UserPlus, Activity, Archive,
   Star, FileText, ExternalLink,
@@ -912,98 +912,172 @@ const InterestsTab: React.FC = () => {
     );
 };
 
-const CompetitionLinkRow = ({ comp, currentLinkObj, updateCompetitionLink }: any) => {
-    const [name, setName] = useState(currentLinkObj.name);
-    const [url, setUrl] = useState(currentLinkObj.url);
+const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
+    comp: { id: string; title: string; category: string };
+    currentLinks: Array<{ url: string; name: string }>;
+    updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
+}) => {
+    const [links, setLinks] = useState(currentLinks);
+    const [isAdding, setIsAdding] = useState(false);
+    const [newName, setNewName] = useState('');
+    const [newUrl, setNewUrl] = useState('');
 
-    useEffect(() => {
-        setName(currentLinkObj.name);
-        setUrl(currentLinkObj.url);
-    }, [currentLinkObj.name, currentLinkObj.url]);
+    useEffect(() => { setLinks(currentLinks); }, [currentLinks]);
 
-    const handleBlur = () => {
-        if (name !== currentLinkObj.name || url !== currentLinkObj.url) {
-            updateCompetitionLink(comp.id, url, name);
-        }
+    const save = (updated: Array<{ url: string; name: string }>) => {
+        setLinks(updated);
+        updateCompetitionLinks(comp.id, updated);
+    };
+
+    const removeLink = (i: number) => save(links.filter((_, idx) => idx !== i));
+
+    const addLink = () => {
+        if (!newUrl.trim()) return;
+        save([...links, { url: newUrl.trim(), name: newName.trim() || newUrl.trim() }]);
+        setNewName(''); setNewUrl(''); setIsAdding(false);
+    };
+
+    const updateField = (i: number, field: 'url' | 'name', val: string) => {
+        setLinks(prev => prev.map((l, idx) => idx === i ? { ...l, [field]: val } : l));
     };
 
     return (
-        <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <div className="md:w-1/3">
-                <h4 className="font-bold text-gray-900 dark:text-white">{comp.title}</h4>
-                <span className="text-xs bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded uppercase">{comp.category}</span>
+        <div className="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h4 className="font-bold text-gray-900 dark:text-white text-sm">{comp.title}</h4>
+                    <span className="text-xs bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded uppercase">{comp.category}</span>
+                </div>
+                <span className="text-xs text-gray-400">{links.length} link{links.length !== 1 ? 's' : ''}</span>
             </div>
-            <div className="md:w-2/3 flex flex-col gap-2">
-                <div className="flex gap-2">
-                    <div className="relative flex-grow">
-                    <input 
-                        type="text" 
-                        placeholder="Custom Name (e.g. Rulebook, Guide)"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onBlur={handleBlur}
-                        className="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-accent-blue outline-none transition-colors"
-                    />
+
+            <div className="space-y-1.5 ml-1">
+                {links.length === 0 && !isAdding && (
+                    <p className="text-xs text-gray-400 italic">No links yet.</p>
+                )}
+                {links.map((link, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                        <input
+                            type="text"
+                            value={link.name}
+                            onChange={e => updateField(i, 'name', e.target.value)}
+                            onBlur={() => updateCompetitionLinks(comp.id, links)}
+                            placeholder="Label (e.g. Rulebook)"
+                            className="w-32 bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
+                        />
+                        <div className="relative flex-1">
+                            <LinkIcon size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                value={link.url}
+                                onChange={e => updateField(i, 'url', e.target.value)}
+                                onBlur={() => updateCompetitionLinks(comp.id, links)}
+                                placeholder="Paste URL..."
+                                className="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg pl-7 pr-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
+                            />
+                        </div>
+                        {link.url && (
+                            <a href={link.url} target="_blank" rel="noopener noreferrer"
+                                className="p-1 text-accent-blue hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded">
+                                <ExternalLink size={13} />
+                            </a>
+                        )}
+                        <button onClick={() => removeLink(i)}
+                            className="p-1 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded">
+                            <Trash2 size={13} />
+                        </button>
                     </div>
-                </div>
-                <div className="flex gap-2">
-                    <div className="relative flex-grow">
-                    <input 
-                        type="text" 
-                        placeholder="Paste Link (Google Drive, PDF URL...)"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                        onBlur={handleBlur}
-                        className="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg pl-9 pr-3 py-2 text-sm focus:ring-1 focus:ring-accent-blue outline-none transition-colors"
-                    />
-                    <LinkIcon size={14} className="absolute left-3 top-2.5 text-gray-400" />
+                ))}
+
+                {isAdding && (
+                    <div className="flex items-center gap-2 mt-1">
+                        <input
+                            autoFocus
+                            type="text"
+                            value={newName}
+                            onChange={e => setNewName(e.target.value)}
+                            placeholder="Label"
+                            className="w-32 bg-gray-50 dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1 text-xs outline-none"
+                        />
+                        <input
+                            type="text"
+                            value={newUrl}
+                            onChange={e => setNewUrl(e.target.value)}
+                            placeholder="Paste URL..."
+                            className="flex-1 bg-gray-50 dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1 text-xs outline-none"
+                            onKeyDown={e => { if (e.key === 'Enter') addLink(); if (e.key === 'Escape') setIsAdding(false); }}
+                        />
+                        <button onClick={addLink} className="p-1 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
+                            <CheckCircle size={13} />
+                        </button>
+                        <button onClick={() => { setIsAdding(false); setNewName(''); setNewUrl(''); }}
+                            className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 rounded">
+                            <X size={13} />
+                        </button>
                     </div>
-                    {url && (
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="p-2 bg-blue-50 dark:bg-blue-900/20 text-accent-blue rounded-lg hover:bg-accent-blue hover:text-white transition-colors">
-                            <ExternalLink size={18} />
-                        </a>
-                    )}
-                </div>
+                )}
+
+                {!isAdding && (
+                    <button onClick={() => setIsAdding(true)}
+                        className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-medium mt-1">
+                        <Plus size={11} /> Add link
+                    </button>
+                )}
             </div>
         </div>
     );
 };
 
 const CompetitionsTab: React.FC = () => {
-    const { competitionLinks, updateCompetitionLink } = useData();
+    const { competitionLinks, updateCompetitionLinks } = useData();
     const [search, setSearch] = useState('');
     const filtered = COMPETITIONS.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
 
+    const teamsLinks = competitionLinks['teams'] ?? [];
+
     return (
         <div className="space-y-6 animate-fade-in">
-             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Competitions</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Add resource links (rulebooks, guides) for each event.</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Add resource links (rulebooks, guides) for each event. Multiple links allowed.</p>
                 </div>
-                <input 
-                    placeholder="Search competitions..." 
-                    value={search} 
-                    onChange={e => setSearch(e.target.value)} 
+                <input
+                    placeholder="Search competitions..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
                     className="md:w-64 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm"
                 />
-             </div>
+            </div>
 
-             <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
-                 <div className="divide-y divide-gray-200 dark:divide-dark-border">
-                     {filtered.map(comp => {
-                         const currentLinkObj = competitionLinks[comp.id] || { url: '', name: '' };
-                         return (
-                             <CompetitionLinkRow 
-                                 key={comp.id} 
-                                 comp={comp} 
-                                 currentLinkObj={currentLinkObj} 
-                                 updateCompetitionLink={updateCompetitionLink} 
-                             />
-                         );
-                     })}
-                 </div>
-             </div>
+            {/* TEAMS special section */}
+            <div>
+                <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 px-1">TEAMS Program</h3>
+                <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                    <CompetitionLinkRow
+                        comp={{ id: 'teams', title: 'TEAMS — Tests of Engineering Aptitude, Mathematics & Science', category: 'stem' }}
+                        currentLinks={teamsLinks}
+                        updateCompetitionLinks={updateCompetitionLinks}
+                    />
+                </div>
+            </div>
+
+            {/* All competitions */}
+            <div>
+                <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 px-1">Individual &amp; Team Competitions</h3>
+                <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                    <div className="divide-y divide-gray-200 dark:divide-dark-border">
+                        {filtered.map(comp => (
+                            <CompetitionLinkRow
+                                key={comp.id}
+                                comp={comp}
+                                currentLinks={competitionLinks[comp.id] ?? []}
+                                updateCompetitionLinks={updateCompetitionLinks}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
