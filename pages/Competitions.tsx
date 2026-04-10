@@ -4,7 +4,7 @@ import {
   Trophy, AlertTriangle, Search,
   ChevronRight, CheckCircle,
   Briefcase, PenTool, Cpu, Hammer, Zap, Plane, Layers, X,
-  Users, Clock, FileText, Download, Star, MapPin, Filter
+  Users, Clock, FileText, Download, Star, MapPin, Filter, UserCheck, Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
@@ -16,14 +16,14 @@ import { SEO } from '../components/SEO';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
-  stem:       { label: 'STEM',           color: '#3b82f6', bg: 'rgba(59,130,246,0.15)',   icon: Cpu      },
-  arch:       { label: 'Architecture',   color: '#f59e0b', bg: 'rgba(245,158,11,0.15)',   icon: Hammer   },
-  man:        { label: 'Manufacturing',  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)',   icon: Layers   },
-  trans:      { label: 'Transportation', color: '#06b6d4', bg: 'rgba(6,182,212,0.15)',    icon: Plane    },
-  energy:     { label: 'Energy',         color: '#e05c5c', bg: 'rgba(224,92,92,0.15)',    icon: Zap      },
-  ict:        { label: 'ICT',            color: '#60a5fa', bg: 'rgba(96,165,250,0.15)',   icon: Cpu      },
-  design:     { label: 'Design',         color: '#ec4899', bg: 'rgba(236,72,153,0.15)',   icon: PenTool  },
-  leadership: { label: 'Leadership',     color: '#22c55e', bg: 'rgba(34,197,94,0.15)',    icon: Briefcase},
+  stem:       { label: 'STEM',           color: '#3b82f6', bg: 'rgba(59,130,246,0.32)',   icon: Cpu      },
+  arch:       { label: 'Architecture',   color: '#f59e0b', bg: 'rgba(245,158,11,0.32)',   icon: Hammer   },
+  man:        { label: 'Manufacturing',  color: '#8b5cf6', bg: 'rgba(139,92,246,0.32)',   icon: Layers   },
+  trans:      { label: 'Transportation', color: '#06b6d4', bg: 'rgba(6,182,212,0.32)',    icon: Plane    },
+  energy:     { label: 'Energy',         color: '#e05c5c', bg: 'rgba(224,92,92,0.32)',    icon: Zap      },
+  ict:        { label: 'ICT',            color: '#60a5fa', bg: 'rgba(96,165,250,0.32)',   icon: Cpu      },
+  design:     { label: 'Design',         color: '#ec4899', bg: 'rgba(236,72,153,0.32)',   icon: PenTool  },
+  leadership: { label: 'Leadership',     color: '#22c55e', bg: 'rgba(34,197,94,0.32)',    icon: Briefcase},
 };
 
 const CATEGORIES = [
@@ -37,6 +37,70 @@ const CATEGORIES = [
   { id: 'design',     name: 'Design'     },
   { id: 'leadership', name: 'Leadership' },
 ];
+
+/* ── LEHS TSA Chapter Teams ── */
+const TSA_TEAMS = [
+  {
+    id: 'team-coding',
+    name: 'Coding Team',
+    competition: 'Coding',
+    category: 'ict',
+    members: ['Sai Vemula', 'Aryan Patel', 'Ethan Kim'],
+    status: 'active' as const,
+    description: 'Building a full-stack web application for the annual coding challenge.',
+  },
+  {
+    id: 'team-animatronics',
+    name: 'Animatronics Team',
+    competition: 'Animatronics',
+    category: 'stem',
+    members: ['Jake Torres', 'Mia Chen', 'Liam Park'],
+    status: 'active' as const,
+    description: 'Designing and fabricating an animatronic creature with servo-driven motion control.',
+  },
+  {
+    id: 'team-video-game',
+    name: 'Video Game Design',
+    competition: 'Video Game Design',
+    category: 'design',
+    members: ['Priya Nair', 'Marcus Webb', 'Sofia Reyes', 'Daniel Okafor'],
+    status: 'forming' as const,
+    description: 'Developing an original 2D platformer game with original art and music assets.',
+  },
+  {
+    id: 'team-arch-design',
+    name: 'Architecture Team',
+    competition: 'Architectural Design',
+    category: 'arch',
+    members: ['Aiden Brooks', 'Natalie Wu'],
+    status: 'active' as const,
+    description: 'Designing a sustainable tiny-home community center with LEED principles.',
+  },
+  {
+    id: 'team-engineering-design',
+    name: 'Engineering Design',
+    competition: 'Engineering Design',
+    category: 'stem',
+    members: ['Tyler Nguyen', 'Zara Ahmed', 'Connor Slate', 'Yuna Park'],
+    status: 'forming' as const,
+    description: 'Prototyping a solution to an engineering challenge using iterative design methods.',
+  },
+  {
+    id: 'team-debating-tech',
+    name: 'Debating Technological Issues',
+    competition: 'Debating Technological Issues',
+    category: 'leadership',
+    members: ['Aaliya Johnson', 'Ryan Clark'],
+    status: 'complete' as const,
+    description: 'Preparing arguments on cutting-edge technology policy topics for competitive debate.',
+  },
+];
+
+const TEAM_STATUS_META = {
+  active:   { label: 'Active',   color: '#22c55e', bg: 'rgba(34,197,94,0.2)'  },
+  forming:  { label: 'Forming',  color: '#f59e0b', bg: 'rgba(245,158,11,0.2)' },
+  complete: { label: 'Complete', color: '#60a5fa', bg: 'rgba(96,165,250,0.2)' },
+};
 
 const Competitions: React.FC = () => {
   const { user } = useAuth();
@@ -387,6 +451,105 @@ const Competitions: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* ════════════════════════════════════════
+          TSA TEAMS SECTION
+      ════════════════════════════════════════ */}
+      <section className="relative py-20 border-t border-space-500/30 overflow-hidden">
+        {/* Background accent */}
+        <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/30 to-space-900/0 pointer-events-none" />
+        <div className="orb orb-blue w-[500px] h-[400px] top-[-60px] left-[-80px] opacity-10 animate-orb-float-2 pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section header */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <div className="section-label inline-flex mb-4"><Shield size={12} /> LEHS Chapter Teams</div>
+            <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+              Our{' '}
+              <span className="text-gradient-blue">Teams</span>
+            </h2>
+            <p className="text-ink-dim text-lg max-w-2xl leading-relaxed">
+              Students competing together under the LEHS TSA chapter banner. Each team represents a registered event entry for the 2024–2025 season.
+            </p>
+          </motion.div>
+
+          {/* Teams grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {TSA_TEAMS.map((team, i) => {
+              const catMeta = CATEGORY_META[team.category] ?? CATEGORY_META['stem'];
+              const statusMeta = TEAM_STATUS_META[team.status];
+              const CatIcon = catMeta.icon;
+              return (
+                <motion.div
+                  key={team.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: Math.min(i * 0.07, 0.4) }}
+                  className="glass-card rounded-2xl p-6 flex flex-col gap-4 border border-space-500/50 hover:border-space-400/70 transition-all duration-300"
+                  style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.35)' }}
+                >
+                  {/* Top row: category icon + status badge */}
+                  <div className="flex items-center justify-between">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: catMeta.bg, color: catMeta.color }}
+                    >
+                      <CatIcon size={18} />
+                    </div>
+                    <span
+                      className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border"
+                      style={{ background: statusMeta.bg, color: statusMeta.color, borderColor: `${statusMeta.color}40` }}
+                    >
+                      {statusMeta.label}
+                    </span>
+                  </div>
+
+                  {/* Team name + event */}
+                  <div>
+                    <h3 className="font-black text-ink text-lg leading-snug mb-1">{team.name}</h3>
+                    <p className="text-xs font-semibold" style={{ color: catMeta.color }}>
+                      {catMeta.label} · {team.competition}
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-ink-dim leading-relaxed flex-1">{team.description}</p>
+
+                  {/* Members */}
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-2 font-semibold uppercase tracking-widest">
+                      <UserCheck size={11} /> Members
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {team.members.map(member => (
+                        <span
+                          key={member}
+                          className="text-xs px-2.5 py-1 rounded-lg bg-space-700/80 border border-space-500/60 text-ink-dim font-medium"
+                        >
+                          {member}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="pt-3 border-t border-space-500/30 flex items-center gap-2 text-xs text-ink-muted">
+                    <Users size={12} />
+                    <span>{team.members.length} member{team.members.length !== 1 ? 's' : ''}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ════════════════════════════════════════
           DETAIL MODAL
