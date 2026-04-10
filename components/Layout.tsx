@@ -62,11 +62,19 @@ export const Navbar: React.FC = () => {
   const { logout, isAuthenticated, user } = useAuth();
   const { siteSettings, announcements } = useData();
 
-  // Unread announcement count — persisted in localStorage per user
+  // Unread announcement count — initialize seen list on first load so existing
+  // announcements don't permanently trigger the badge for new/returning users.
   const unreadCount = (() => {
-    if (!user) return 0;
+    if (!user || announcements.length === 0) return 0;
     try {
-      const seen: string[] = JSON.parse(localStorage.getItem(`lehs-seen-${user.id}`) ?? '[]');
+      const key = `lehs-seen-${user.id}`;
+      const raw = localStorage.getItem(key);
+      if (raw === null) {
+        // First time: mark everything current as seen so badge starts at 0
+        localStorage.setItem(key, JSON.stringify(announcements.map(a => a.id)));
+        return 0;
+      }
+      const seen: string[] = JSON.parse(raw);
       return announcements.filter(a => !seen.includes(a.id)).length;
     } catch { return 0; }
   })();
