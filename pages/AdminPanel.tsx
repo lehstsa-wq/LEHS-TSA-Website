@@ -496,15 +496,13 @@ const UpdatesTab: React.FC = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [type, setType] = useState<Announcement['type']>('General');
-    const [imageUrl, setImageUrl] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!title || !content) return;
-        addAnnouncement({ title, content, type, isPinned: false, visibility: 'public', imageUrl });
+        addAnnouncement({ title, content, type, isPinned: false, visibility: 'public' });
         setTitle('');
         setContent('');
-        setImageUrl('');
     };
 
     return (
@@ -527,10 +525,6 @@ const UpdatesTab: React.FC = () => {
                         </select>
                     </div>
                     <div>
-                        <label className={labelClass}>Image URL (Optional)</label>
-                        <input value={imageUrl} onChange={e => setImageUrl(e.target.value)} className={inputClass} placeholder="https://..." />
-                    </div>
-                    <div>
                         <label className={labelClass}>Content</label>
                         <textarea value={content} onChange={e => setContent(e.target.value)} className={`${inputClass} min-h-[100px] resize-none`} placeholder="Details..." required />
                     </div>
@@ -551,7 +545,6 @@ const UpdatesTab: React.FC = () => {
                                 </div>
                                 <h4 className="font-bold text-gray-900 dark:text-white">{a.title}</h4>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{a.content}</p>
-                                {a.imageUrl && <p className="text-xs text-accent-blue mt-1 flex items-center gap-1"><ImageIcon size={12}/> Has Image</p>}
                             </div>
                             <button onClick={async () => {
                                 if (await confirm('Delete Announcement', 'Delete this announcement?', true, 'Delete')) {
@@ -575,14 +568,13 @@ const LeadershipTab: React.FC = () => {
     const [name, setName] = useState('');
     const [role, setRole] = useState('');
     const [email, setEmail] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
     const [bio, setBio] = useState('');
     const [category, setCategory] = useState<Officer['category']>('Executive');
 
     const handleAdd = (e: React.FormEvent) => {
         e.preventDefault();
-        addOfficer({ name, role, grade: '12th Grade', category, bio, imageUrl, email, order: officersList.length + 1 });
-        setName(''); setRole(''); setEmail(''); setImageUrl(''); setBio('');
+        addOfficer({ name, role, grade: '12th Grade', category, bio, email, order: officersList.length + 1 });
+        setName(''); setRole(''); setEmail(''); setBio('');
     };
 
     return (
@@ -602,10 +594,6 @@ const LeadershipTab: React.FC = () => {
                         <div>
                             <label className={labelClass}>Email</label>
                             <input value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="jane@lehs.tsa" />
-                        </div>
-                        <div>
-                            <label className={labelClass}>Image URL</label>
-                            <input value={imageUrl} onChange={e => setImageUrl(e.target.value)} className={inputClass} placeholder="https://..." />
                         </div>
                     </div>
                     <div>
@@ -720,7 +708,7 @@ const EventsTab: React.FC = () => {
 const ProjectsTab: React.FC = () => {
     const { projectsList, addProject, deleteProject } = useData();
     const { confirm } = useModal();
-    const [form, setForm] = useState({ title: '', category: 'Software Development', year: '2025', description: '', award: '', imageUrl: '' });
+    const [form, setForm] = useState({ title: '', category: 'Software Development', year: '2025', description: '', award: '' });
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const toggleExpand = (id: string) => {
@@ -734,7 +722,6 @@ const ProjectsTab: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div className="space-y-3">
                          <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className={inputClass} placeholder="Project Title" />
-                         <input value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} className={inputClass} placeholder="Image URL (optional)" />
                          <input value={form.award} onChange={e => setForm({...form, award: e.target.value})} className={inputClass} placeholder="Award (e.g., 1st Place State)" />
                      </div>
                      <div className="space-y-3">
@@ -746,7 +733,7 @@ const ProjectsTab: React.FC = () => {
                     onClick={() => {
                         if(!form.title) return;
                         addProject(form);
-                        setForm({ title: '', category: 'Software Development', year: '2025', description: '', award: '', imageUrl: '' });
+                        setForm({ title: '', category: 'Software Development', year: '2025', description: '', award: '' });
                     }}
                     className={`${buttonClass} bg-accent-blue text-white w-full mt-4`}
                 >
@@ -918,63 +905,39 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
     updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
 }) => {
     const [links, setLinks] = useState(currentLinks);
-    // ref always holds latest value — fixes stale closure on onBlur handlers
-    const latestLinks = useRef(links);
-
+    const [addName, setAddName] = useState('');
+    const [addUrl, setAddUrl] = useState('');
     const [isAdding, setIsAdding] = useState(false);
-    const [newName, setNewName] = useState('');
-    const [newUrl, setNewUrl] = useState('');
 
-    // Only sync from parent when parent genuinely changes (e.g. another admin edits),
-    // not every time Firestore echoes back our own save.
-    const prevParent = useRef(currentLinks);
+    // Sync from parent using content equality — avoids ?? [] new-reference-every-render bug
+    const prevJson = useRef(JSON.stringify(currentLinks));
     useEffect(() => {
-        if (prevParent.current !== currentLinks) {
-            prevParent.current = currentLinks;
-            // Don't overwrite if user is mid-edit
-            if (!isAdding) {
-                latestLinks.current = currentLinks;
-                setLinks(currentLinks);
-            }
+        const incoming = JSON.stringify(currentLinks);
+        if (incoming !== prevJson.current) {
+            prevJson.current = incoming;
+            setLinks(currentLinks);
         }
-    }, [currentLinks, isAdding]);
+    }, [currentLinks]);
 
-    // Update a field in the local list; keep the ref in sync immediately
-    const updateField = (i: number, field: 'url' | 'name', val: string) => {
-        const updated = latestLinks.current.map((l, idx) =>
-            idx === i ? { ...l, [field]: val } : l
-        );
-        latestLinks.current = updated;
-        setLinks(updated);
-    };
-
-    // Persist current ref value to Firestore on blur
-    const saveOnBlur = () => updateCompetitionLinks(comp.id, latestLinks.current);
-
-    const removeLink = (i: number) => {
-        const updated = latestLinks.current.filter((_, idx) => idx !== i);
-        latestLinks.current = updated;
+    const saveNew = () => {
+        if (!addUrl.trim()) return;
+        const updated = [...links, { url: addUrl.trim(), name: addName.trim() || addUrl.trim() }];
         setLinks(updated);
         updateCompetitionLinks(comp.id, updated);
-    };
-
-    const addLink = () => {
-        if (!newUrl.trim()) return;
-        const updated = [...latestLinks.current, {
-            url: newUrl.trim(),
-            name: newName.trim() || newUrl.trim(),
-        }];
-        latestLinks.current = updated;
-        setLinks(updated);
-        updateCompetitionLinks(comp.id, updated);
-        setNewName('');
-        setNewUrl('');
+        setAddName('');
+        setAddUrl('');
         setIsAdding(false);
+    };
+
+    const remove = (i: number) => {
+        const updated = links.filter((_, idx) => idx !== i);
+        setLinks(updated);
+        updateCompetitionLinks(comp.id, updated);
     };
 
     return (
         <div className="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-3">
                 <div>
                     <h4 className="font-bold text-gray-900 dark:text-white text-sm">{comp.title}</h4>
                     <span className="text-xs bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded uppercase">{comp.category}</span>
@@ -982,83 +945,67 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
                 <span className="text-xs text-gray-400">{links.length} link{links.length !== 1 ? 's' : ''}</span>
             </div>
 
-            <div className="space-y-1.5 ml-1">
+            {/* Saved links — read-only with delete */}
+            <div className="space-y-1.5 mb-2">
                 {links.length === 0 && !isAdding && (
                     <p className="text-xs text-gray-400 italic">No links yet.</p>
                 )}
                 {links.map((link, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={link.name}
-                            onChange={e => updateField(i, 'name', e.target.value)}
-                            onBlur={saveOnBlur}
-                            placeholder="Label (e.g. Rulebook)"
-                            className="w-32 bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
-                        />
-                        <div className="relative flex-1">
-                            <LinkIcon size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                                type="text"
-                                value={link.url}
-                                onChange={e => updateField(i, 'url', e.target.value)}
-                                onBlur={saveOnBlur}
-                                placeholder="Paste URL..."
-                                className="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg pl-7 pr-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
-                            />
+                    <div key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-white/5 rounded-lg">
+                        <LinkIcon size={11} className="text-gray-400 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-gray-800 dark:text-white truncate">{link.name}</p>
+                            <p className="text-xs text-gray-400 truncate">{link.url}</p>
                         </div>
-                        {link.url && (
-                            <a href={link.url} target="_blank" rel="noopener noreferrer"
-                                className="p-1 text-accent-blue hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded">
-                                <ExternalLink size={13} />
-                            </a>
-                        )}
-                        <button onClick={() => removeLink(i)}
-                            className="p-1 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded">
-                            <Trash2 size={13} />
+                        <a href={link.url} target="_blank" rel="noopener noreferrer"
+                            className="p-1 text-accent-blue hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded shrink-0">
+                            <ExternalLink size={12} />
+                        </a>
+                        <button onClick={() => remove(i)}
+                            className="p-1 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded shrink-0">
+                            <Trash2 size={12} />
                         </button>
                     </div>
                 ))}
-
-                {isAdding && (
-                    <div className="flex items-center gap-2 mt-1">
-                        <input
-                            autoFocus
-                            type="text"
-                            value={newName}
-                            onChange={e => setNewName(e.target.value)}
-                            placeholder="Label"
-                            className="w-32 bg-gray-50 dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1 text-xs outline-none"
-                        />
-                        <input
-                            type="text"
-                            value={newUrl}
-                            onChange={e => setNewUrl(e.target.value)}
-                            placeholder="Paste URL..."
-                            className="flex-1 bg-gray-50 dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1 text-xs outline-none"
-                            onKeyDown={e => {
-                                if (e.key === 'Enter') addLink();
-                                if (e.key === 'Escape') { setIsAdding(false); setNewName(''); setNewUrl(''); }
-                            }}
-                        />
-                        <button onClick={addLink}
-                            className="p-1 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
-                            <CheckCircle size={13} />
-                        </button>
-                        <button onClick={() => { setIsAdding(false); setNewName(''); setNewUrl(''); }}
-                            className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 rounded">
-                            <X size={13} />
-                        </button>
-                    </div>
-                )}
-
-                {!isAdding && (
-                    <button onClick={() => setIsAdding(true)}
-                        className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-medium mt-1">
-                        <Plus size={11} /> Add link
-                    </button>
-                )}
             </div>
+
+            {/* Add link form — explicit Save button, no onBlur */}
+            {isAdding ? (
+                <div className="flex items-center gap-2 mt-1">
+                    <input
+                        autoFocus
+                        type="text"
+                        value={addName}
+                        onChange={e => setAddName(e.target.value)}
+                        placeholder="Label (e.g. Rulebook)"
+                        className="w-28 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1.5 text-xs outline-none"
+                    />
+                    <input
+                        type="text"
+                        value={addUrl}
+                        onChange={e => setAddUrl(e.target.value)}
+                        placeholder="Paste URL..."
+                        className="flex-1 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1.5 text-xs outline-none"
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') saveNew();
+                            if (e.key === 'Escape') { setIsAdding(false); setAddName(''); setAddUrl(''); }
+                        }}
+                    />
+                    <button onClick={saveNew}
+                        className="p-1.5 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
+                        <CheckCircle size={14} />
+                    </button>
+                    <button onClick={() => { setIsAdding(false); setAddName(''); setAddUrl(''); }}
+                        className="p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 rounded">
+                        <X size={14} />
+                    </button>
+                </div>
+            ) : (
+                <button onClick={() => setIsAdding(true)}
+                    className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-medium">
+                    <Plus size={11} /> Add link
+                </button>
+            )}
         </div>
     );
 };
