@@ -36,7 +36,7 @@ const Counter: React.FC<{ value: number; suffix?: string; duration?: number }> =
    TERMINAL TYPEWRITER
 ───────────────────────────────────────────────────────────── */
 const TERMINAL_LINES = [
-  '$ tsa --chapter "Little Elm HS" --year 2025',
+  '$ tsa --chapter "Little Elm HS" --year 2025-2026',
   '> Loading 75+ members...',
   '> Competitions: Webmaster, Coding, Design...',
   '> State qualifiers: 50+',
@@ -219,7 +219,7 @@ const Home: React.FC = () => {
                 className="badge badge-blue mb-6 inline-flex"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-electric-500 animate-pulse" />
-                Little Elm High School TSA · 2024–2025
+                Little Elm High School TSA · 2025–2026
               </motion.div>
 
               {/* Headline */}
@@ -705,7 +705,7 @@ const Home: React.FC = () => {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/join" className="btn-primary text-base px-8 py-4 group">
-              Join Now — It's Free
+              Join Now
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link to="/about" className="btn-secondary text-base px-8 py-4">

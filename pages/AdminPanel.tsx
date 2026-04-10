@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Shield, Users, Bell, Calendar, Settings,
   Plus, Trash2, X,
@@ -899,31 +899,23 @@ const InterestsTab: React.FC = () => {
     );
 };
 
-const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
-    comp: { id: string; title: string; category: string };
-    currentLinks: Array<{ url: string; name: string }>;
-    updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
-}) => {
-    const [links, setLinks] = useState(currentLinks);
+// Mounted only when a row is expanded — useState initializes fresh from Firestore data.
+// No sync effects, no stale closures, no ref gymnastics.
+const LinkEditor: React.FC<{
+    compId: string;
+    initialLinks: Array<{ url: string; name: string }>;
+    onSave: (links: Array<{ url: string; name: string }>) => void;
+}> = ({ initialLinks, onSave }) => {
+    const [links, setLinks] = useState(initialLinks);
     const [addName, setAddName] = useState('');
     const [addUrl, setAddUrl] = useState('');
     const [isAdding, setIsAdding] = useState(false);
-
-    // Sync from parent using content equality — avoids ?? [] new-reference-every-render bug
-    const prevJson = useRef(JSON.stringify(currentLinks));
-    useEffect(() => {
-        const incoming = JSON.stringify(currentLinks);
-        if (incoming !== prevJson.current) {
-            prevJson.current = incoming;
-            setLinks(currentLinks);
-        }
-    }, [currentLinks]);
 
     const saveNew = () => {
         if (!addUrl.trim()) return;
         const updated = [...links, { url: addUrl.trim(), name: addName.trim() || addUrl.trim() }];
         setLinks(updated);
-        updateCompetitionLinks(comp.id, updated);
+        onSave(updated);
         setAddName('');
         setAddUrl('');
         setIsAdding(false);
@@ -932,23 +924,14 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
     const remove = (i: number) => {
         const updated = links.filter((_, idx) => idx !== i);
         setLinks(updated);
-        updateCompetitionLinks(comp.id, updated);
+        onSave(updated);
     };
 
     return (
-        <div className="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <div className="flex items-center justify-between mb-3">
-                <div>
-                    <h4 className="font-bold text-gray-900 dark:text-white text-sm">{comp.title}</h4>
-                    <span className="text-xs bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded uppercase">{comp.category}</span>
-                </div>
-                <span className="text-xs text-gray-400">{links.length} link{links.length !== 1 ? 's' : ''}</span>
-            </div>
-
-            {/* Saved links — read-only with delete */}
-            <div className="space-y-1.5 mb-2">
+        <div className="px-4 pb-4 border-t border-gray-100 dark:border-dark-border pt-3">
+            <div className="space-y-1.5 mb-3">
                 {links.length === 0 && !isAdding && (
-                    <p className="text-xs text-gray-400 italic">No links yet.</p>
+                    <p className="text-xs text-gray-400 italic">No links yet — add one below.</p>
                 )}
                 {links.map((link, i) => (
                     <div key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-white/5 rounded-lg">
@@ -969,41 +952,41 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
                 ))}
             </div>
 
-            {/* Add link form — explicit Save button, no onBlur */}
             {isAdding ? (
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-2">
                     <input
                         autoFocus
                         type="text"
                         value={addName}
                         onChange={e => setAddName(e.target.value)}
                         placeholder="Label (e.g. Rulebook)"
-                        className="w-28 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1.5 text-xs outline-none"
+                        className="w-36 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-500 rounded-lg px-2 py-1.5 text-xs text-gray-900 dark:text-white outline-none"
                     />
                     <input
                         type="text"
                         value={addUrl}
                         onChange={e => setAddUrl(e.target.value)}
                         placeholder="Paste URL..."
-                        className="flex-1 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1.5 text-xs outline-none"
+                        className="flex-1 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-500 rounded-lg px-2 py-1.5 text-xs text-gray-900 dark:text-white outline-none"
                         onKeyDown={e => {
                             if (e.key === 'Enter') saveNew();
                             if (e.key === 'Escape') { setIsAdding(false); setAddName(''); setAddUrl(''); }
                         }}
                     />
                     <button onClick={saveNew}
-                        className="p-1.5 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
-                        <CheckCircle size={14} />
+                        disabled={!addUrl.trim()}
+                        className="px-3 py-1.5 bg-accent-blue text-white rounded-lg text-xs font-semibold disabled:opacity-40">
+                        Save
                     </button>
                     <button onClick={() => { setIsAdding(false); setAddName(''); setAddUrl(''); }}
-                        className="p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 rounded">
+                        className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                         <X size={14} />
                     </button>
                 </div>
             ) : (
                 <button onClick={() => setIsAdding(true)}
-                    className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-medium">
-                    <Plus size={11} /> Add link
+                    className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-semibold">
+                    <Plus size={12} /> Add link
                 </button>
             )}
         </div>
@@ -1013,52 +996,65 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
 const CompetitionsTab: React.FC = () => {
     const { competitionLinks, updateCompetitionLinks } = useData();
     const [search, setSearch] = useState('');
-    const filtered = COMPETITIONS.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
-    const teamsLinks = competitionLinks['teams'] ?? [];
+    const allItems: Array<{ id: string; title: string; category: string }> = [
+        { id: 'teams', title: 'TEAMS — Tests of Engineering Aptitude, Mathematics & Science', category: 'TEAMS Program' },
+        ...COMPETITIONS.filter(c => c.title.toLowerCase().includes(search.toLowerCase())),
+    ];
 
     return (
-        <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="space-y-4 animate-fade-in">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Competitions</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Add resource links (rulebooks, guides) for each event. Multiple links allowed.</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Click a competition to add or remove resource links.</p>
                 </div>
                 <input
                     placeholder="Search competitions..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="md:w-64 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm"
+                    className="md:w-64 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm text-gray-900 dark:text-white"
                 />
             </div>
 
-            {/* TEAMS special section */}
-            <div>
-                <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 px-1">TEAMS Program</h3>
-                <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
-                    <CompetitionLinkRow
-                        comp={{ id: 'teams', title: 'TEAMS — Tests of Engineering Aptitude, Mathematics & Science', category: 'stem' }}
-                        currentLinks={teamsLinks}
-                        updateCompetitionLinks={updateCompetitionLinks}
-                    />
-                </div>
-            </div>
+            <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm divide-y divide-gray-100 dark:divide-dark-border">
+                {allItems.map(comp => {
+                    const links = competitionLinks[comp.id] ?? [];
+                    const isOpen = expandedId === comp.id;
+                    return (
+                        <div key={comp.id}>
+                            {/* Accordion header */}
+                            <button
+                                onClick={() => setExpandedId(isOpen ? null : comp.id)}
+                                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left"
+                            >
+                                <div className="min-w-0 mr-4">
+                                    <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{comp.title}</p>
+                                    <span className="text-[10px] text-gray-400 uppercase tracking-wide">{comp.category}</span>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    {links.length > 0 && (
+                                        <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-accent-blue px-2 py-0.5 rounded-full font-semibold">
+                                            {links.length} link{links.length !== 1 ? 's' : ''}
+                                        </span>
+                                    )}
+                                    {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                                </div>
+                            </button>
 
-            {/* All competitions */}
-            <div>
-                <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 px-1">Individual &amp; Team Competitions</h3>
-                <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
-                    <div className="divide-y divide-gray-200 dark:divide-dark-border">
-                        {filtered.map(comp => (
-                            <CompetitionLinkRow
-                                key={comp.id}
-                                comp={comp}
-                                currentLinks={competitionLinks[comp.id] ?? []}
-                                updateCompetitionLinks={updateCompetitionLinks}
-                            />
-                        ))}
-                    </div>
-                </div>
+                            {/* Editor — only mounts when open, so useState(initialLinks) is always fresh */}
+                            {isOpen && (
+                                <LinkEditor
+                                    key={comp.id}
+                                    compId={comp.id}
+                                    initialLinks={links}
+                                    onSave={updated => updateCompetitionLinks(comp.id, updated)}
+                                />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
