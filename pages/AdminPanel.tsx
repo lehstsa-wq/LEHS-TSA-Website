@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import {
   Shield, Users, Bell, Calendar, Settings,
-  Plus, Trash2, X,
+  Plus, Trash2, X, Search, Edit2,
   Briefcase, FolderOpen, Image as ImageIcon,
   TrendingUp, AlertCircle, UserPlus, Activity, Archive,
   Star, FileText, ExternalLink,
   Link as LinkIcon, Save, ChevronDown, ChevronUp,
-  AlertOctagon, CheckCircle
+  AlertOctagon, CheckCircle,
+  Cpu, Hammer, Layers, Plane, Zap, PenTool
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
@@ -899,162 +900,421 @@ const InterestsTab: React.FC = () => {
     );
 };
 
-// Mounted only when a row is expanded — useState initializes fresh from Firestore data.
-// No sync effects, no stale closures, no ref gymnastics.
-const LinkEditor: React.FC<{
-    compId: string;
-    initialLinks: Array<{ url: string; name: string }>;
-    onSave: (links: Array<{ url: string; name: string }>) => void;
-}> = ({ initialLinks, onSave }) => {
-    const [links, setLinks] = useState(initialLinks);
-    const [addName, setAddName] = useState('');
-    const [addUrl, setAddUrl] = useState('');
-    const [isAdding, setIsAdding] = useState(false);
+// ─── COMPETITIONS TAB ────────────────────────────────────────────────────────
 
-    const saveNew = () => {
-        if (!addUrl.trim()) return;
-        const updated = [...links, { url: addUrl.trim(), name: addName.trim() || addUrl.trim() }];
-        setLinks(updated);
-        onSave(updated);
-        setAddName('');
-        setAddUrl('');
-        setIsAdding(false);
-    };
-
-    const remove = (i: number) => {
-        const updated = links.filter((_, idx) => idx !== i);
-        setLinks(updated);
-        onSave(updated);
-    };
-
-    return (
-        <div className="px-4 pb-4 border-t border-gray-100 dark:border-dark-border pt-3">
-            <div className="space-y-1.5 mb-3">
-                {links.length === 0 && !isAdding && (
-                    <p className="text-xs text-gray-400 italic">No links yet — add one below.</p>
-                )}
-                {links.map((link, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-white/5 rounded-lg">
-                        <LinkIcon size={11} className="text-gray-400 shrink-0" />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-gray-800 dark:text-white truncate">{link.name}</p>
-                            <p className="text-xs text-gray-400 truncate">{link.url}</p>
-                        </div>
-                        <a href={link.url} target="_blank" rel="noopener noreferrer"
-                            className="p-1 text-accent-blue hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded shrink-0">
-                            <ExternalLink size={12} />
-                        </a>
-                        <button onClick={() => remove(i)}
-                            className="p-1 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded shrink-0">
-                            <Trash2 size={12} />
-                        </button>
-                    </div>
-                ))}
-            </div>
-
-            {isAdding ? (
-                <div className="flex items-center gap-2">
-                    <input
-                        autoFocus
-                        type="text"
-                        value={addName}
-                        onChange={e => setAddName(e.target.value)}
-                        placeholder="Label (e.g. Rulebook)"
-                        className="w-36 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-500 rounded-lg px-2 py-1.5 text-xs text-gray-900 dark:text-white outline-none"
-                    />
-                    <input
-                        type="text"
-                        value={addUrl}
-                        onChange={e => setAddUrl(e.target.value)}
-                        placeholder="Paste URL..."
-                        className="flex-1 bg-white dark:bg-dark-bg border border-blue-400 dark:border-blue-500 rounded-lg px-2 py-1.5 text-xs text-gray-900 dark:text-white outline-none"
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') saveNew();
-                            if (e.key === 'Escape') { setIsAdding(false); setAddName(''); setAddUrl(''); }
-                        }}
-                    />
-                    <button onClick={saveNew}
-                        disabled={!addUrl.trim()}
-                        className="px-3 py-1.5 bg-accent-blue text-white rounded-lg text-xs font-semibold disabled:opacity-40">
-                        Save
-                    </button>
-                    <button onClick={() => { setIsAdding(false); setAddName(''); setAddUrl(''); }}
-                        className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                        <X size={14} />
-                    </button>
-                </div>
-            ) : (
-                <button onClick={() => setIsAdding(true)}
-                    className="flex items-center gap-1 text-xs text-accent-blue hover:text-blue-500 font-semibold">
-                    <Plus size={12} /> Add link
-                </button>
-            )}
-        </div>
-    );
+const COMP_CATEGORY_META: Record<string, { label: string; color: string; icon: React.ElementType }> = {
+    stem:       { label: 'STEM',           color: '#3b82f6', icon: Cpu       },
+    arch:       { label: 'Architecture',   color: '#f59e0b', icon: Hammer    },
+    man:        { label: 'Manufacturing',  color: '#8b5cf6', icon: Layers    },
+    trans:      { label: 'Transportation', color: '#06b6d4', icon: Plane     },
+    energy:     { label: 'Energy',         color: '#e05c5c', icon: Zap       },
+    ict:        { label: 'ICT',            color: '#60a5fa', icon: Cpu       },
+    design:     { label: 'Design',         color: '#ec4899', icon: PenTool   },
+    leadership: { label: 'Leadership',     color: '#22c55e', icon: Briefcase },
+    teams:      { label: 'TEAMS',          color: '#f97316', icon: Star      },
 };
+
+const COMP_CATEGORY_FILTERS = [
+    { id: 'all', name: 'All' },
+    { id: 'stem', name: 'STEM' },
+    { id: 'arch', name: 'Architecture' },
+    { id: 'man', name: 'Manufacturing' },
+    { id: 'trans', name: 'Transportation' },
+    { id: 'energy', name: 'Energy' },
+    { id: 'ict', name: 'ICT' },
+    { id: 'design', name: 'Design' },
+    { id: 'leadership', name: 'Leadership' },
+];
+
+type CompItem = { id: string; title: string; subtitle: string; category: string; description: string };
+
+const ALL_COMP_ITEMS: CompItem[] = [
+    {
+        id: 'teams',
+        title: 'TEAMS',
+        subtitle: 'Tests of Engineering Aptitude, Mathematics & Science',
+        category: 'teams',
+        description: 'Teams of 2–4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2025–2026 theme: "Engineering the Past".',
+    },
+    ...COMPETITIONS.map(c => ({
+        id: c.id,
+        title: c.title,
+        subtitle: '',
+        category: c.category,
+        description: c.description,
+    })),
+];
 
 const CompetitionsTab: React.FC = () => {
     const { competitionLinks, updateCompetitionLinks } = useData();
     const [search, setSearch] = useState('');
-    const [expandedId, setExpandedId] = useState<string | null>(null);
+    const [categoryFilter, setCategoryFilter] = useState('all');
+    const [selectedId, setSelectedId] = useState<string>('teams');
+    const [editingIdx, setEditingIdx] = useState<number | null>(null);
+    const [editName, setEditName] = useState('');
+    const [editUrl, setEditUrl] = useState('');
+    const [addName, setAddName] = useState('');
+    const [addUrl, setAddUrl] = useState('');
+    const [showAdd, setShowAdd] = useState(false);
+    const [saved, setSaved] = useState(false);
 
-    const allItems: Array<{ id: string; title: string; category: string }> = [
-        { id: 'teams', title: 'TEAMS — Tests of Engineering Aptitude, Mathematics & Science', category: 'TEAMS Program' },
-        ...COMPETITIONS.filter(c => c.title.toLowerCase().includes(search.toLowerCase())),
-    ];
+    const filtered = ALL_COMP_ITEMS.filter(c => {
+        const matchCat = categoryFilter === 'all' || c.category === categoryFilter;
+        const matchSearch = c.title.toLowerCase().includes(search.toLowerCase());
+        return matchCat && matchSearch;
+    });
+
+    const selected = ALL_COMP_ITEMS.find(c => c.id === selectedId) ?? ALL_COMP_ITEMS[0];
+    const links = competitionLinks[selectedId] ?? [];
+    const meta = COMP_CATEGORY_META[selected.category] ?? COMP_CATEGORY_META['stem'];
+
+    const persist = (updated: Array<{ url: string; name: string }>) => {
+        updateCompetitionLinks(selectedId, updated);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+    };
+
+    const addLink = () => {
+        if (!addUrl.trim()) return;
+        persist([...links, { url: addUrl.trim(), name: addName.trim() || addUrl.trim() }]);
+        setAddName(''); setAddUrl(''); setShowAdd(false);
+    };
+
+    const removeLink = (i: number) => persist(links.filter((_, idx) => idx !== i));
+
+    const startEdit = (i: number) => {
+        setEditingIdx(i);
+        setEditName(links[i].name);
+        setEditUrl(links[i].url);
+    };
+
+    const saveEdit = () => {
+        if (editingIdx === null || !editUrl.trim()) return;
+        const updated = links.map((l, i) =>
+            i === editingIdx ? { url: editUrl.trim(), name: editName.trim() || editUrl.trim() } : l
+        );
+        persist(updated);
+        setEditingIdx(null);
+    };
+
+    const selectComp = (id: string) => {
+        setSelectedId(id);
+        setShowAdd(false);
+        setEditingIdx(null);
+        setAddName(''); setAddUrl('');
+    };
+
+    const totalLinks = Object.values(competitionLinks).reduce((acc, ls) => acc + ls.length, 0);
+    const configuredCount = Object.keys(competitionLinks).filter(k => (competitionLinks[k]?.length ?? 0) > 0).length;
 
     return (
-        <div className="space-y-4 animate-fade-in">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+        <div className="animate-fade-in flex flex-col gap-5" style={{ height: 'calc(100vh - 10rem)' }}>
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 shrink-0">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Competitions</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Click a competition to add or remove resource links.</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Competition Resources</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                        Attach rulebooks, study guides, and links to each competition. Members see these on the Competitions page.
+                    </p>
                 </div>
-                <input
-                    placeholder="Search competitions..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="md:w-64 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm text-gray-900 dark:text-white"
-                />
+                <div className="flex gap-3 shrink-0">
+                    <div className="text-center px-4 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl shadow-sm">
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">{totalLinks}</p>
+                        <p className="text-[11px] text-gray-400">total links</p>
+                    </div>
+                    <div className="text-center px-4 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl shadow-sm">
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">{configuredCount}</p>
+                        <p className="text-[11px] text-gray-400">configured</p>
+                    </div>
+                </div>
             </div>
 
-            <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm divide-y divide-gray-100 dark:divide-dark-border">
-                {allItems.map(comp => {
-                    const links = competitionLinks[comp.id] ?? [];
-                    const isOpen = expandedId === comp.id;
-                    return (
-                        <div key={comp.id}>
-                            {/* Accordion header */}
-                            <button
-                                onClick={() => setExpandedId(isOpen ? null : comp.id)}
-                                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left"
-                            >
-                                <div className="min-w-0 mr-4">
-                                    <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{comp.title}</p>
-                                    <span className="text-[10px] text-gray-400 uppercase tracking-wide">{comp.category}</span>
-                                </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                    {links.length > 0 && (
-                                        <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-accent-blue px-2 py-0.5 rounded-full font-semibold">
-                                            {links.length} link{links.length !== 1 ? 's' : ''}
-                                        </span>
-                                    )}
-                                    {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
-                                </div>
-                            </button>
+            {/* Two-panel layout */}
+            <div className="flex gap-4 flex-1 min-h-0">
 
-                            {/* Editor — only mounts when open, so useState(initialLinks) is always fresh */}
-                            {isOpen && (
-                                <LinkEditor
-                                    key={comp.id}
-                                    compId={comp.id}
-                                    initialLinks={links}
-                                    onSave={updated => updateCompetitionLinks(comp.id, updated)}
-                                />
+                {/* ── Left panel: competition list ── */}
+                <div className="w-72 shrink-0 flex flex-col bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                    {/* Search */}
+                    <div className="p-3 border-b border-gray-100 dark:border-dark-border shrink-0">
+                        <div className="relative">
+                            <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            <input
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                placeholder="Search competitions..."
+                                className="w-full pl-7 pr-7 py-2 bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border rounded-lg text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-blue/20 focus:border-accent-blue outline-none"
+                            />
+                            {search && (
+                                <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <X size={12} />
+                                </button>
                             )}
                         </div>
-                    );
-                })}
+                    </div>
+
+                    {/* Category filter pills */}
+                    <div className="flex gap-1 flex-wrap px-3 py-2 border-b border-gray-100 dark:border-dark-border shrink-0">
+                        {COMP_CATEGORY_FILTERS.map(cat => (
+                            <button
+                                key={cat.id}
+                                onClick={() => setCategoryFilter(cat.id)}
+                                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition-colors ${
+                                    categoryFilter === cat.id
+                                        ? 'bg-accent-blue text-white'
+                                        : 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
+                                }`}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* List */}
+                    <div className="flex-1 overflow-y-auto divide-y divide-gray-100 dark:divide-dark-border">
+                        {filtered.length === 0 && (
+                            <p className="text-xs text-gray-400 italic text-center py-10">No results</p>
+                        )}
+                        {filtered.map(comp => {
+                            const compLinks = competitionLinks[comp.id] ?? [];
+                            const compMeta = COMP_CATEGORY_META[comp.category];
+                            const isActive = selectedId === comp.id;
+                            return (
+                                <button
+                                    key={comp.id}
+                                    onClick={() => selectComp(comp.id)}
+                                    className={`w-full text-left px-3 py-2.5 transition-colors flex items-center gap-2.5 border-l-2 ${
+                                        isActive
+                                            ? 'bg-accent-blue/10 border-accent-blue'
+                                            : 'border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
+                                    }`}
+                                >
+                                    <div
+                                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                                        style={{ background: `${compMeta?.color}22` }}
+                                    >
+                                        {compMeta && <compMeta.icon size={13} style={{ color: compMeta.color }} />}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className={`text-xs font-semibold truncate ${isActive ? 'text-accent-blue' : 'text-gray-800 dark:text-white'}`}>
+                                            {comp.title}
+                                        </p>
+                                        {comp.subtitle && (
+                                            <p className="text-[10px] text-gray-400 truncate">{comp.subtitle}</p>
+                                        )}
+                                    </div>
+                                    {compLinks.length > 0 && (
+                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-accent-blue shrink-0">
+                                            {compLinks.length}
+                                        </span>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* ── Right panel: detail + link editor ── */}
+                <div className="flex-1 min-w-0 flex flex-col bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                    {/* Competition header */}
+                    <div
+                        className="px-6 py-4 border-b border-gray-100 dark:border-dark-border shrink-0"
+                        style={{ borderTop: `3px solid ${meta.color}` }}
+                    >
+                        <div className="flex items-start gap-3">
+                            <div
+                                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                style={{ background: `${meta.color}22` }}
+                            >
+                                <meta.icon size={20} style={{ color: meta.color }} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{selected.title}</h3>
+                                    <span
+                                        className="text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0"
+                                        style={{ background: `${meta.color}20`, color: meta.color }}
+                                    >
+                                        {meta.label}
+                                    </span>
+                                    {saved && (
+                                        <span className="flex items-center gap-1 text-[11px] font-semibold text-green-500 shrink-0">
+                                            <CheckCircle size={11} /> Saved
+                                        </span>
+                                    )}
+                                </div>
+                                {selected.subtitle && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{selected.subtitle}</p>
+                                )}
+                                {selected.description && (
+                                    <p className="text-xs text-gray-400 mt-1 line-clamp-2">{selected.description}</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Links section */}
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                                Resource Links
+                                {links.length > 0 && (
+                                    <span className="ml-2 text-gray-400 font-normal text-xs">({links.length})</span>
+                                )}
+                            </h4>
+                            {!showAdd && (
+                                <button
+                                    onClick={() => { setShowAdd(true); setEditingIdx(null); }}
+                                    className="flex items-center gap-1.5 text-xs font-semibold text-white bg-accent-blue hover:bg-accent-hover px-3 py-1.5 rounded-lg transition-colors"
+                                >
+                                    <Plus size={13} /> Add Link
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Empty state */}
+                        {links.length === 0 && !showAdd && (
+                            <div className="text-center py-16">
+                                <div className="w-14 h-14 bg-gray-100 dark:bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <LinkIcon size={24} className="text-gray-300 dark:text-gray-600" />
+                                </div>
+                                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">No resources yet</p>
+                                <p className="text-xs text-gray-400 mt-1 max-w-xs mx-auto">
+                                    Add a rulebook, study guide, or any helpful link for members.
+                                </p>
+                                <button
+                                    onClick={() => setShowAdd(true)}
+                                    className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-accent-blue hover:bg-accent-hover px-5 py-2.5 rounded-xl transition-colors shadow-sm"
+                                >
+                                    <Plus size={15} /> Add First Link
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Link cards */}
+                        <div className="space-y-2">
+                            {links.map((link, i) => (
+                                <div
+                                    key={i}
+                                    className="group border border-gray-100 dark:border-dark-border rounded-xl overflow-hidden"
+                                >
+                                    {editingIdx === i ? (
+                                        /* Inline edit form */
+                                        <div className="p-4 bg-blue-50/60 dark:bg-blue-900/10 space-y-2.5">
+                                            <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Editing Link</p>
+                                            <input
+                                                autoFocus
+                                                value={editName}
+                                                onChange={e => setEditName(e.target.value)}
+                                                placeholder='Label  (e.g. "2025–2026 Rulebook")'
+                                                className={inputClass}
+                                            />
+                                            <input
+                                                value={editUrl}
+                                                onChange={e => setEditUrl(e.target.value)}
+                                                placeholder="https://..."
+                                                className={`${inputClass} font-mono`}
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter') saveEdit();
+                                                    if (e.key === 'Escape') setEditingIdx(null);
+                                                }}
+                                            />
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={saveEdit}
+                                                    disabled={!editUrl.trim()}
+                                                    className="flex items-center gap-1.5 px-4 py-2 bg-accent-blue text-white rounded-lg text-xs font-semibold disabled:opacity-40 hover:bg-accent-hover transition-colors"
+                                                >
+                                                    <Save size={12} /> Save Changes
+                                                </button>
+                                                <button
+                                                    onClick={() => setEditingIdx(null)}
+                                                    className="px-4 py-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 text-xs font-semibold"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        /* Read-only row */
+                                        <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/3 transition-colors">
+                                            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
+                                                <LinkIcon size={14} className="text-accent-blue" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-semibold text-gray-800 dark:text-white truncate">{link.name}</p>
+                                                <p className="text-xs text-gray-400 truncate font-mono">{link.url}</p>
+                                            </div>
+                                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                                <a
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-1.5 text-gray-400 hover:text-accent-blue hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                                    title="Open link"
+                                                >
+                                                    <ExternalLink size={13} />
+                                                </a>
+                                                <button
+                                                    onClick={() => startEdit(i)}
+                                                    className="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit2 size={13} />
+                                                </button>
+                                                <button
+                                                    onClick={() => removeLink(i)}
+                                                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={13} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Add form */}
+                        {showAdd && (
+                            <div className="mt-4 border border-blue-200 dark:border-blue-700/40 rounded-xl p-4 bg-blue-50/50 dark:bg-blue-900/10 space-y-3">
+                                <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">New Link</p>
+                                <input
+                                    autoFocus
+                                    value={addName}
+                                    onChange={e => setAddName(e.target.value)}
+                                    placeholder='Label  (e.g. "2025–2026 Rulebook")'
+                                    className={inputClass}
+                                />
+                                <input
+                                    value={addUrl}
+                                    onChange={e => setAddUrl(e.target.value)}
+                                    placeholder="https://..."
+                                    className={`${inputClass} font-mono`}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') addLink();
+                                        if (e.key === 'Escape') { setShowAdd(false); setAddName(''); setAddUrl(''); }
+                                    }}
+                                />
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={addLink}
+                                        disabled={!addUrl.trim()}
+                                        className="flex items-center gap-1.5 px-4 py-2 bg-accent-blue text-white rounded-lg text-sm font-semibold disabled:opacity-40 hover:bg-accent-hover transition-colors"
+                                    >
+                                        <Plus size={14} /> Add Link
+                                    </button>
+                                    <button
+                                        onClick={() => { setShowAdd(false); setAddName(''); setAddUrl(''); }}
+                                        className="px-4 py-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-semibold"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );
