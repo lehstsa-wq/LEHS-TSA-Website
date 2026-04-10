@@ -1327,14 +1327,17 @@ const CompetitionsTab: React.FC = () => {
 // ─── ATTENDANCE TAB ──────────────────────────────────────────────────────────
 
 const AttendanceTab: React.FC = () => {
-    const { meetings, addMeeting, deleteMeeting, members } = useData();
+    const { meetings, addMeeting, deleteMeeting, members, siteSettings, updateSiteSettings } = useData();
     const { confirm } = useModal();
     const [form, setForm] = useState({ title: '', date: '', time: '', location: '', pin: '', type: 'General' as const });
     const [expandedId, setExpandedId] = useState<string | null>(null);
+    const [webhookUrl, setWebhookUrl] = useState((siteSettings as any).sheetsWebhookUrl ?? '');
+    const [webhookSaving, setWebhookSaving] = useState(false);
+    const [webhookSaved, setWebhookSaved] = useState(false);
+    const [syncingId, setSyncingId] = useState<string | null>(null);
+    const [syncMsg, setSyncMsg] = useState<{ id: string; ok: boolean; text: string } | null>(null);
 
-    const generatePin = () => {
-        setForm(f => ({ ...f, pin: String(Math.floor(1000 + Math.random() * 9000)) }));
-    };
+    const generatePin = () => setForm(f => ({ ...f, pin: String(Math.floor(1000 + Math.random() * 9000)) }));
 
     const handleAdd = async () => {
         if (!form.title.trim() || !form.date || !form.pin.trim()) return;
@@ -1347,16 +1350,155 @@ const AttendanceTab: React.FC = () => {
         if (ok) await deleteMeeting(id);
     };
 
-    const memberMap = Object.fromEntries(members.map(m => [m.id, m.name]));
+    const memberMap = Object.fromEntries(members.map(m => [m.id, m]));
+
+    // ── CSV export ──────────────────────────────────────────────────────────
+    const exportCsv = (meeting: typeof meetings[0]) => {
+        const attendees = meeting.attendees.map(uid => ({ uid, member: memberMap[uid] }));
+        const rows = [
+            ['Meeting', 'Date', 'Time', 'Location', 'Name', 'Email', 'Grade', 'Member ID'],
+            ...attendees.map(({ uid, member: m }) => [
+                meeting.title,
+                meeting.date,
+                meeting.time ?? '',
+                meeting.location ?? '',
+                m?.name ?? uid,
+                m?.email ?? '',
+                m?.grade ?? '',
+                m?.memberId ?? '',
+            ]),
+        ];
+        if (attendees.length === 0) rows.push([meeting.title, meeting.date, meeting.time ?? '', meeting.location ?? '', '(no attendees)', '', '', '']);
+        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `attendance-${meeting.title.replace(/\s+/g, '-')}-${meeting.date}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const exportAllCsv = () => {
+        const rows = [['Meeting', 'Date', 'Time', 'Location', 'Type', 'Name', 'Email', 'Grade', 'Member ID']];
+        for (const m of meetings) {
+            if (m.attendees.length === 0) {
+                rows.push([m.title, m.date, m.time ?? '', m.location ?? '', m.type, '(no attendees)', '', '', '']);
+            } else {
+                for (const uid of m.attendees) {
+                    const mem = memberMap[uid];
+                    rows.push([m.title, m.date, m.time ?? '', m.location ?? '', m.type, mem?.name ?? uid, mem?.email ?? '', mem?.grade ?? '', mem?.memberId ?? '']);
+                }
+            }
+        }
+        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `attendance-all-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    // ── Google Sheets sync via Apps Script webhook ───────────────────────────
+    const saveWebhook = async () => {
+        setWebhookSaving(true);
+        await updateSiteSettings({ ...siteSettings, sheetsWebhookUrl: webhookUrl.trim() } as any);
+        setWebhookSaving(false);
+        setWebhookSaved(true);
+        setTimeout(() => setWebhookSaved(false), 2500);
+    };
+
+    const syncToSheets = async (meeting: typeof meetings[0]) => {
+        const url = ((siteSettings as any).sheetsWebhookUrl ?? '').trim();
+        if (!url) return;
+        setSyncingId(meeting.id);
+        setSyncMsg(null);
+        try {
+            const attendees = meeting.attendees.map(id => {
+                const m = memberMap[id];
+                return { name: m?.name ?? id, email: m?.email ?? '', grade: m?.grade ?? '', memberId: m?.memberId ?? '' };
+            });
+            await fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meeting: meeting.title, date: meeting.date, time: meeting.time, location: meeting.location, type: meeting.type, attendees }),
+            });
+            setSyncMsg({ id: meeting.id, ok: true, text: 'Synced — check your Sheet.' });
+        } catch {
+            setSyncMsg({ id: meeting.id, ok: false, text: 'Sync failed. Check the webhook URL.' });
+        } finally {
+            setSyncingId(null);
+        }
+    };
+
+    const hasWebhook = !!((siteSettings as any).sheetsWebhookUrl ?? '').trim();
 
     return (
         <div className="space-y-6 animate-fade-in">
-            <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Attendance Tracker</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create meetings with PINs. Members check in at <span className="font-mono text-accent-blue">/check-in</span>.</p>
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Attendance Tracker</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Members check in at <a href="/#/check-in" target="_blank" className="font-mono text-accent-blue hover:underline">/check-in</a> using the meeting PIN.
+                    </p>
+                </div>
+                {meetings.length > 0 && (
+                    <button onClick={exportAllCsv} className={`${buttonClass} bg-green-600 text-white hover:bg-green-700`}>
+                        <FileText size={14} /> Export All CSV
+                    </button>
+                )}
             </div>
 
-            {/* Add meeting form */}
+            {/* Google Sheets webhook */}
+            <div className={cardClass}>
+                <div className="flex items-center gap-2 mb-1">
+                    <ExternalLink size={14} className="text-green-500" />
+                    <h3 className="font-bold text-gray-900 dark:text-white text-sm">Google Sheets Sync</h3>
+                    {hasWebhook && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30">Connected</span>}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    Paste a <strong>Google Apps Script</strong> Web App URL to push attendance directly to a Google Sheet with one click.{' '}
+                    <span className="text-accent-blue cursor-pointer hover:underline" onClick={() => window.open('https://developers.google.com/apps-script/guides/web', '_blank')}>
+                        How to set this up ↗
+                    </span>
+                </p>
+                <div className="bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border rounded-xl p-3 mb-3 font-mono text-xs text-gray-500 dark:text-gray-400 overflow-x-auto whitespace-pre">
+{`// Paste this into Google Apps Script → New Project
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName('Attendance') ||
+    SpreadsheetApp.getActiveSpreadsheet().insertSheet('Attendance');
+  if (sheet.getLastRow() === 0)
+    sheet.appendRow(['Meeting','Date','Time','Location','Type','Name','Email','Grade','Member ID']);
+  data.attendees.forEach(a => sheet.appendRow([
+    data.meeting, data.date, data.time, data.location, data.type,
+    a.name, a.email, a.grade, a.memberId
+  ]));
+  return ContentService.createTextOutput('OK');
+}`}
+                </div>
+                <div className="flex gap-2">
+                    <input
+                        value={webhookUrl}
+                        onChange={e => setWebhookUrl(e.target.value)}
+                        placeholder="https://script.google.com/macros/s/.../exec"
+                        className={`${inputClass} flex-1 font-mono text-xs`}
+                    />
+                    <button
+                        onClick={saveWebhook}
+                        disabled={webhookSaving}
+                        className={`${buttonClass} shrink-0 ${webhookSaved ? 'bg-green-600 text-white' : 'bg-accent-blue text-white hover:bg-accent-hover'} disabled:opacity-40`}
+                    >
+                        <Save size={13} /> {webhookSaved ? 'Saved!' : webhookSaving ? 'Saving…' : 'Save'}
+                    </button>
+                </div>
+            </div>
+
+            {/* Create meeting form */}
             <div className={cardClass}>
                 <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-sm">Create Meeting</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -1397,12 +1539,12 @@ const AttendanceTab: React.FC = () => {
 
             {/* Meeting list */}
             {meetings.length === 0 ? (
-                <div className="text-center py-16 text-gray-400 text-sm">No meetings yet.</div>
+                <div className="text-center py-16 text-gray-400 text-sm">No meetings yet. Create one above.</div>
             ) : (
                 <div className="space-y-3">
                     {meetings.map(m => {
                         const isOpen = expandedId === m.id;
-                        const attendeeNames = m.attendees.map(id => memberMap[id] ?? id);
+                        const attendeeMems = m.attendees.map(id => memberMap[id]);
                         return (
                             <div key={m.id} className={cardClass + ' p-0 overflow-hidden'}>
                                 <button onClick={() => setExpandedId(isOpen ? null : m.id)}
@@ -1417,27 +1559,71 @@ const AttendanceTab: React.FC = () => {
                                             <p className="text-xs text-gray-500">{m.date}{m.time ? ` · ${m.time}` : ''}{m.location ? ` · ${m.location}` : ''}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 shrink-0">
-                                        <span className="font-mono text-sm font-bold text-accent-blue bg-accent-blue/10 px-3 py-1 rounded-lg tracking-widest">
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span className="font-mono text-sm font-bold text-accent-blue bg-accent-blue/10 px-3 py-1 rounded-lg tracking-widest hidden sm:block">
                                             PIN: {m.pin}
                                         </span>
+                                        {/* CSV export */}
+                                        <button
+                                            onClick={e => { e.stopPropagation(); exportCsv(m); }}
+                                            className="p-1.5 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                                            title="Export CSV"
+                                        >
+                                            <FileText size={14} />
+                                        </button>
+                                        {/* Sheets sync */}
+                                        {hasWebhook && (
+                                            <button
+                                                onClick={e => { e.stopPropagation(); syncToSheets(m); }}
+                                                disabled={syncingId === m.id}
+                                                className="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors disabled:opacity-40"
+                                                title="Sync to Google Sheets"
+                                            >
+                                                <ExternalLink size={14} />
+                                            </button>
+                                        )}
                                         <button onClick={e => { e.stopPropagation(); handleDelete(m.id); }} className="p-1.5 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                                             <Trash2 size={14} />
                                         </button>
                                         {isOpen ? <ChevronUp size={15} className="text-gray-400" /> : <ChevronDown size={15} className="text-gray-400" />}
                                     </div>
                                 </button>
+                                {/* Sync feedback */}
+                                {syncMsg?.id === m.id && (
+                                    <div className={`mx-5 mb-2 text-xs font-medium px-3 py-2 rounded-lg ${syncMsg.ok ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/20 text-red-500'}`}>
+                                        {syncMsg.text}
+                                    </div>
+                                )}
                                 {isOpen && (
-                                    <div className="px-5 pb-4 border-t border-gray-100 dark:border-dark-border pt-3">
-                                        {attendeeNames.length === 0 ? (
+                                    <div className="px-5 pb-5 border-t border-gray-100 dark:border-dark-border pt-4 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Attendees ({m.attendees.length})</p>
+                                            <span className="font-mono text-xs font-bold text-accent-blue bg-accent-blue/10 px-2.5 py-1 rounded-lg sm:hidden">PIN: {m.pin}</span>
+                                        </div>
+                                        {attendeeMems.length === 0 ? (
                                             <p className="text-xs text-gray-400 italic">No check-ins yet.</p>
                                         ) : (
-                                            <div className="flex flex-wrap gap-2">
-                                                {attendeeNames.map((name, i) => (
-                                                    <span key={i} className="text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-2.5 py-1 rounded-full font-medium">
-                                                        {name}
-                                                    </span>
-                                                ))}
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-xs">
+                                                    <thead>
+                                                        <tr className="text-left text-gray-400 border-b border-gray-100 dark:border-dark-border">
+                                                            <th className="pb-2 font-semibold pr-4">Name</th>
+                                                            <th className="pb-2 font-semibold pr-4 hidden sm:table-cell">Email</th>
+                                                            <th className="pb-2 font-semibold pr-4 hidden sm:table-cell">Grade</th>
+                                                            <th className="pb-2 font-semibold">Member ID</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
+                                                        {attendeeMems.map((mem, i) => (
+                                                            <tr key={i} className="text-gray-700 dark:text-gray-300">
+                                                                <td className="py-1.5 pr-4 font-medium">{mem?.name ?? m.attendees[i]}</td>
+                                                                <td className="py-1.5 pr-4 text-gray-400 hidden sm:table-cell">{mem?.email ?? '—'}</td>
+                                                                <td className="py-1.5 pr-4 text-gray-400 hidden sm:table-cell">{mem?.grade ?? '—'}</td>
+                                                                <td className="py-1.5 font-mono text-gray-400">{mem?.memberId ?? '—'}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         )}
                                     </div>

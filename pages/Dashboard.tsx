@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Bell, FileText, Calendar, Trophy, User, BookOpen, Zap, Star, ExternalLink, Users } from 'lucide-react';
+import { Shield, Bell, FileText, Calendar, Trophy, User, BookOpen, Zap, Star, ExternalLink, Users, QrCode } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import AIAdvisor from '../components/AIAdvisor';
@@ -76,17 +76,33 @@ const Dashboard: React.FC = () => {
             {/* Left: Main Portal Content */}
             <div className="lg:col-span-8 space-y-8">
                 
+                {/* Check-in banner */}
+                <Link to="/check-in"
+                  className="flex items-center gap-4 p-4 rounded-2xl border border-accent-blue/30 bg-accent-blue/5 hover:bg-accent-blue/10 transition-all group shadow-sm"
+                >
+                  <div className="w-12 h-12 bg-accent-blue text-white rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-lg shadow-accent-blue/30">
+                    <QrCode size={22} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-gray-900 dark:text-white text-sm">Meeting Check-In</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Enter your PIN to mark attendance for today's meeting</p>
+                  </div>
+                  <span className="text-xs font-bold text-accent-blue px-3 py-1.5 rounded-lg bg-accent-blue/10 shrink-0 group-hover:bg-accent-blue group-hover:text-white transition-all">
+                    Check In →
+                  </span>
+                </Link>
+
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     { label: 'Resources', icon: BookOpen, path: '/resources', color: 'blue' },
                     { label: 'Updates', icon: Bell, path: '/updates', color: 'purple' },
                     { label: 'Events', icon: Calendar, path: '/events', color: 'green' },
-                    { label: 'Awards', icon: Trophy, path: '/gallery', color: 'yellow' }
+                    { label: 'Directory', icon: Users, path: '/directory', color: 'yellow' }
                   ].map((item, i) => (
-                    <Link 
+                    <Link
                       key={i}
-                      to={item.path} 
+                      to={item.path}
                       className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border p-5 rounded-2xl transition-all group shadow-sm hover:border-accent-blue/40 hover:-translate-y-1 hover:shadow-xl"
                     >
                       <div className="w-12 h-12 bg-accent-blue/10 text-accent-blue rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent-blue group-hover:text-white transition-all">
