@@ -514,8 +514,8 @@ const AccountInfoSection: React.FC = () => {
       </div>
       <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {items.map(({ icon: Icon, label, value, badge }) => (
-          <div key={label} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-white/3 rounded-xl border border-gray-100 dark:border-dark-border">
-            <div className="p-2 bg-white dark:bg-dark-surface rounded-lg shadow-sm shrink-0">
+          <div key={label} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-dark-border">
+            <div className="p-2 bg-gray-100 dark:bg-white/10 rounded-lg shrink-0">
               <Icon size={15} className="text-gray-500 dark:text-gray-400" />
             </div>
             <div className="min-w-0">
