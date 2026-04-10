@@ -9,7 +9,7 @@ import {
   addDoc
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport } from '../types';
+import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport, CompetitionResult, Meeting } from '../types';
 import { useAuth } from './AuthContext';
 
 // --- MOCK DATA ---
@@ -122,6 +122,19 @@ interface DataContextType {
   competitionLinks: Record<string, Array<{ url: string; name: string }>>;
   updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
 
+  // Competition Results (trophy wall)
+  competitionResults: CompetitionResult[];
+  addCompetitionResult: (result: Omit<CompetitionResult, 'id'>) => Promise<void>;
+  updateCompetitionResult: (id: string, data: Partial<CompetitionResult>) => Promise<void>;
+  deleteCompetitionResult: (id: string) => Promise<void>;
+
+  // Meetings & Attendance
+  meetings: Meeting[];
+  addMeeting: (meeting: Omit<Meeting, 'id' | 'attendees'>) => Promise<void>;
+  updateMeeting: (id: string, data: Partial<Meeting>) => Promise<void>;
+  deleteMeeting: (id: string) => Promise<void>;
+  checkInMeeting: (pin: string, userId: string, userName: string) => Promise<{ success: boolean; meetingTitle?: string; error?: string }>;
+
   officersList: Officer[];
   eventsList: Event[];
   projectsList: Project[];
@@ -187,6 +200,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // State for Competition Links (multiple per competition)
   const [competitionLinks, setCompetitionLinks] = useState<Record<string, Array<{ url: string; name: string }>>>({});
+
+  // Competition Results & Meetings
+  const [competitionResults, setCompetitionResults] = useState<CompetitionResult[]>([]);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
   
   const [officersList, setOfficersList] = useState<Officer[]>(MOCK_OFFICERS);
   const [eventsList, setEventsList] = useState<Event[]>(MOCK_EVENTS);
@@ -315,6 +332,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         setCompetitionLinks(normalized);
       }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Sync Competition Results from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "competition_results"), (snapshot) => {
+      const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CompetitionResult));
+      items.sort((a, b) => b.year.localeCompare(a.year));
+      setCompetitionResults(items);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Sync Meetings from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "meetings"), (snapshot) => {
+      const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meeting));
+      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      setMeetings(items);
     });
     return () => unsubscribe();
   }, []);
@@ -734,6 +771,59 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   };
 
+  // ── Competition Results ──────────────────────────────────────────────────
+  const addCompetitionResult = async (result: Omit<CompetitionResult, 'id'>) => {
+    try {
+      await addDoc(collection(db, "competition_results"), result);
+    } catch (e) { console.error("Error adding result:", e); throw e; }
+  };
+
+  const updateCompetitionResult = async (id: string, data: Partial<CompetitionResult>) => {
+    try {
+      await setDoc(doc(db, "competition_results", id), data, { merge: true });
+    } catch (e) { console.error("Error updating result:", e); throw e; }
+  };
+
+  const deleteCompetitionResult = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "competition_results", id));
+    } catch (e) { console.error("Error deleting result:", e); throw e; }
+  };
+
+  // ── Meetings & Attendance ────────────────────────────────────────────────
+  const addMeeting = async (meeting: Omit<Meeting, 'id' | 'attendees'>) => {
+    try {
+      await addDoc(collection(db, "meetings"), { ...meeting, attendees: [] });
+    } catch (e) { console.error("Error adding meeting:", e); throw e; }
+  };
+
+  const updateMeeting = async (id: string, data: Partial<Meeting>) => {
+    try {
+      await setDoc(doc(db, "meetings", id), data, { merge: true });
+    } catch (e) { console.error("Error updating meeting:", e); throw e; }
+  };
+
+  const deleteMeeting = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "meetings", id));
+    } catch (e) { console.error("Error deleting meeting:", e); throw e; }
+  };
+
+  const checkInMeeting = async (pin: string, userId: string, _userName: string): Promise<{ success: boolean; meetingTitle?: string; error?: string }> => {
+    const today = new Date().toISOString().split('T')[0];
+    const match = meetings.find(m => m.pin === pin.trim() && m.date === today);
+    if (!match) return { success: false, error: 'No meeting found with that PIN today.' };
+    if (match.attendees.includes(userId)) return { success: false, error: `You're already checked in to ${match.title}.` };
+    try {
+      const updated = [...match.attendees, userId];
+      await setDoc(doc(db, "meetings", match.id), { attendees: updated }, { merge: true });
+      return { success: true, meetingTitle: match.title };
+    } catch (e) {
+      console.error("Check-in error:", e);
+      return { success: false, error: 'Check-in failed. Please try again.' };
+    }
+  };
+
   const subscribe = async (email: string) => {
     try {
       // 1. Save to Firestore
@@ -764,6 +854,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <DataContext.Provider value={{ 
       announcements, members, resources, officerNotes, internalDeadlines, siteSettings, competitionInterests, problemReports,
       competitionLinks, updateCompetitionLinks,
+      competitionResults, addCompetitionResult, updateCompetitionResult, deleteCompetitionResult,
+      meetings, addMeeting, updateMeeting, deleteMeeting, checkInMeeting,
       officersList, eventsList, projectsList, galleryList, accessCodes,
       addAnnouncement, updateAnnouncement, deleteAnnouncement,
       updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,

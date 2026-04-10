@@ -7,7 +7,7 @@ import {
   TrendingUp, AlertCircle, UserPlus, Activity, Archive,
   Star, FileText, ExternalLink,
   Link as LinkIcon, Save, ChevronDown, ChevronUp,
-  AlertOctagon, CheckCircle,
+  AlertOctagon, CheckCircle, Award,
   Cpu, Hammer, Layers, Plane, Zap, PenTool
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
@@ -17,7 +17,7 @@ import { Officer, Announcement } from '../types';
 import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
 
-type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings';
+type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results';
 
 // Shared Styles
 const cardClass = "bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl shadow-sm p-6";
@@ -53,6 +53,8 @@ const AdminPanel: React.FC = () => {
               { id: 'events', label: 'Events', icon: Calendar },
               { id: 'projects', label: 'Projects', icon: FolderOpen },
               { id: 'gallery', label: 'Gallery', icon: ImageIcon },
+              { id: 'attendance', label: 'Attendance', icon: CheckCircle },
+              { id: 'results', label: 'Competition Results', icon: TrendingUp },
               { id: 'resources', label: 'Resources', icon: LinkIcon },
               { id: 'settings', label: 'Settings', icon: Settings },
             ].map((item) => (
@@ -87,6 +89,8 @@ const AdminPanel: React.FC = () => {
            {activeTab === 'competitions' && <CompetitionsTab />}
            {activeTab === 'interests' && <InterestsTab />}
            {activeTab === 'resources' && <ResourcesTab />}
+           {activeTab === 'attendance' && <AttendanceTab />}
+           {activeTab === 'results' && <ResultsTab />}
            {activeTab === 'settings' && <SettingsTab />}
         </div>
       </main>
@@ -1316,6 +1320,284 @@ const CompetitionsTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+        </div>
+    );
+};
+
+// ─── ATTENDANCE TAB ──────────────────────────────────────────────────────────
+
+const AttendanceTab: React.FC = () => {
+    const { meetings, addMeeting, deleteMeeting, members } = useData();
+    const { confirm } = useModal();
+    const [form, setForm] = useState({ title: '', date: '', time: '', location: '', pin: '', type: 'General' as const });
+    const [expandedId, setExpandedId] = useState<string | null>(null);
+
+    const generatePin = () => {
+        setForm(f => ({ ...f, pin: String(Math.floor(1000 + Math.random() * 9000)) }));
+    };
+
+    const handleAdd = async () => {
+        if (!form.title.trim() || !form.date || !form.pin.trim()) return;
+        await addMeeting({ title: form.title.trim(), date: form.date, time: form.time, location: form.location.trim(), pin: form.pin.trim(), type: form.type, description: '' });
+        setForm({ title: '', date: '', time: '', location: '', pin: '', type: 'General' });
+    };
+
+    const handleDelete = async (id: string) => {
+        const ok = await confirm('Delete Meeting', 'Remove this meeting and all attendance records?');
+        if (ok) await deleteMeeting(id);
+    };
+
+    const memberMap = Object.fromEntries(members.map(m => [m.id, m.name]));
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Attendance Tracker</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create meetings with PINs. Members check in at <span className="font-mono text-accent-blue">/check-in</span>.</p>
+            </div>
+
+            {/* Add meeting form */}
+            <div className={cardClass}>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-sm">Create Meeting</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label className={labelClass}>Title</label>
+                        <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. General Meeting" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Type</label>
+                        <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as typeof form.type }))} className={inputClass}>
+                            {['General', 'Officer', 'Competition', 'Workshop'].map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className={labelClass}>Date</label>
+                        <input type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Time</label>
+                        <input type="time" value={form.time} onChange={e => setForm(f => ({ ...f, time: e.target.value }))} className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Location</label>
+                        <input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder="Room 204" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Check-in PIN</label>
+                        <div className="flex gap-2">
+                            <input value={form.pin} onChange={e => setForm(f => ({ ...f, pin: e.target.value.replace(/\D/g, '').slice(0, 6) }))} placeholder="4–6 digits" className={`${inputClass} font-mono tracking-widest`} maxLength={6} />
+                            <button onClick={generatePin} className="px-3 py-2 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 text-xs font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors shrink-0">Generate</button>
+                        </div>
+                    </div>
+                </div>
+                <button onClick={handleAdd} disabled={!form.title.trim() || !form.date || !form.pin.trim()} className={`${buttonClass} bg-accent-blue text-white hover:bg-accent-hover disabled:opacity-40`}>
+                    <Plus size={15} /> Create Meeting
+                </button>
+            </div>
+
+            {/* Meeting list */}
+            {meetings.length === 0 ? (
+                <div className="text-center py-16 text-gray-400 text-sm">No meetings yet.</div>
+            ) : (
+                <div className="space-y-3">
+                    {meetings.map(m => {
+                        const isOpen = expandedId === m.id;
+                        const attendeeNames = m.attendees.map(id => memberMap[id] ?? id);
+                        return (
+                            <div key={m.id} className={cardClass + ' p-0 overflow-hidden'}>
+                                <button onClick={() => setExpandedId(isOpen ? null : m.id)}
+                                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-center min-w-[48px]">
+                                            <p className="text-xl font-black text-accent-blue leading-none">{m.attendees.length}</p>
+                                            <p className="text-[10px] text-gray-400">present</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-gray-900 dark:text-white text-sm">{m.title}</p>
+                                            <p className="text-xs text-gray-500">{m.date}{m.time ? ` · ${m.time}` : ''}{m.location ? ` · ${m.location}` : ''}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3 shrink-0">
+                                        <span className="font-mono text-sm font-bold text-accent-blue bg-accent-blue/10 px-3 py-1 rounded-lg tracking-widest">
+                                            PIN: {m.pin}
+                                        </span>
+                                        <button onClick={e => { e.stopPropagation(); handleDelete(m.id); }} className="p-1.5 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                            <Trash2 size={14} />
+                                        </button>
+                                        {isOpen ? <ChevronUp size={15} className="text-gray-400" /> : <ChevronDown size={15} className="text-gray-400" />}
+                                    </div>
+                                </button>
+                                {isOpen && (
+                                    <div className="px-5 pb-4 border-t border-gray-100 dark:border-dark-border pt-3">
+                                        {attendeeNames.length === 0 ? (
+                                            <p className="text-xs text-gray-400 italic">No check-ins yet.</p>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {attendeeNames.map((name, i) => (
+                                                    <span key={i} className="text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-2.5 py-1 rounded-full font-medium">
+                                                        {name}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// ─── RESULTS TAB ─────────────────────────────────────────────────────────────
+
+const PLACEMENT_OPTIONS = ['1st Place', '2nd Place', '3rd Place', 'State Qualifier', 'Nationals Qualifier', 'Semifinalist', 'Finalist', 'Participant'];
+const LEVEL_OPTIONS: Array<'Regional' | 'State' | 'National'> = ['Regional', 'State', 'National'];
+
+const levelColors: Record<string, string> = {
+    Regional: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900/30',
+    State:    'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-900/30',
+    National: 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-100 dark:border-yellow-900/30',
+};
+const placementColors: Record<string, string> = {
+    '1st Place': 'text-yellow-500',
+    '2nd Place': 'text-gray-400',
+    '3rd Place': 'text-amber-600',
+};
+
+const ResultsTab: React.FC = () => {
+    const { competitionResults, addCompetitionResult, deleteCompetitionResult } = useData();
+    const { confirm } = useModal();
+    const currentYear = new Date().getFullYear().toString();
+    const [form, setForm] = useState({
+        competition: '', placement: '1st Place', level: 'Regional' as 'Regional' | 'State' | 'National',
+        year: currentYear, members: '', notes: ''
+    });
+    const [yearFilter, setYearFilter] = useState('All');
+
+    const years = ['All', ...Array.from(new Set(competitionResults.map(r => r.year))).sort((a, b) => b.localeCompare(a))];
+    const filtered = yearFilter === 'All' ? competitionResults : competitionResults.filter(r => r.year === yearFilter);
+
+    const handleAdd = async () => {
+        if (!form.competition.trim()) return;
+        await addCompetitionResult({
+            competition: form.competition.trim(),
+            placement: form.placement,
+            level: form.level,
+            year: form.year,
+            members: form.members.split(',').map(s => s.trim()).filter(Boolean),
+            notes: form.notes.trim(),
+        });
+        setForm({ competition: '', placement: '1st Place', level: 'Regional', year: currentYear, members: '', notes: '' });
+    };
+
+    const handleDelete = async (id: string) => {
+        const ok = await confirm('Delete Result', 'Remove this competition result?');
+        if (ok) await deleteCompetitionResult(id);
+    };
+
+    // Group by level for display
+    const nationals = filtered.filter(r => r.level === 'National');
+    const state     = filtered.filter(r => r.level === 'State');
+    const regional  = filtered.filter(r => r.level === 'Regional');
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Competition Results</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Track placements at regionals, state, and nationals — displayed on the public site.</p>
+            </div>
+
+            {/* Add form */}
+            <div className={cardClass}>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-sm">Add Result</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label className={labelClass}>Competition</label>
+                        <input value={form.competition} onChange={e => setForm(f => ({ ...f, competition: e.target.value }))} placeholder="e.g. Webmaster" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Placement</label>
+                        <select value={form.placement} onChange={e => setForm(f => ({ ...f, placement: e.target.value }))} className={inputClass}>
+                            {PLACEMENT_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className={labelClass}>Level</label>
+                        <select value={form.level} onChange={e => setForm(f => ({ ...f, level: e.target.value as typeof form.level }))} className={inputClass}>
+                            {LEVEL_OPTIONS.map(l => <option key={l} value={l}>{l}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className={labelClass}>Year</label>
+                        <input value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="2025" className={inputClass} />
+                    </div>
+                    <div className="sm:col-span-2">
+                        <label className={labelClass}>Members (comma separated)</label>
+                        <input value={form.members} onChange={e => setForm(f => ({ ...f, members: e.target.value }))} placeholder="Alex Rivera, Jordan Lee" className={inputClass} />
+                    </div>
+                    <div className="sm:col-span-2">
+                        <label className={labelClass}>Notes (optional)</label>
+                        <input value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Any extra context…" className={inputClass} />
+                    </div>
+                </div>
+                <button onClick={handleAdd} disabled={!form.competition.trim()} className={`${buttonClass} bg-accent-blue text-white hover:bg-accent-hover disabled:opacity-40`}>
+                    <Plus size={15} /> Add Result
+                </button>
+            </div>
+
+            {/* Year filter */}
+            {years.length > 1 && (
+                <div className="flex gap-2 flex-wrap">
+                    {years.map(y => (
+                        <button key={y} onClick={() => setYearFilter(y)}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${yearFilter === y ? 'bg-accent-blue text-white' : 'bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border text-gray-600 dark:text-gray-400 hover:border-accent-blue/50'}`}>
+                            {y}
+                        </button>
+                    ))}
+                </div>
+            )}
+
+            {/* Results grouped by level */}
+            {filtered.length === 0 ? (
+                <div className="text-center py-16 text-gray-400 text-sm">No results recorded yet.</div>
+            ) : (
+                <div className="space-y-6">
+                    {([['National', nationals], ['State', state], ['Regional', regional]] as [string, typeof filtered][]).map(([level, items]) =>
+                        items.length === 0 ? null : (
+                            <div key={level}>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${levelColors[level]}`}>{level}</span>
+                                    <span className="text-xs text-gray-400">{items.length} result{items.length !== 1 ? 's' : ''}</span>
+                                </div>
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {items.map(r => (
+                                        <div key={r.id} className={`${cardClass} relative group`}>
+                                            <button onClick={() => handleDelete(r.id)} className="absolute top-3 right-3 p-1.5 opacity-0 group-hover:opacity-100 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all">
+                                                <Trash2 size={13} />
+                                            </button>
+                                            <div className="flex items-start gap-3 mb-3">
+                                                <Award size={18} className={placementColors[r.placement] ?? 'text-accent-blue'} />
+                                                <div>
+                                                    <p className={`text-sm font-black ${placementColors[r.placement] ?? 'text-gray-900 dark:text-white'}`}>{r.placement}</p>
+                                                    <p className="text-xs text-gray-500">{r.year}</p>
+                                                </div>
+                                            </div>
+                                            <p className="font-bold text-gray-900 dark:text-white text-sm mb-2">{r.competition}</p>
+                                            {r.members.length > 0 && (
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">{r.members.join(', ')}</p>
+                                            )}
+                                            {r.notes && <p className="text-xs text-gray-400 mt-1 italic">{r.notes}</p>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )
+                    )}
+                </div>
+            )}
         </div>
     );
 };

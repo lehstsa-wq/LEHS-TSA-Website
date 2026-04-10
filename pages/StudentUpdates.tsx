@@ -1,12 +1,22 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Pin, Calendar, User, FileText, ExternalLink } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 import { SEO } from '../components/SEO';
 
 const StudentUpdates: React.FC = () => {
   const { announcements } = useData();
+  const { user } = useAuth();
   const [filter, setFilter] = useState('All');
+
+  // Mark all current announcements as read when page is visited
+  useEffect(() => {
+    if (!user) return;
+    const key = `lehs-seen-${user.id}`;
+    const ids = announcements.map(a => a.id);
+    localStorage.setItem(key, JSON.stringify(ids));
+  }, [announcements, user]);
 
   const filteredUpdates = filter === 'All' 
     ? announcements 

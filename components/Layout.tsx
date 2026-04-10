@@ -37,6 +37,7 @@ const NAV_GROUPS = [
     label: 'Connect',
     links: [
       { name: 'Resources', path: '/resources', icon: BookOpen, desc: 'Guides, PDFs & links' },
+      { name: 'Directory', path: '/directory', icon: Users,    desc: 'Member roster & skills' },
       { name: 'Join',      path: '/join',      icon: Users,    desc: 'Become a member' },
       { name: 'Contact',   path: '/contact',   icon: Phone,    desc: 'Get in touch' },
     ]
@@ -58,8 +59,17 @@ export const Navbar: React.FC = () => {
   const searchRef  = useRef<HTMLInputElement>(null);
   const location   = useLocation();
   const navigate   = useNavigate();
-  const { logout, isAuthenticated } = useAuth();
-  const { siteSettings } = useData();
+  const { logout, isAuthenticated, user } = useAuth();
+  const { siteSettings, announcements } = useData();
+
+  // Unread announcement count — persisted in localStorage per user
+  const unreadCount = (() => {
+    if (!user) return 0;
+    try {
+      const seen: string[] = JSON.parse(localStorage.getItem(`lehs-seen-${user.id}`) ?? '[]');
+      return announcements.filter(a => !seen.includes(a.id)).length;
+    } catch { return 0; }
+  })();
 
   /* Scroll shadow */
   useEffect(() => {
@@ -235,10 +245,15 @@ export const Navbar: React.FC = () => {
                 <div className="flex items-center gap-3 ml-1 pl-3 border-l border-space-500/50">
                   <Link
                     to="/dashboard"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-medium shadow-glow-blue transition-all duration-200"
+                    className="relative flex items-center gap-2 px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-medium shadow-glow-blue transition-all duration-200"
                   >
                     <LayoutDashboard size={15} />
                     Dashboard
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow-md animate-pulse">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
                   </Link>
                   <button
                     onClick={() => { logout(); navigate('/'); }}
@@ -352,8 +367,13 @@ export const Navbar: React.FC = () => {
                 {isAuthenticated ? (
                   <>
                     <Link to="/dashboard" onClick={() => setMobileOpen(false)}
-                      className="btn-primary w-full justify-center text-sm py-2.5">
+                      className="relative btn-primary w-full justify-center text-sm py-2.5">
                       <LayoutDashboard size={16} /> Dashboard
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow-md">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
                     </Link>
                     <button onClick={() => { logout(); navigate('/'); setMobileOpen(false); }}
                       className="btn-secondary w-full justify-center text-sm py-2.5">

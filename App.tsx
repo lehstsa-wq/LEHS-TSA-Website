@@ -29,6 +29,8 @@ import StudentUpdates from './pages/StudentUpdates';
 import AdminPanel from './pages/AdminPanel';
 import Settings from './pages/Settings';
 import Interests from './pages/Interests';
+import MemberDirectory from './pages/MemberDirectory';
+import CheckIn from './pages/CheckIn';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -114,14 +116,23 @@ const App: React.FC = () => {
                       </ProtectedRoute>
                     } 
                   />
-                  <Route 
-                    path="/admin" 
+                  <Route
+                    path="/admin"
                     element={
                       <ProtectedRoute requireOfficer={true}>
                         <AdminPanel />
                       </ProtectedRoute>
-                    } 
+                    }
                   />
+                  <Route
+                    path="/directory"
+                    element={
+                      <ProtectedRoute>
+                        <MemberDirectory />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/check-in" element={<CheckIn />} />
                 </Routes>
               </Layout>
               <BackToTop />

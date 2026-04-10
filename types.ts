@@ -57,6 +57,8 @@ export interface ResourceLink {
   accessLevel: 'member' | 'officer';
   description: string;
   dateAdded: string;
+  pinned?: boolean;
+  downloadCount?: number;
 }
 
 // Auth & Portal Types
@@ -173,4 +175,26 @@ export interface ProblemReport {
   priority: 'Low' | 'Medium' | 'High';
   status: 'Open' | 'In Progress' | 'Resolved';
   submittedDate: string;
+}
+
+export interface CompetitionResult {
+  id: string;
+  competition: string;
+  placement: string; // '1st Place', '2nd Place', 'State Qualifier', 'Nationals Qualifier', etc.
+  level: 'Regional' | 'State' | 'National';
+  year: string;
+  members: string[];
+  notes?: string;
+}
+
+export interface Meeting {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  description?: string;
+  pin: string; // 4–6 digit check-in PIN
+  attendees: string[]; // user IDs who checked in
+  type: 'General' | 'Officer' | 'Competition' | 'Workshop';
 }
