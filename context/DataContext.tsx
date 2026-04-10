@@ -302,7 +302,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "settings", "competition_links"), (doc) => {
       if (doc.exists()) {
-        setCompetitionLinks(doc.data() as Record<string, Array<{ url: string; name: string }>>);
+        const raw = doc.data() as Record<string, unknown>;
+        // Migrate: old format stored a single {url,name} object; new format is an array
+        const normalized: Record<string, Array<{ url: string; name: string }>> = {};
+        for (const [id, val] of Object.entries(raw)) {
+          if (Array.isArray(val)) {
+            normalized[id] = val as Array<{ url: string; name: string }>;
+          } else if (val && typeof val === 'object' && 'url' in val) {
+            const v = val as { url: string; name?: string };
+            if (v.url) normalized[id] = [{ url: v.url, name: v.name || v.url }];
+          }
+        }
+        setCompetitionLinks(normalized);
       }
     });
     return () => unsubscribe();
