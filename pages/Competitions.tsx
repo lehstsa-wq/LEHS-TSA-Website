@@ -38,69 +38,41 @@ const CATEGORIES = [
   { id: 'leadership', name: 'Leadership' },
 ];
 
-/* ── LEHS TSA Chapter Teams ── */
-const TSA_TEAMS = [
+/* ── TEAMS competition components ── */
+const TEAMS_COMPONENTS = [
   {
-    id: 'team-coding',
-    name: 'Coding Team',
-    competition: 'Coding',
-    category: 'ict',
-    members: ['Sai Vemula', 'Aryan Patel', 'Ethan Kim'],
-    status: 'active' as const,
-    description: 'Building a full-stack web application for the annual coding challenge.',
+    id: 'design-build',
+    title: 'Design / Build',
+    description: 'Teams design and construct a physical solution to an engineering challenge based on the annual theme. Judged on creativity, functionality, and engineering principles.',
+    icon: Hammer,
+    color: '#f59e0b',
+    bg: 'rgba(245,158,11,0.25)',
   },
   {
-    id: 'team-animatronics',
-    name: 'Animatronics Team',
-    competition: 'Animatronics',
-    category: 'stem',
-    members: ['Jake Torres', 'Mia Chen', 'Liam Park'],
-    status: 'active' as const,
-    description: 'Designing and fabricating an animatronic creature with servo-driven motion control.',
+    id: 'multiple-choice',
+    title: 'Multiple Choice',
+    description: 'An individual written exam covering engineering aptitude, mathematics, and science concepts relevant to the annual theme.',
+    icon: FileText,
+    color: '#3b82f6',
+    bg: 'rgba(59,130,246,0.25)',
   },
   {
-    id: 'team-video-game',
-    name: 'Video Game Design',
-    competition: 'Video Game Design',
-    category: 'design',
-    members: ['Priya Nair', 'Marcus Webb', 'Sofia Reyes', 'Daniel Okafor'],
-    status: 'forming' as const,
-    description: 'Developing an original 2D platformer game with original art and music assets.',
+    id: 'math-modeling',
+    title: 'Mathematical Modeling',
+    description: 'Teams apply mathematical and scientific reasoning to model and solve an open-ended engineering problem tied to the year\'s theme.',
+    icon: Layers,
+    color: '#8b5cf6',
+    bg: 'rgba(139,92,246,0.25)',
   },
   {
-    id: 'team-arch-design',
-    name: 'Architecture Team',
-    competition: 'Architectural Design',
-    category: 'arch',
-    members: ['Aiden Brooks', 'Natalie Wu'],
-    status: 'active' as const,
-    description: 'Designing a sustainable tiny-home community center with LEED principles.',
-  },
-  {
-    id: 'team-engineering-design',
-    name: 'Engineering Design',
-    competition: 'Engineering Design',
-    category: 'stem',
-    members: ['Tyler Nguyen', 'Zara Ahmed', 'Connor Slate', 'Yuna Park'],
-    status: 'forming' as const,
-    description: 'Prototyping a solution to an engineering challenge using iterative design methods.',
-  },
-  {
-    id: 'team-debating-tech',
-    name: 'Debating Technological Issues',
-    competition: 'Debating Technological Issues',
-    category: 'leadership',
-    members: ['Aaliya Johnson', 'Ryan Clark'],
-    status: 'complete' as const,
-    description: 'Preparing arguments on cutting-edge technology policy topics for competitive debate.',
+    id: 'essay',
+    title: 'Essay',
+    description: 'A written response analyzing a real-world engineering issue connected to the annual theme, evaluated on depth of understanding and communication.',
+    icon: PenTool,
+    color: '#22c55e',
+    bg: 'rgba(34,197,94,0.25)',
   },
 ];
-
-const TEAM_STATUS_META = {
-  active:   { label: 'Active',   color: '#22c55e', bg: 'rgba(34,197,94,0.2)'  },
-  forming:  { label: 'Forming',  color: '#f59e0b', bg: 'rgba(245,158,11,0.2)' },
-  complete: { label: 'Complete', color: '#60a5fa', bg: 'rgba(96,165,250,0.2)' },
-};
 
 const Competitions: React.FC = () => {
   const { user } = useAuth();
@@ -453,101 +425,133 @@ const Competitions: React.FC = () => {
       </div>
 
       {/* ════════════════════════════════════════
-          TSA TEAMS SECTION
+          TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
-      <section className="relative py-20 border-t border-space-500/30 overflow-hidden">
-        {/* Background accent */}
-        <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/30 to-space-900/0 pointer-events-none" />
-        <div className="orb orb-blue w-[500px] h-[400px] top-[-60px] left-[-80px] opacity-10 animate-orb-float-2 pointer-events-none" />
+      <section className="relative py-24 border-t border-space-500/30 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
+        <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]  left-[-100px] opacity-10 animate-orb-float-2 pointer-events-none" />
+        <div className="orb orb-crimson w-[300px] h-[300px] bottom-[0px] right-[5%]   opacity-10 animate-orb-float-3 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
           {/* Section header */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-12"
+            className="mb-14"
           >
-            <div className="section-label inline-flex mb-4"><Shield size={12} /> LEHS Chapter Teams</div>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
-              Our{' '}
-              <span className="text-gradient-blue">Teams</span>
-            </h2>
-            <p className="text-ink-dim text-lg max-w-2xl leading-relaxed">
-              Students competing together under the LEHS TSA chapter banner. Each team represents a registered event entry for the 2024–2025 season.
+            <div className="section-label inline-flex mb-4"><Shield size={12} /> TSA TEAMS Program</div>
+            <div className="flex flex-wrap items-end gap-4 mb-5">
+              <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+                <span className="text-gradient-blue">TEAMS</span>
+              </h2>
+              <span className="text-ink-muted text-base font-medium mb-1 leading-snug">
+                Tests of Engineering Aptitude,<br className="hidden sm:block" /> Mathematics &amp; Science
+              </span>
+            </div>
+            <p className="text-ink-dim text-lg max-w-2xl leading-relaxed mb-6">
+              A nationally recognized TSA competition where teams of 2–4 students tackle real-world engineering challenges using math and science. Winners advance from state to the National TSA Conference.
             </p>
+
+            {/* Theme + size chips */}
+            <div className="flex flex-wrap gap-3">
+              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-amber-500/30">
+                <Star size={15} className="text-amber-400 flex-shrink-0" />
+                <div>
+                  <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2025–2026 Theme</div>
+                  <div className="text-sm font-black text-amber-300">Engineering the Past</div>
+                </div>
+              </div>
+              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-electric-500/30">
+                <Users size={15} className="text-electric-400 flex-shrink-0" />
+                <div>
+                  <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>
+                  <div className="text-sm font-black text-ink">2–4 Members</div>
+                </div>
+              </div>
+              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-violet-500/30">
+                <Trophy size={15} className="text-violet-400 flex-shrink-0" />
+                <div>
+                  <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Advancement</div>
+                  <div className="text-sm font-black text-ink">State → Nationals</div>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Teams grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {TSA_TEAMS.map((team, i) => {
-              const catMeta = CATEGORY_META[team.category] ?? CATEGORY_META['stem'];
-              const statusMeta = TEAM_STATUS_META[team.status];
-              const CatIcon = catMeta.icon;
+          {/* Four components */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mb-6"
+          >
+            <h3 className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-6 flex items-center gap-2">
+              <ChevronRight size={12} /> Four Competition Components
+            </h3>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+            {TEAMS_COMPONENTS.map((comp, i) => {
+              const Icon = comp.icon;
               return (
                 <motion.div
-                  key={team.id}
+                  key={comp.id}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: Math.min(i * 0.07, 0.4) }}
+                  transition={{ duration: 0.45, delay: i * 0.08 }}
                   className="glass-card rounded-2xl p-6 flex flex-col gap-4 border border-space-500/50 hover:border-space-400/70 transition-all duration-300"
-                  style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.35)' }}
                 >
-                  {/* Top row: category icon + status badge */}
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: catMeta.bg, color: catMeta.color }}
-                    >
-                      <CatIcon size={18} />
-                    </div>
-                    <span
-                      className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border"
-                      style={{ background: statusMeta.bg, color: statusMeta.color, borderColor: `${statusMeta.color}40` }}
-                    >
-                      {statusMeta.label}
-                    </span>
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: comp.bg, color: comp.color }}
+                  >
+                    <Icon size={20} />
                   </div>
-
-                  {/* Team name + event */}
                   <div>
-                    <h3 className="font-black text-ink text-lg leading-snug mb-1">{team.name}</h3>
-                    <p className="text-xs font-semibold" style={{ color: catMeta.color }}>
-                      {catMeta.label} · {team.competition}
-                    </p>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-sm text-ink-dim leading-relaxed flex-1">{team.description}</p>
-
-                  {/* Members */}
-                  <div>
-                    <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-2 font-semibold uppercase tracking-widest">
-                      <UserCheck size={11} /> Members
+                    <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: comp.color }}>
+                      Component {i + 1}
                     </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {team.members.map(member => (
-                        <span
-                          key={member}
-                          className="text-xs px-2.5 py-1 rounded-lg bg-space-700/80 border border-space-500/60 text-ink-dim font-medium"
-                        >
-                          {member}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="pt-3 border-t border-space-500/30 flex items-center gap-2 text-xs text-ink-muted">
-                    <Users size={12} />
-                    <span>{team.members.length} member{team.members.length !== 1 ? 's' : ''}</span>
+                    <h4 className="font-black text-ink text-base leading-snug mb-2">{comp.title}</h4>
+                    <p className="text-sm text-ink-dim leading-relaxed">{comp.description}</p>
                   </div>
                 </motion.div>
               );
             })}
           </div>
+
+          {/* CTA / info banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="glass-card rounded-2xl p-8 border border-electric-500/25 flex flex-col sm:flex-row items-start sm:items-center gap-6"
+          >
+            <div className="w-14 h-14 rounded-2xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
+              <UserCheck size={26} />
+            </div>
+            <div className="flex-1">
+              <h4 className="font-black text-ink text-lg mb-1">Interested in TEAMS?</h4>
+              <p className="text-sm text-ink-dim leading-relaxed">
+                TEAMS is open to all LEHS TSA members. Teams of 2–4 compete together across all four components — talk to an officer to get placed on a team or form your own.
+              </p>
+            </div>
+            <a
+              href="https://tsaweb.org/teams"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary shrink-0 flex items-center gap-2 text-sm"
+            >
+              <Trophy size={14} /> Learn More
+            </a>
+          </motion.div>
+
         </div>
       </section>
 
