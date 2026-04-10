@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Shield, Users, Bell, Calendar, Settings,
   Plus, Trash2, X,
@@ -918,27 +918,58 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
     updateCompetitionLinks: (compId: string, links: Array<{ url: string; name: string }>) => void;
 }) => {
     const [links, setLinks] = useState(currentLinks);
+    // ref always holds latest value — fixes stale closure on onBlur handlers
+    const latestLinks = useRef(links);
+
     const [isAdding, setIsAdding] = useState(false);
     const [newName, setNewName] = useState('');
     const [newUrl, setNewUrl] = useState('');
 
-    useEffect(() => { setLinks(currentLinks); }, [currentLinks]);
+    // Only sync from parent when parent genuinely changes (e.g. another admin edits),
+    // not every time Firestore echoes back our own save.
+    const prevParent = useRef(currentLinks);
+    useEffect(() => {
+        if (prevParent.current !== currentLinks) {
+            prevParent.current = currentLinks;
+            // Don't overwrite if user is mid-edit
+            if (!isAdding) {
+                latestLinks.current = currentLinks;
+                setLinks(currentLinks);
+            }
+        }
+    }, [currentLinks, isAdding]);
 
-    const save = (updated: Array<{ url: string; name: string }>) => {
+    // Update a field in the local list; keep the ref in sync immediately
+    const updateField = (i: number, field: 'url' | 'name', val: string) => {
+        const updated = latestLinks.current.map((l, idx) =>
+            idx === i ? { ...l, [field]: val } : l
+        );
+        latestLinks.current = updated;
+        setLinks(updated);
+    };
+
+    // Persist current ref value to Firestore on blur
+    const saveOnBlur = () => updateCompetitionLinks(comp.id, latestLinks.current);
+
+    const removeLink = (i: number) => {
+        const updated = latestLinks.current.filter((_, idx) => idx !== i);
+        latestLinks.current = updated;
         setLinks(updated);
         updateCompetitionLinks(comp.id, updated);
     };
 
-    const removeLink = (i: number) => save(links.filter((_, idx) => idx !== i));
-
     const addLink = () => {
         if (!newUrl.trim()) return;
-        save([...links, { url: newUrl.trim(), name: newName.trim() || newUrl.trim() }]);
-        setNewName(''); setNewUrl(''); setIsAdding(false);
-    };
-
-    const updateField = (i: number, field: 'url' | 'name', val: string) => {
-        setLinks(prev => prev.map((l, idx) => idx === i ? { ...l, [field]: val } : l));
+        const updated = [...latestLinks.current, {
+            url: newUrl.trim(),
+            name: newName.trim() || newUrl.trim(),
+        }];
+        latestLinks.current = updated;
+        setLinks(updated);
+        updateCompetitionLinks(comp.id, updated);
+        setNewName('');
+        setNewUrl('');
+        setIsAdding(false);
     };
 
     return (
@@ -961,7 +992,7 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
                             type="text"
                             value={link.name}
                             onChange={e => updateField(i, 'name', e.target.value)}
-                            onBlur={() => updateCompetitionLinks(comp.id, links)}
+                            onBlur={saveOnBlur}
                             placeholder="Label (e.g. Rulebook)"
                             className="w-32 bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
                         />
@@ -971,7 +1002,7 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
                                 type="text"
                                 value={link.url}
                                 onChange={e => updateField(i, 'url', e.target.value)}
-                                onBlur={() => updateCompetitionLinks(comp.id, links)}
+                                onBlur={saveOnBlur}
                                 placeholder="Paste URL..."
                                 className="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg pl-7 pr-2 py-1 text-xs outline-none focus:ring-1 focus:ring-accent-blue"
                             />
@@ -1005,9 +1036,13 @@ const CompetitionLinkRow = ({ comp, currentLinks, updateCompetitionLinks }: {
                             onChange={e => setNewUrl(e.target.value)}
                             placeholder="Paste URL..."
                             className="flex-1 bg-gray-50 dark:bg-dark-bg border border-blue-400 dark:border-blue-600 rounded-lg px-2 py-1 text-xs outline-none"
-                            onKeyDown={e => { if (e.key === 'Enter') addLink(); if (e.key === 'Escape') setIsAdding(false); }}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter') addLink();
+                                if (e.key === 'Escape') { setIsAdding(false); setNewName(''); setNewUrl(''); }
+                            }}
                         />
-                        <button onClick={addLink} className="p-1 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
+                        <button onClick={addLink}
+                            className="p-1 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded">
                             <CheckCircle size={13} />
                         </button>
                         <button onClick={() => { setIsAdding(false); setNewName(''); setNewUrl(''); }}
