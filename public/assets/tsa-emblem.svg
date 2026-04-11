@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 633.034 381.051" role="img" aria-label="Technology Student Association emblem">
+  <defs>
+    <clipPath id="shield-clip">
+      <path d="M316.517 8C316.517 8 120 8 120 180c0 120 196.517 193.051 196.517 193.051S513.034 300 513.034 180C513.034 8 316.517 8 316.517 8z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Shield background -->
+  <path d="M316.517 4C316.517 4 108 4 108 182c0 126 208.517 197 208.517 197S525.034 308 525.034 182C525.034 4 316.517 4 316.517 4z" fill="#005DAA"/>
+
+  <!-- Top red bar -->
+  <rect x="108" y="82" width="417" height="58" fill="#EE3524" clip-path="url(#shield-clip)"/>
+
+  <!-- Bottom red bar -->
+  <rect x="108" y="285" width="417" height="94" fill="#EE3524" clip-path="url(#shield-clip)"/>
+
+  <!-- TSA lettering -->
+  <text x="316.517" y="246" font-family="Arial Black, sans-serif" font-weight="900" font-size="108" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">TSA</text>
+
+  <!-- Top white text -->
+  <text x="316.517" y="124" font-family="Arial, sans-serif" font-weight="700" font-size="26" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">TECHNOLOGY</text>
+
+  <!-- Bottom white text -->
+  <text x="316.517" y="327" font-family="Arial, sans-serif" font-weight="700" font-size="19" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">STUDENT ASSOCIATION</text>
+
+  <!-- Shield outline -->
+  <path d="M316.517 4C316.517 4 108 4 108 182c0 126 208.517 197 208.517 197S525.034 308 525.034 182C525.034 4 316.517 4 316.517 4z" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+</svg>
