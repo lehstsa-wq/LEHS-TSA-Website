@@ -199,3 +199,33 @@ export interface Meeting {
   attendees: string[]; // user IDs who checked in
   type: 'General' | 'Officer' | 'Competition' | 'Workshop';
 }
+
+export interface Team {
+  id: string;
+  name: string;
+  competitionId: string;
+  competitionName: string;
+  leaderId: string;
+  leaderName: string;
+  memberIds: string[];
+  memberNames: string[];
+  maxSize: number;
+  status: 'open' | 'full' | 'closed';
+  description?: string;
+  createdAt: string;
+}
+
+export type OpportunityType = 'Scholarship' | 'Internship' | 'Program' | 'Competition' | 'Workshop' | 'Fellowship';
+
+export interface Opportunity {
+  id: string;
+  title: string;
+  organization: string;
+  description: string;
+  type: OpportunityType;
+  deadline?: string;
+  link?: string;
+  tags?: string[];
+  featured?: boolean;
+  postedDate: string;
+}

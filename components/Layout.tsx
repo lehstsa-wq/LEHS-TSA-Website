@@ -27,10 +27,12 @@ const NAV_GROUPS = [
   {
     label: 'Compete',
     links: [
-      { name: 'Competitions', path: '/competitions', icon: Trophy,   desc: 'Explore TSA events' },
-      { name: 'Events',        path: '/events',       icon: Calendar, desc: 'Meetings & calendar' },
-      { name: 'Projects',      path: '/projects',     icon: Zap,      desc: 'Chapter project showcase' },
-      { name: 'Gallery',       path: '/gallery',      icon: Image,    desc: 'Photos & memories' },
+      { name: 'Competitions',   path: '/competitions',   icon: Trophy,   desc: 'Explore TSA events' },
+      { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' },
+      { name: 'Opportunities',  path: '/opportunities',  icon: Zap,      desc: 'Scholarships, programs & more' },
+      { name: 'Events',         path: '/events',         icon: Calendar, desc: 'Meetings & calendar' },
+      { name: 'Projects',       path: '/projects',       icon: Cpu,      desc: 'Chapter project showcase' },
+      { name: 'Gallery',        path: '/gallery',        icon: Image,    desc: 'Photos & memories' },
     ]
   },
   {

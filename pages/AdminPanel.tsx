@@ -17,7 +17,7 @@ import { Officer, Announcement } from '../types';
 import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
 
-type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results';
+type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
 // Shared Styles
 const cardClass = "bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl shadow-sm p-6";
@@ -62,6 +62,7 @@ const AdminPanel: React.FC = () => {
               items: [
                 { id: 'competitions', label: 'Competition Links', icon: Briefcase },
                 { id: 'interests', label: 'Interest Tracking', icon: Activity },
+                { id: 'teams', label: 'Teams', icon: Users },
                 { id: 'results', label: 'Results', icon: TrendingUp },
               ]
             },
@@ -69,6 +70,7 @@ const AdminPanel: React.FC = () => {
               label: 'Content',
               items: [
                 { id: 'updates', label: 'Announcements', icon: Bell },
+                { id: 'opportunities', label: 'Opportunities', icon: Zap },
                 { id: 'leadership', label: 'Leadership', icon: Star },
                 { id: 'events', label: 'Events', icon: Calendar },
                 { id: 'projects', label: 'Projects', icon: FolderOpen },
@@ -116,6 +118,8 @@ const AdminPanel: React.FC = () => {
            {activeTab === 'resources' && <ResourcesTab />}
            {activeTab === 'attendance' && <AttendanceTab />}
            {activeTab === 'results' && <ResultsTab />}
+           {activeTab === 'opportunities' && <OpportunitiesTab />}
+           {activeTab === 'teams' && <TeamsAdminTab />}
            {activeTab === 'settings' && <SettingsTab />}
         </div>
       </main>
@@ -2109,5 +2113,249 @@ const SettingsTab: React.FC = () => {
         </div>
     );
 }
+
+// ─── OPPORTUNITIES TAB ─────────────────────────────────────────────────────
+
+const OPP_TYPES = ['Scholarship', 'Internship', 'Program', 'Competition', 'Workshop', 'Fellowship'] as const;
+
+const OpportunitiesTab: React.FC = () => {
+    const { opportunities, addOpportunity, updateOpportunity, deleteOpportunity } = useData();
+    const { confirm } = useModal();
+    const [form, setForm] = useState({
+        title: '', organization: '', description: '',
+        type: 'Scholarship' as typeof OPP_TYPES[number],
+        deadline: '', link: '', tags: '', featured: false,
+    });
+    const [editId, setEditId] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+
+    const resetForm = () => {
+        setForm({ title: '', organization: '', description: '', type: 'Scholarship', deadline: '', link: '', tags: '', featured: false });
+        setEditId(null);
+    };
+
+    const startEdit = (opp: typeof opportunities[0]) => {
+        setForm({
+            title: opp.title, organization: opp.organization, description: opp.description,
+            type: opp.type, deadline: opp.deadline ?? '', link: opp.link ?? '',
+            tags: (opp.tags ?? []).join(', '), featured: opp.featured ?? false,
+        });
+        setEditId(opp.id);
+    };
+
+    const handleSave = async () => {
+        if (!form.title || !form.organization) return;
+        setSaving(true);
+        const payload = {
+            title: form.title, organization: form.organization, description: form.description,
+            type: form.type, featured: form.featured,
+            ...(form.deadline && { deadline: form.deadline }),
+            ...(form.link && { link: form.link }),
+            tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+        };
+        if (editId) {
+            await updateOpportunity(editId, payload);
+        } else {
+            await addOpportunity(payload);
+        }
+        setSaving(false);
+        resetForm();
+    };
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div className="flex justify-between items-center">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Opportunities</h2>
+                    <p className="text-sm text-gray-500">{opportunities.length} posted — visible to all members.</p>
+                </div>
+            </div>
+
+            {/* Form */}
+            <div className={`${cardClass} border-accent-blue/20`}>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Plus size={16} className="text-accent-blue" />
+                    {editId ? 'Edit Opportunity' : 'Post New Opportunity'}
+                </h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="sm:col-span-2">
+                        <label className={labelClass}>Title *</label>
+                        <input value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} placeholder="e.g., STEM Excellence Scholarship" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Organization *</label>
+                        <input value={form.organization} onChange={e => setForm(f => ({...f, organization: e.target.value}))} placeholder="e.g., Texas STEM Foundation" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Type</label>
+                        <select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value as typeof OPP_TYPES[number]}))} className={inputClass}>
+                            {OPP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                    </div>
+                    <div className="sm:col-span-2">
+                        <label className={labelClass}>Description</label>
+                        <textarea value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} rows={3} placeholder="Describe the opportunity, eligibility, award amount, etc." className={`${inputClass} resize-none`} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Deadline (optional)</label>
+                        <input type="date" value={form.deadline} onChange={e => setForm(f => ({...f, deadline: e.target.value}))} className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Link (optional)</label>
+                        <input value={form.link} onChange={e => setForm(f => ({...f, link: e.target.value}))} placeholder="https://apply.example.com" className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Tags (comma-separated)</label>
+                        <input value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} placeholder="STEM, Texas, Engineering" className={inputClass} />
+                    </div>
+                    <div className="flex items-center gap-3 pt-5">
+                        <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm(f => ({...f, featured: e.target.checked}))} className="w-4 h-4 accent-accent-blue" />
+                        <label htmlFor="featured" className="text-sm font-semibold text-gray-700 dark:text-gray-300 select-none cursor-pointer">
+                            Feature this opportunity (shown as spotlight)
+                        </label>
+                    </div>
+                    <div className="sm:col-span-2 flex gap-2 justify-end">
+                        {editId && <button onClick={resetForm} className={`${buttonClass} border border-gray-300 dark:border-dark-border text-gray-600 dark:text-gray-400`}>Cancel</button>}
+                        <button onClick={handleSave} disabled={saving || !form.title || !form.organization} className={`${buttonClass} bg-accent-blue text-white hover:bg-accent-hover disabled:opacity-50 px-6`}>
+                            <Save size={15} /> {saving ? 'Saving…' : editId ? 'Update' : 'Post Opportunity'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* List */}
+            <div className="space-y-3">
+                {opportunities.length === 0 && (
+                    <div className="text-center py-12 border border-dashed border-gray-200 dark:border-dark-border rounded-xl text-gray-500 text-sm">No opportunities posted yet.</div>
+                )}
+                {opportunities.map(opp => (
+                    <div key={opp.id} className={`${cardClass} p-4 flex items-start gap-4`}>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className="font-bold text-gray-900 dark:text-white">{opp.title}</span>
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">{opp.type}</span>
+                                {opp.featured && <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">★ Featured</span>}
+                                {opp.deadline && <span className="text-[10px] text-gray-500">Due {new Date(opp.deadline).toLocaleDateString()}</span>}
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{opp.organization} — {opp.description}</p>
+                        </div>
+                        <div className="flex gap-1.5 shrink-0">
+                            <button onClick={() => startEdit(opp)} className="p-2 rounded-lg text-gray-400 hover:text-accent-blue hover:bg-accent-blue/10 transition-colors"><Edit2 size={15} /></button>
+                            <button onClick={async () => {
+                                if (await confirm('Delete Opportunity', `Delete "${opp.title}"?`, true, 'Delete')) deleteOpportunity(opp.id);
+                            }} className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><Trash2 size={15} /></button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// ─── TEAMS ADMIN TAB ────────────────────────────────────────────────────────
+
+const TeamsAdminTab: React.FC = () => {
+    const { teams, deleteTeam, updateTeamStatus } = useData();
+    const { confirm } = useModal();
+    const [search, setSearch] = useState('');
+
+    const filtered = teams.filter(t =>
+        t.name.toLowerCase().includes(search.toLowerCase()) ||
+        t.competitionName.toLowerCase().includes(search.toLowerCase()) ||
+        t.leaderName.toLowerCase().includes(search.toLowerCase())
+    );
+
+    // Group by competition
+    const grouped = filtered.reduce<Record<string, typeof filtered>>((acc, t) => {
+        if (!acc[t.competitionName]) acc[t.competitionName] = [];
+        acc[t.competitionName].push(t);
+        return acc;
+    }, {});
+
+    const statusColor: Record<string, string> = {
+        open:   'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+        full:   'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
+        closed: 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400',
+    };
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Teams</h2>
+                    <p className="text-sm text-gray-500">{teams.length} team{teams.length !== 1 ? 's' : ''} across {Object.keys(grouped).length} competition{Object.keys(grouped).length !== 1 ? 's' : ''}.</p>
+                </div>
+                <div className="relative w-full sm:w-64">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input placeholder="Search teams…" value={search} onChange={e => setSearch(e.target.value)} className={`${inputClass} pl-9`} />
+                </div>
+            </div>
+
+            {Object.keys(grouped).length === 0 ? (
+                <div className="text-center py-12 border border-dashed border-gray-200 dark:border-dark-border rounded-xl text-gray-500 text-sm">
+                    No teams created yet. Members create teams from the Teams page.
+                </div>
+            ) : (
+                Object.entries(grouped).map(([comp, compTeams]) => (
+                    <div key={comp} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                        <div className="px-5 py-3 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">
+                            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Award size={15} className="text-accent-blue" /> {comp}
+                            </h3>
+                            <span className="text-xs font-bold text-gray-500 bg-gray-200 dark:bg-white/10 px-2 py-0.5 rounded-full">{compTeams.length} team{compTeams.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                                <thead className="text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-dark-border bg-gray-50/50 dark:bg-dark-bg/30">
+                                    <tr>
+                                        <th className="px-4 py-2.5">Team Name</th>
+                                        <th className="px-4 py-2.5">Leader</th>
+                                        <th className="px-4 py-2.5">Members</th>
+                                        <th className="px-4 py-2.5">Status</th>
+                                        <th className="px-4 py-2.5">Created</th>
+                                        <th className="px-4 py-2.5"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-dark-border">
+                                    {compTeams.map(team => (
+                                        <tr key={team.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{team.name}</td>
+                                            <td className="px-4 py-3">{team.leaderName}</td>
+                                            <td className="px-4 py-3">
+                                                <span className="text-xs">{team.memberIds.length} / {team.maxSize}</span>
+                                                <div className="w-16 h-1 bg-gray-100 dark:bg-white/10 rounded-full mt-1 overflow-hidden">
+                                                    <div className="h-full bg-accent-blue rounded-full" style={{ width: `${(team.memberIds.length / team.maxSize) * 100}%` }} />
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <select
+                                                    value={team.status}
+                                                    onChange={e => updateTeamStatus(team.id, e.target.value as 'open' | 'full' | 'closed')}
+                                                    className={`text-xs font-bold px-2 py-1 rounded-lg border-0 outline-none cursor-pointer ${statusColor[team.status]}`}
+                                                >
+                                                    <option value="open">Open</option>
+                                                    <option value="full">Full</option>
+                                                    <option value="closed">Closed</option>
+                                                </select>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs">{new Date(team.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-4 py-3">
+                                                <button onClick={async () => {
+                                                    if (await confirm('Disband Team', `Disband "${team.name}"? This cannot be undone.`, true, 'Disband')) deleteTeam(team.id);
+                                                }} className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ))
+            )}
+        </div>
+    );
+};
 
 export default AdminPanel;

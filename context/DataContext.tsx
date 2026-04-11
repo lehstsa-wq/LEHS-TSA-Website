@@ -9,7 +9,7 @@ import {
   addDoc
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport, CompetitionResult, Meeting } from '../types';
+import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport, CompetitionResult, Meeting, Team, Opportunity } from '../types';
 import { useAuth } from './AuthContext';
 
 // --- MOCK DATA ---
@@ -185,6 +185,20 @@ interface DataContextType {
   archiveAccessCode: (id: string) => Promise<void>;
   regenerateMemberAccessCode: (oldCodeId: string, memberUid: string, memberName: string, role: 'member' | 'officer') => Promise<string | null>;
   subscribe: (email: string) => Promise<void>;
+
+  // Teams
+  teams: Team[];
+  createTeam: (team: Omit<Team, 'id' | 'createdAt' | 'memberIds' | 'memberNames' | 'status'>) => Promise<string>;
+  joinTeam: (teamId: string, userId: string, userName: string) => Promise<void>;
+  leaveTeam: (teamId: string, userId: string) => Promise<void>;
+  deleteTeam: (id: string) => Promise<void>;
+  updateTeamStatus: (id: string, status: Team['status']) => Promise<void>;
+
+  // Opportunities
+  opportunities: Opportunity[];
+  addOpportunity: (opp: Omit<Opportunity, 'id' | 'postedDate'>) => Promise<void>;
+  updateOpportunity: (id: string, data: Partial<Opportunity>) => Promise<void>;
+  deleteOpportunity: (id: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -205,6 +219,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Competition Results & Meetings
   const [competitionResults, setCompetitionResults] = useState<CompetitionResult[]>([]);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+
+  // Teams & Opportunities
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   
   const [officersList, setOfficersList] = useState<Officer[]>(MOCK_OFFICERS);
   const [eventsList, setEventsList] = useState<Event[]>(MOCK_EVENTS);
@@ -291,6 +309,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribe = onSnapshot(collection(db, "competition_interests"), (snapshot) => {
       const interests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CompetitionInterest));
       setCompetitionInterests(interests);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Sync Teams from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "teams"), (snapshot) => {
+      const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Team));
+      items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setTeams(items);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Sync Opportunities from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "opportunities"), (snapshot) => {
+      const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
+      items.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+      setOpportunities(items);
     });
     return () => unsubscribe();
   }, []);
@@ -861,8 +899,61 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // ── TEAMS ──────────────────────────────────────────────────────────────────
+  const createTeam = async (team: Omit<Team, 'id' | 'createdAt' | 'memberIds' | 'memberNames' | 'status'>): Promise<string> => {
+    const newTeam: Omit<Team, 'id'> = {
+      ...team,
+      memberIds: [team.leaderId],
+      memberNames: [team.leaderName],
+      status: 'open',
+      createdAt: new Date().toISOString(),
+    };
+    const docRef = await addDoc(collection(db, "teams"), newTeam);
+    return docRef.id;
+  };
+
+  const joinTeam = async (teamId: string, userId: string, userName: string) => {
+    const team = teams.find(t => t.id === teamId);
+    if (!team) return;
+    const newMemberIds = [...team.memberIds, userId];
+    const newMemberNames = [...team.memberNames, userName];
+    const newStatus: Team['status'] = newMemberIds.length >= team.maxSize ? 'full' : 'open';
+    await setDoc(doc(db, "teams", teamId), { memberIds: newMemberIds, memberNames: newMemberNames, status: newStatus }, { merge: true });
+  };
+
+  const leaveTeam = async (teamId: string, userId: string) => {
+    const team = teams.find(t => t.id === teamId);
+    if (!team) return;
+    const newMemberIds = team.memberIds.filter(id => id !== userId);
+    const newMemberNames = team.memberNames.filter((_, i) => team.memberIds[i] !== userId);
+    const newStatus: Team['status'] = newMemberIds.length < team.maxSize ? 'open' : 'full';
+    await setDoc(doc(db, "teams", teamId), { memberIds: newMemberIds, memberNames: newMemberNames, status: newStatus }, { merge: true });
+  };
+
+  const deleteTeam = async (id: string) => {
+    await deleteDoc(doc(db, "teams", id));
+  };
+
+  const updateTeamStatus = async (id: string, status: Team['status']) => {
+    await setDoc(doc(db, "teams", id), { status }, { merge: true });
+  };
+
+  // ── OPPORTUNITIES ───────────────────────────────────────────────────────────
+  const addOpportunity = async (opp: Omit<Opportunity, 'id' | 'postedDate'>) => {
+    const item = { ...opp, postedDate: new Date().toISOString() };
+    await addDoc(collection(db, "opportunities"), item);
+  };
+
+  const updateOpportunity = async (id: string, data: Partial<Opportunity>) => {
+    await setDoc(doc(db, "opportunities", id), data, { merge: true });
+  };
+
+  const deleteOpportunity = async (id: string) => {
+    await deleteDoc(doc(db, "opportunities", id));
+  };
+
   return (
-    <DataContext.Provider value={{ 
+    <DataContext.Provider value={{
       announcements, members, resources, officerNotes, internalDeadlines, siteSettings, competitionInterests, problemReports,
       competitionLinks, updateCompetitionLinks,
       competitionResults, addCompetitionResult, updateCompetitionResult, deleteCompetitionResult,
@@ -879,7 +970,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addProject, updateProject, deleteProject,
       addGalleryItem, deleteGalleryItem,
       generateAccessCode, deleteAccessCode, archiveAccessCode, regenerateMemberAccessCode,
-      subscribe
+      subscribe,
+      teams, createTeam, joinTeam, leaveTeam, deleteTeam, updateTeamStatus,
+      opportunities, addOpportunity, updateOpportunity, deleteOpportunity,
     }}>
       {children}
     </DataContext.Provider>
