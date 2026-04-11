@@ -34,12 +34,12 @@ const Contact: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[400px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
+        <div className="orb w-[400px] h-[400px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Mail size={12} /> Contact</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Mail size={12} /> Contact</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Get in Touch</h1>
             <p className="section-body max-w-xl">
               Questions about membership, events, or competitions? We're here to help.
@@ -47,7 +47,7 @@ const Contact: React.FC = () => {
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Main content */}
@@ -60,7 +60,7 @@ const Contact: React.FC = () => {
             <div className="space-y-6">
 
               <div className="card flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-electric-100 text-electric-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-muted text-gold flex items-center justify-center flex-shrink-0">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -74,12 +74,12 @@ const Contact: React.FC = () => {
               </div>
 
               <div className="card flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-electric-100 text-electric-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-muted text-gold flex items-center justify-center flex-shrink-0">
                   <Mail size={20} />
                 </div>
                 <div>
                   <div className="font-semibold text-ink mb-1">Email</div>
-                  <a href="mailto:lehstsa@gmail.com" className="text-sm text-electric-500 hover:text-electric-400 transition-colors">
+                  <a href="mailto:lehstsa@gmail.com" className="text-sm text-gold hover:text-gold transition-colors">
                     lehstsa@gmail.com
                   </a>
                 </div>
@@ -90,13 +90,13 @@ const Contact: React.FC = () => {
                 <div className="flex gap-3">
                   {siteSettings.instagramLink && (
                     <a href={siteSettings.instagramLink} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-space-500/60 text-ink-dim hover:text-ink hover:border-electric-300/50 transition-all text-sm font-medium">
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-warm-700/40 text-ink-dim hover:text-ink hover:border-gold-border/50 transition-all text-sm font-medium">
                       <Instagram size={16} /> Instagram
                     </a>
                   )}
                   {siteSettings.twitterLink && (
                     <a href={siteSettings.twitterLink} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-space-500/60 text-ink-dim hover:text-ink hover:border-electric-300/50 transition-all text-sm font-medium">
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-warm-700/40 text-ink-dim hover:text-ink hover:border-gold-border/50 transition-all text-sm font-medium">
                       <Twitter size={16} /> Twitter
                     </a>
                   )}
@@ -111,7 +111,7 @@ const Contact: React.FC = () => {
                     { name: 'Texas TSA',    url: 'https://www.texastsa.org/' },
                   ].map(link => (
                     <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center justify-between py-2 text-sm text-ink-dim hover:text-electric-500 transition-colors group">
+                      className="flex items-center justify-between py-2 text-sm text-ink-dim hover:text-gold transition-colors group">
                       {link.name}
                       <ExternalLink size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
@@ -140,20 +140,20 @@ const Contact: React.FC = () => {
                     <label className="text-xs text-ink-muted font-semibold uppercase tracking-wide block mb-1.5">Name *</label>
                     <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                       placeholder="Your full name" required
-                      className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all" />
+                      className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all" />
                   </div>
                   <div>
                     <label className="text-xs text-ink-muted font-semibold uppercase tracking-wide block mb-1.5">Email *</label>
                     <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                       placeholder="your@email.com" required
-                      className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all" />
+                      className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all" />
                   </div>
                 </div>
 
                 <div>
                   <label className="text-xs text-ink-muted font-semibold uppercase tracking-wide block mb-1.5">Subject</label>
                   <select value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
-                    className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-3 text-sm text-ink focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all">
+                    className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-3 text-sm text-ink focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all">
                     <option value="">Select a topic</option>
                     <option value="Membership">Membership Question</option>
                     <option value="Competitions">Competition Info</option>
@@ -168,7 +168,7 @@ const Contact: React.FC = () => {
                   <textarea
                     value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                     placeholder="Tell us what's on your mind..." required rows={6}
-                    className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all resize-none"
+                    className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-3 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all resize-none"
                   />
                 </div>
 
@@ -187,7 +187,7 @@ const Contact: React.FC = () => {
                 </button>
 
                 <p className="text-xs text-ink-muted text-center">
-                  Or email us directly at <a href="mailto:lehstsa@gmail.com" className="text-electric-500 hover:text-electric-400 transition-colors">lehstsa@gmail.com</a>
+                  Or email us directly at <a href="mailto:lehstsa@gmail.com" className="text-gold hover:text-gold transition-colors">lehstsa@gmail.com</a>
                 </p>
               </form>
             )}

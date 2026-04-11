@@ -48,7 +48,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
           {member.avatar ? (
             <img src={member.avatar} alt={member.name} className="w-14 h-14 rounded-2xl object-cover" />
           ) : (
-            <div className="w-14 h-14 rounded-2xl bg-electric-500/20 flex items-center justify-center text-electric-400 text-xl font-bold">
+            <div className="w-14 h-14 rounded-2xl bg-gold/20 flex items-center justify-center text-gold text-xl font-bold">
               {member.name.charAt(0)}
             </div>
           )}
@@ -72,7 +72,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
           {showContact && (member.phone || member.email) && (
             <div className="flex flex-wrap gap-3 mt-2">
               {member.email && (
-                <a href={`mailto:${member.email}`} className="flex items-center gap-1 text-[11px] text-ink-dim hover:text-electric-400 transition-colors">
+                <a href={`mailto:${member.email}`} className="flex items-center gap-1 text-[11px] text-ink-dim hover:text-gold transition-colors">
                   <Mail size={10} /> {member.email}
                 </a>
               )}
@@ -89,7 +89,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
         {hasDetails && (
           <button
             onClick={() => setExpanded(e => !e)}
-            className="shrink-0 p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-space-600/50 transition-all"
+            className="shrink-0 p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-warm-800/60 transition-all"
           >
             <ChevronDown size={15} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
           </button>
@@ -106,7 +106,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="pt-4 mt-4 border-t border-space-500/40 space-y-3">
+            <div className="pt-4 mt-4 border-t border-warm-700/40 space-y-3">
               {member.bio && (
                 <p className="text-xs text-ink-dim leading-relaxed">{member.bio}</p>
               )}
@@ -117,7 +117,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {member.skills!.map(s => (
-                      <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-electric-500/10 text-electric-400 border border-electric-500/20 font-medium">
+                      <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 font-medium">
                         {s}
                       </span>
                     ))}
@@ -131,7 +131,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {member.interests!.map(i => (
-                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20 font-medium">
+                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold-400 border border-gold-500/20 font-medium">
                         {i}
                       </span>
                     ))}
@@ -191,23 +191,23 @@ const MemberDirectory: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-25" />
-        <div className="orb orb-blue w-[500px] h-[400px] top-[-60px] right-[-40px] opacity-25 animate-orb-float-1" />
+        <div className="orb w-[500px] h-[400px] top-[-60px] right-[-40px] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Users size={12} /> Chapter Members</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Users size={12} /> Chapter Members</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-4">Member Directory</h1>
             <p className="section-body max-w-2xl">
               Find teammates, explore skills, and connect with chapter members. {activeMembers.length} active members.
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Controls */}
-      <div className="sticky top-20 z-20 bg-space-900/95 backdrop-blur-md border-b border-space-500/30">
+      <div className="sticky top-20 z-20 bg-warm-950/95 backdrop-blur-md border-b border-warm-700/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
@@ -216,7 +216,7 @@ const MemberDirectory: React.FC = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by name or bio…"
-              className="w-full pl-9 pr-8 py-2.5 bg-space-700/60 border border-space-500/50 rounded-xl text-sm text-ink placeholder-ink-muted focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500/50 outline-none transition-all"
+              className="w-full pl-9 pr-8 py-2.5 bg-warm-850/60 border border-warm-700/40 rounded-xl text-sm text-ink placeholder-ink-muted focus:ring-2 focus:ring-gold/20 focus:border-gold/50 outline-none transition-all"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink">
@@ -230,14 +230,14 @@ const MemberDirectory: React.FC = () => {
             onClick={() => setShowFilters(f => !f)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border ${
               hasActiveFilters || showFilters
-                ? 'bg-electric-500/20 text-electric-400 border-electric-500/40'
-                : 'bg-space-700/60 text-ink-muted border-space-500/50 hover:text-ink'
+                ? 'bg-gold/20 text-gold border-gold/40'
+                : 'bg-warm-850/60 text-ink-muted border-warm-700/40 hover:text-ink'
             }`}
           >
             <Filter size={14} />
             Filters
             {hasActiveFilters && (
-              <span className="w-1.5 h-1.5 rounded-full bg-electric-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-gold" />
             )}
           </button>
 
@@ -254,7 +254,7 @@ const MemberDirectory: React.FC = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-space-500/30"
+              className="overflow-hidden border-t border-warm-700/40"
             >
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-4 items-end">
                 {/* Grade */}
@@ -266,7 +266,7 @@ const MemberDirectory: React.FC = () => {
                     {GRADE_OPTIONS.map(g => (
                       <button key={g} onClick={() => setGradeFilter(g)}
                         className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
-                          gradeFilter === g ? 'bg-electric-500 text-white' : 'bg-space-700/60 text-ink-muted hover:text-ink border border-space-500/50'
+                          gradeFilter === g ? 'bg-gold text-white' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'
                         }`}>
                         {g === 'All' ? 'All' : gradeLabel(g)}
                       </button>
@@ -283,7 +283,7 @@ const MemberDirectory: React.FC = () => {
                     {ROLE_OPTIONS.map(r => (
                       <button key={r} onClick={() => setRoleFilter(r)}
                         className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors capitalize ${
-                          roleFilter === r ? 'bg-electric-500 text-white' : 'bg-space-700/60 text-ink-muted hover:text-ink border border-space-500/50'
+                          roleFilter === r ? 'bg-gold text-white' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'
                         }`}>
                         {r}
                       </button>
@@ -300,7 +300,7 @@ const MemberDirectory: React.FC = () => {
                     <select
                       value={skillFilter}
                       onChange={e => setSkillFilter(e.target.value)}
-                      className="bg-space-700/60 border border-space-500/50 rounded-lg px-3 py-1.5 text-xs text-ink outline-none focus:border-electric-500/50"
+                      className="bg-warm-850/60 border border-warm-700/40 rounded-lg px-3 py-1.5 text-xs text-ink outline-none focus:border-gold/50"
                     >
                       <option value="">Any skill</option>
                       {allSkills.map(s => <option key={s} value={s}>{s}</option>)}
@@ -329,7 +329,7 @@ const MemberDirectory: React.FC = () => {
             <Users size={40} className="mx-auto mb-4 text-ink-muted opacity-40" />
             <p className="text-ink-muted font-semibold">No members match your filters.</p>
             <button onClick={() => { setSearch(''); setGradeFilter('All'); setRoleFilter('All'); setSkillFilter(''); }}
-              className="mt-4 text-xs text-electric-400 hover:text-electric-300 font-semibold">
+              className="mt-4 text-xs text-gold hover:text-gold font-semibold">
               Clear all filters
             </button>
           </div>

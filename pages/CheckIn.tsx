@@ -41,14 +41,14 @@ const CheckIn: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-space-900">
+      <div className="min-h-screen flex items-center justify-center bg-warm-950">
         <p className="text-ink-muted">Please sign in to check in to a meeting.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-space-900 flex flex-col items-center justify-center px-4 py-20">
+    <div className="min-h-screen bg-warm-950 flex flex-col items-center justify-center px-4 py-20">
       <SEO title="Meeting Check-In" description="Check in to your TSA meeting." />
 
       <motion.div
@@ -58,8 +58,8 @@ const CheckIn: React.FC = () => {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-electric-500/20 flex items-center justify-center mx-auto mb-4">
-            <QrCode size={28} className="text-electric-400" />
+          <div className="w-16 h-16 rounded-2xl bg-gold/20 flex items-center justify-center mx-auto mb-4">
+            <QrCode size={28} className="text-gold" />
           </div>
           <h1 className="text-3xl font-bold text-ink">Meeting Check-In</h1>
           <p className="text-ink-muted mt-2 text-sm">Enter the PIN from your officer to mark attendance.</p>
@@ -70,9 +70,9 @@ const CheckIn: React.FC = () => {
           <div className="mb-6 space-y-2">
             <p className="text-[10px] font-bold text-ink-muted uppercase tracking-wider mb-2">Today's Meetings</p>
             {todayMeetings.map(m => (
-              <div key={m.id} className="glass-card rounded-xl p-3 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-electric-500/15 flex items-center justify-center shrink-0">
-                  <Calendar size={14} className="text-electric-400" />
+              <div key={m.id} className="card rounded-xl p-3 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gold/15 flex items-center justify-center shrink-0">
+                  <Calendar size={14} className="text-gold" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-ink truncate">{m.title}</p>
@@ -87,7 +87,7 @@ const CheckIn: React.FC = () => {
         )}
 
         {/* Form / Result */}
-        <div className="glass-card rounded-2xl p-8">
+        <div className="card rounded-2xl p-8">
           <AnimatePresence mode="wait">
             {status === 'success' ? (
               <motion.div
@@ -141,7 +141,7 @@ const CheckIn: React.FC = () => {
                     value={pin}
                     onChange={e => setPin(e.target.value.replace(/\D/g, ''))}
                     placeholder="Enter 4–6 digit PIN"
-                    className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 py-3 text-2xl font-mono font-bold text-ink text-center tracking-[0.4em] placeholder-ink-muted focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-all"
+                    className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-3 text-2xl font-mono font-bold text-ink text-center tracking-[0.4em] placeholder-ink-muted focus:ring-2 focus:ring-gold/30 focus:border-gold outline-none transition-all"
                   />
                   <p className="text-[11px] text-ink-muted mt-2 text-center">
                     Signed in as <span className="text-ink font-semibold">{user.name}</span>

@@ -5,11 +5,11 @@ import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 
 const TYPE_COLORS: Record<string, string> = {
-  Meeting:     'badge-blue',
+  Meeting:     'badge-muted',
   Deadline:    'badge-gold',
   Competition: 'badge-gold',
   General:     'badge-green',
-  Urgent:      'badge-purple',
+  Urgent:      'badge-muted',
 };
 
 const News: React.FC = () => {
@@ -39,34 +39,34 @@ const News: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[350px] top-[-50px] right-[10%] opacity-25 animate-orb-float-1" />
+        <div className="orb w-[400px] h-[350px] top-[-50px] right-[10%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Newspaper size={12} /> Updates</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Newspaper size={12} /> Updates</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Chapter News</h1>
             <p className="section-body max-w-xl">
               Announcements, deadlines, competition news, and chapter updates — all in one place.
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Filters */}
-      <div className="sticky top-16 z-30 bg-space-900/90 backdrop-blur-xl border-b border-space-500/40 py-4">
+      <div className="sticky top-16 z-30 bg-warm-950/90 backdrop-blur-xl border-b border-warm-700/40 py-4">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-3 items-center">
           <div className="relative flex-1 min-w-[180px] max-w-sm">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search news..."
-              className="w-full bg-space-700/50 border border-space-500/60 rounded-xl pl-9 pr-3 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all" />
+              className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl pl-9 pr-3 py-2 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all" />
             {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"><X size={13} /></button>}
           </div>
           <div className="flex gap-1.5 flex-wrap">
             {types.map(t => (
               <button key={t} onClick={() => setTypeFilter(t)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${typeFilter === t ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${typeFilter === t ? 'bg-gold text-white' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'}`}>
                 {t !== 'All' && <Tag size={11} />} {t}
               </button>
             ))}
@@ -95,10 +95,10 @@ const News: React.FC = () => {
                       <div className="flex items-center gap-1.5 text-gold-500 text-xs font-bold">
                         <Pin size={12} /> Pinned
                       </div>
-                      <span className={`badge ${TYPE_COLORS[item.type] || 'badge-blue'}`}>{item.type}</span>
+                      <span className={`badge ${TYPE_COLORS[item.type] || 'badge-muted'}`}>{item.type}</span>
                       <span className="flex items-center gap-1 text-xs text-ink-muted"><Calendar size={12} />{item.date}</span>
                     </div>
-                    <h3 className="font-bold text-lg text-ink mb-2 group-hover:text-electric-400 transition-colors">{item.title}</h3>
+                    <h3 className="font-bold text-lg text-ink mb-2 group-hover:text-gold transition-colors">{item.title}</h3>
                     <p className="text-sm text-ink-dim leading-relaxed">{item.content}</p>
                     <div className="flex items-center gap-1.5 mt-4 text-xs text-ink-muted">
                       <User size={12} /> {item.author}
@@ -116,10 +116,10 @@ const News: React.FC = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-1 pl-3">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className={`badge ${TYPE_COLORS[item.type] || 'badge-blue'}`}>{item.type}</span>
+                      <span className={`badge ${TYPE_COLORS[item.type] || 'badge-muted'}`}>{item.type}</span>
                       <span className="flex items-center gap-1 text-xs text-ink-muted"><Calendar size={11} />{item.date}</span>
                     </div>
-                    <h3 className="font-bold text-ink mb-1.5 group-hover:text-electric-400 transition-colors">{item.title}</h3>
+                    <h3 className="font-bold text-ink mb-1.5 group-hover:text-gold transition-colors">{item.title}</h3>
                     <p className="text-sm text-ink-dim leading-relaxed">{item.content}</p>
                     <div className="flex items-center gap-1.5 mt-3 text-xs text-ink-muted">
                       <User size={11} /> {item.author}

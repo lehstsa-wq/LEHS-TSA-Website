@@ -19,28 +19,28 @@ const Gallery: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-purple w-[400px] h-[350px] top-[-60px] right-[5%] opacity-25 animate-orb-float-2" />
+        <div className="orb w-[400px] h-[350px] top-[-60px] right-[5%] opacity-25 animate-orb-float-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><ImageIcon size={12} /> Gallery</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><ImageIcon size={12} /> Gallery</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Photo Gallery</h1>
             <p className="section-body max-w-xl">
               Competitions, build nights, conferences, and community — captured in photos.
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Filter */}
-      <div className="sticky top-16 z-30 bg-space-900/90 backdrop-blur-xl border-b border-space-500/40 py-4">
+      <div className="sticky top-16 z-30 bg-warm-950/90 backdrop-blur-xl border-b border-warm-700/40 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 flex-wrap items-center">
           <Filter size={13} className="text-ink-muted" />
           {categories.map(c => (
             <button key={c} onClick={() => setFilter(c)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === c ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === c ? 'bg-gold text-white' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'}`}>
               {c}
             </button>
           ))}
@@ -63,7 +63,7 @@ const Gallery: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }} transition={{ duration: 0.3, delay: (i % 8) * 0.05 }}
                 onClick={() => setPreview(item.imageUrl)}
-                className="relative group rounded-2xl overflow-hidden aspect-square bg-space-700 border border-space-500/50 hover:border-electric-300/50 transition-all"
+                className="relative group rounded-2xl overflow-hidden aspect-square bg-warm-850 border border-warm-700/40 hover:border-gold-border/50 transition-all"
               >
                 <LazyImage src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">

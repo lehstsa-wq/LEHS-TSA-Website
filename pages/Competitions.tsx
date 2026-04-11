@@ -170,13 +170,12 @@ const Competitions: React.FC = () => {
           HERO
       ════════════════════════════════════════ */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-25" />
 
         {/* Orbs */}
-        <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]   right-[-60px]  opacity-30 animate-orb-float-1" />
-        <div className="orb orb-crimson w-[350px] h-[350px] bottom-[0px]  left-[5%]      opacity-20 animate-orb-float-2" />
-        <div className="orb orb-gold   w-[280px] h-[280px] top-[20%]     right-[25%]    opacity-15 animate-orb-float-3" />
+        <div className="orb   w-[600px] h-[500px] top-[-80px]   right-[-60px]  opacity-30 animate-orb-float-1" />
+        <div className="orb   w-[280px] h-[280px] top-[20%]     right-[25%]    opacity-15 animate-orb-float-3" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -184,13 +183,13 @@ const Competitions: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <div className="section-label inline-flex mb-5"><Trophy size={12} /> 2025–2026 Season</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-5"><Trophy size={12} /> 2025–2026 Season</div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance">
               Compete.{' '}
-              <span className="text-gradient-blue">Build.</span>
+              <span className="">Build.</span>
               <br />
-              <span className="text-gradient-crimson">Win.</span>
+              <span className="">Win.</span>
             </h1>
 
             <p className="text-xl text-ink-dim leading-relaxed max-w-2xl mb-10">
@@ -211,7 +210,7 @@ const Competitions: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
-                  className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3"
+                  className="card rounded-2xl px-5 py-3 flex items-center gap-3"
                 >
                   <span className="text-2xl font-black" style={{ color: chip.color }}>{chip.val}</span>
                   <span className="text-xs text-ink-muted font-medium leading-tight">{chip.label}</span>
@@ -221,8 +220,8 @@ const Competitions: React.FC = () => {
 
             {/* NQE / UTE info cards */}
             <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
-              <div className="glass-card rounded-2xl p-5 flex items-start gap-4 border-l-2 border-electric-500/60">
-                <div className="w-10 h-10 rounded-xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
+              <div className="card rounded-2xl p-5 flex items-start gap-4 border-l-2 border-gold/60">
+                <div className="w-10 h-10 rounded-xl bg-gold/20 text-gold flex items-center justify-center flex-shrink-0">
                   <Trophy size={18} />
                 </div>
                 <div>
@@ -232,8 +231,8 @@ const Competitions: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="glass-card rounded-2xl p-5 flex items-start gap-4 border-l-2 border-violet-500/60">
-                <div className="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center flex-shrink-0">
+              <div className="card rounded-2xl p-5 flex items-start gap-4 border-l-2 border-warm-700/60">
+                <div className="w-10 h-10 rounded-xl bg-warm-800/20 text-ink-dim flex items-center justify-center flex-shrink-0">
                   <MapPin size={18} />
                 </div>
                 <div>
@@ -253,7 +252,7 @@ const Competitions: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-gold-500/30 bg-gold-500/10 text-gold-400 text-sm"
+            className="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-gold-500/30 bg-gold/10 text-gold-400 text-sm"
           >
             <AlertTriangle size={15} className="flex-shrink-0" />
             <span>
@@ -263,13 +262,13 @@ const Competitions: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-space-950 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* ════════════════════════════════════════
           STICKY FILTER BAR
       ════════════════════════════════════════ */}
-      <div className="sticky top-16 z-30 bg-space-900/95 backdrop-blur-xl border-b border-space-500/40 py-4">
+      <div className="sticky top-16 z-30 bg-warm-950/95 backdrop-blur-xl border-b border-warm-700/40 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-3 items-center">
 
           {/* Category pills */}
@@ -285,7 +284,7 @@ const Competitions: React.FC = () => {
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap border ${
                     active
                       ? 'text-white border-transparent'
-                      : 'bg-space-700/50 text-ink-muted hover:text-ink border-space-500/50'
+                      : 'bg-warm-850/60 text-ink-muted hover:text-ink border-warm-700/40'
                   }`}
                   style={active ? {
                     background: catMeta?.color ?? '#3b82f6',
@@ -307,7 +306,7 @@ const Competitions: React.FC = () => {
               placeholder="Search events…"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-space-700/50 border border-space-500/60 rounded-xl pl-9 pr-9 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all"
+              className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl pl-9 pr-9 py-2 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all"
             />
             {searchQuery && (
               <button onClick={() => setSearchQuery('')}
@@ -326,7 +325,7 @@ const Competitions: React.FC = () => {
           {(activeCategory !== 'all' || searchQuery) && (
             <button
               onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
-              className="text-xs text-electric-400 hover:text-electric-300 transition-colors"
+              className="text-xs text-gold hover:text-gold transition-colors"
             >
               Clear filters ×
             </button>
@@ -356,7 +355,7 @@ const Competitions: React.FC = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: Math.min(i * 0.035, 0.35) }}
                   onClick={() => setSelectedEvent(comp)}
-                  className="group relative rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all duration-300 bg-space-800/50 border border-space-500/50"
+                  className="group relative rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all duration-300 bg-warm-900/50 border border-warm-700/40"
                   style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.35)' }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = `${catMeta.color}50`;
@@ -402,7 +401,7 @@ const Competitions: React.FC = () => {
                         {catMeta.label}
                       </span>
                       {comp.title.includes('(UTE)') && (
-                        <span className="badge badge-purple text-[10px] backdrop-blur-sm flex items-center gap-1">
+                        <span className="badge badge-muted text-[10px] backdrop-blur-sm flex items-center gap-1">
                           <MapPin size={8} /> TX Only
                         </span>
                       )}
@@ -424,18 +423,18 @@ const Competitions: React.FC = () => {
 
                     {/* Meta pills */}
                     <div className="flex flex-wrap gap-2 mb-5">
-                      <span className="flex items-center gap-1 text-xs text-ink-muted bg-space-700/60 border border-space-500/40 px-2.5 py-1 rounded-lg">
+                      <span className="flex items-center gap-1 text-xs text-ink-muted bg-warm-850/60 border border-warm-700/40 px-2.5 py-1 rounded-lg">
                         <Users size={11} /> Max {comp.details.maxTeamSize}
                       </span>
                       {comp.details.timeLimit !== 'N/A' && (
-                        <span className="flex items-center gap-1 text-xs text-ink-muted bg-space-700/60 border border-space-500/40 px-2.5 py-1 rounded-lg">
+                        <span className="flex items-center gap-1 text-xs text-ink-muted bg-warm-850/60 border border-warm-700/40 px-2.5 py-1 rounded-lg">
                           <Clock size={11} /> {comp.details.timeLimit}
                         </span>
                       )}
                     </div>
 
                     {/* Footer row */}
-                    <div className="flex items-center justify-between pt-4 border-t border-space-500/30">
+                    <div className="flex items-center justify-between pt-4 border-t border-warm-700/40">
                       <span className="text-xs font-medium" style={{ color: catMeta.color }}>
                         View details
                       </span>
@@ -457,11 +456,10 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
-      <section className="relative py-24 border-t border-space-500/30 overflow-hidden">
+      <section className="relative py-24 border-t border-warm-700/40 overflow-hidden">
         {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
-        <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]  left-[-100px] opacity-10 animate-orb-float-2 pointer-events-none" />
-        <div className="orb orb-crimson w-[300px] h-[300px] bottom-[0px] right-[5%]   opacity-10 animate-orb-float-3 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-warm-950/0 via-warm-900/40 to-warm-950/0 pointer-events-none" />
+        <div className="orb   w-[600px] h-[500px] top-[-80px]  left-[-100px] opacity-10 animate-orb-float-2 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -473,10 +471,10 @@ const Competitions: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="mb-14"
           >
-            <div className="section-label inline-flex mb-4"><Shield size={12} /> TSA TEAMS Program</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Shield size={12} /> TSA TEAMS Program</div>
             <div className="flex flex-wrap items-end gap-4 mb-5">
               <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-                <span className="text-gradient-blue">TEAMS</span>
+                <span className="">TEAMS</span>
               </h2>
               <span className="text-ink-muted text-base font-medium mb-1 leading-snug">
                 Tests of Engineering Aptitude,<br className="hidden sm:block" /> Mathematics &amp; Science
@@ -488,22 +486,22 @@ const Competitions: React.FC = () => {
 
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
-              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-amber-500/30">
+              <div className="card rounded-2xl px-5 py-3 flex items-center gap-3 border border-amber-500/30">
                 <Star size={15} className="text-amber-400 flex-shrink-0" />
                 <div>
                   <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2025–2026 Theme</div>
                   <div className="text-sm font-black text-amber-300">Engineering the Past</div>
                 </div>
               </div>
-              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-electric-500/30">
-                <Users size={15} className="text-electric-400 flex-shrink-0" />
+              <div className="card rounded-2xl px-5 py-3 flex items-center gap-3 border border-gold/30">
+                <Users size={15} className="text-gold flex-shrink-0" />
                 <div>
                   <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>
                   <div className="text-sm font-black text-ink">2–4 Members</div>
                 </div>
               </div>
-              <div className="glass-card rounded-2xl px-5 py-3 flex items-center gap-3 border border-violet-500/30">
-                <Trophy size={15} className="text-violet-400 flex-shrink-0" />
+              <div className="card rounded-2xl px-5 py-3 flex items-center gap-3 border border-warm-700/30">
+                <Trophy size={15} className="text-ink-dim flex-shrink-0" />
                 <div>
                   <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Advancement</div>
                   <div className="text-sm font-black text-ink">State → Nationals</div>
@@ -535,7 +533,7 @@ const Competitions: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="glass-card rounded-2xl p-6 flex flex-col gap-4 border border-space-500/50 hover:border-space-400/70 transition-all duration-300"
+                  className="card rounded-2xl p-6 flex flex-col gap-4 border border-warm-700/40 hover:border-warm-600/70 transition-all duration-300"
                 >
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -562,10 +560,10 @@ const Competitions: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="glass-card rounded-2xl p-6 border border-violet-500/25 mb-5"
+              className="card rounded-2xl p-6 border border-warm-700/25 mb-5"
             >
               <h3 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
-                <Download size={14} className="text-violet-400" /> TEAMS Resources
+                <Download size={14} className="text-ink-dim" /> TEAMS Resources
               </h3>
               <div className="flex flex-wrap gap-2">
                 {(competitionLinks['teams'] ?? []).map((link, i) => (
@@ -574,7 +572,7 @@ const Competitions: React.FC = () => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
+                    className="inline-flex items-center gap-2 badge badge-muted hover:bg-gold/30 transition-colors text-xs"
                   >
                     <FileText size={11} /> {link.name || 'TEAMS Resource'}
                   </a>
@@ -589,9 +587,9 @@ const Competitions: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="glass-card rounded-2xl p-8 border border-electric-500/25 flex flex-col sm:flex-row items-start sm:items-center gap-6"
+            className="card rounded-2xl p-8 border border-gold/25 flex flex-col sm:flex-row items-start sm:items-center gap-6"
           >
-            <div className="w-14 h-14 rounded-2xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-gold/20 text-gold flex items-center justify-center flex-shrink-0">
               <UserCheck size={26} />
             </div>
             <div className="flex-1">
@@ -632,13 +630,13 @@ const Competitions: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 24 }}
               transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-space-800 border border-space-500/60"
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-warm-900 border border-warm-700/40"
               style={{ boxShadow: `0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px ${meta?.color ?? '#3b82f6'}25` }}
             >
               {/* Close button */}
               <button
                 onClick={() => setSelectedEvent(null)}
-                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-space-700/90 hover:bg-space-600 flex items-center justify-center text-ink-muted hover:text-ink transition-colors border border-space-500/50"
+                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-warm-850/60 hover:bg-warm-800 flex items-center justify-center text-ink-muted hover:text-ink transition-colors border border-warm-700/40"
               >
                 <X size={16} />
               </button>
@@ -667,7 +665,7 @@ const Competitions: React.FC = () => {
                       {meta?.label}
                     </span>
                     {selectedEvent.title.includes('(UTE)') && (
-                      <span className="badge badge-purple text-[10px] backdrop-blur-sm">Texas UTE</span>
+                      <span className="badge badge-muted text-[10px] backdrop-blur-sm">Texas UTE</span>
                     )}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-black text-white leading-tight drop-shadow-xl">
@@ -685,25 +683,25 @@ const Competitions: React.FC = () => {
               {/* Body */}
               <div className="p-8">
                 {/* Description */}
-                <p className="text-ink-dim text-base leading-relaxed mb-8 pb-8 border-b border-space-500/40">
+                <p className="text-ink-dim text-base leading-relaxed mb-8 pb-8 border-b border-warm-700/40">
                   {selectedEvent.details.fullDescription}
                 </p>
 
                 {/* Info grid */}
                 <div className="grid md:grid-cols-2 gap-4 mb-8">
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="card rounded-xl p-5">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
-                      <Users size={14} className="text-electric-400" /> Eligibility
+                      <Users size={14} className="text-gold" /> Eligibility
                     </h4>
                     <p className="text-sm text-ink-dim leading-relaxed">{selectedEvent.details.eligibility}</p>
                   </div>
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="card rounded-xl p-5">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
-                      <FileText size={14} className="text-electric-400" /> Procedure
+                      <FileText size={14} className="text-gold" /> Procedure
                     </h4>
                     <p className="text-sm text-ink-dim leading-relaxed">{selectedEvent.details.procedure}</p>
                   </div>
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="card rounded-xl p-5">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
                       <Briefcase size={14} className="text-gold-400" /> Career Connections
                     </h4>
@@ -713,9 +711,9 @@ const Competitions: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="card rounded-xl p-5">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
-                      <Download size={14} className="text-violet-400" /> Resources
+                      <Download size={14} className="text-ink-dim" /> Resources
                     </h4>
                     {currentResourceLinks.length > 0 ? (
                       <div className="flex flex-col gap-2">
@@ -725,7 +723,7 @@ const Competitions: React.FC = () => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
+                            className="inline-flex items-center gap-2 badge badge-muted hover:bg-gold/30 transition-colors text-xs"
                           >
                             <FileText size={11} /> {link.name || 'Download Official Guide'}
                           </a>
@@ -759,7 +757,7 @@ const Competitions: React.FC = () => {
 
                 {/* Interest / Sign-in */}
                 <div
-                  className="glass-card rounded-2xl p-6 border"
+                  className="card rounded-2xl p-6 border"
                   style={{ borderColor: `${meta?.color}25` }}
                 >
                   <h3 className="font-bold text-ink mb-1 flex items-center gap-2">
@@ -769,7 +767,7 @@ const Competitions: React.FC = () => {
 
                   {!user ? (
                     <p className="text-sm text-ink-muted">
-                      <a href="#/login" className="text-electric-400 hover:text-electric-300 font-semibold transition-colors">Sign in</a>{' '}
+                      <a href="#/login" className="text-gold hover:text-gold font-semibold transition-colors">Sign in</a>{' '}
                       to register your interest in this event.
                     </p>
                   ) : existingInterest ? (
@@ -797,13 +795,13 @@ const Competitions: React.FC = () => {
                           <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Team Members</p>
                           <div className="flex flex-wrap gap-2">
                             {(existingInterest.teamMembers ?? []).map((m, i) => (
-                              <span key={i} className="px-3 py-1 rounded-xl text-xs font-semibold bg-space-700/60 border border-space-500/50 text-ink-muted">{m}</span>
+                              <span key={i} className="px-3 py-1 rounded-xl text-xs font-semibold bg-warm-850/60 border border-warm-700/40 text-ink-muted">{m}</span>
                             ))}
                           </div>
                         </div>
                       )}
                       {existingInterest.notes && (
-                        <p className="text-xs text-ink-muted italic bg-space-700/40 rounded-xl px-4 py-3 border border-space-500/30">"{existingInterest.notes}"</p>
+                        <p className="text-xs text-ink-muted italic bg-warm-850/60 rounded-xl px-4 py-3 border border-warm-700/40">"{existingInterest.notes}"</p>
                       )}
                       <div className="flex gap-3 pt-1">
                         <button onClick={() => setSelectedEvent(null)} className="btn-secondary flex-1 py-3">Close</button>
@@ -829,7 +827,7 @@ const Competitions: React.FC = () => {
                               className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                                 skills.includes(skill)
                                   ? 'text-white border-transparent'
-                                  : 'bg-space-700/50 text-ink-muted border-space-500/50 hover:text-ink'
+                                  : 'bg-warm-850/60 text-ink-muted border-warm-700/40 hover:text-ink'
                               }`}
                               style={skills.includes(skill) ? {
                                 background: meta?.color,
@@ -846,7 +844,7 @@ const Competitions: React.FC = () => {
                         {teamMembers.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-2">
                             {teamMembers.map((m, i) => (
-                              <span key={i} className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-space-700/60 border border-space-500/50 text-ink">
+                              <span key={i} className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-warm-850/60 border border-warm-700/40 text-ink">
                                 {m}
                                 <button onClick={() => setTeamMembers(prev => prev.filter((_, idx) => idx !== i))} className="text-ink-muted hover:text-red-400 transition-colors">
                                   <X size={11} />
@@ -867,7 +865,7 @@ const Competitions: React.FC = () => {
                           }}
                           onBlur={() => { if (teamMemberInput.trim()) addTeamMember(teamMemberInput); }}
                           placeholder="Type a name and press Enter…"
-                          className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-2.5 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all"
+                          className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-2.5 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all"
                         />
                       </div>
                       <div>
@@ -876,7 +874,7 @@ const Competitions: React.FC = () => {
                           value={notes}
                           onChange={e => setNotes(e.target.value)}
                           placeholder="e.g., I have a partner in mind…"
-                          className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-2.5 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all min-h-[80px] resize-none"
+                          className="w-full bg-warm-850/60 border border-warm-700/40 rounded-xl px-4 py-2.5 text-sm text-ink placeholder-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all min-h-[80px] resize-none"
                         />
                       </div>
                       <div className="flex gap-3 pt-1">

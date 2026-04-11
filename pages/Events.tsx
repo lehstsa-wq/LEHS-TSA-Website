@@ -7,10 +7,10 @@ import { Countdown } from '../components/Countdown';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
-  Meeting:     'badge-blue',
-  Workshop:    'badge-purple',
+  Meeting:     'badge-muted',
+  Workshop:    'badge-muted',
   Social:      'badge-green',
-  Fundraiser:  'badge-purple',
+  Fundraiser:  'badge-muted',
 };
 
 const CATEGORIES = ['All', 'Meeting', 'Competition', 'Workshop', 'Social', 'Fundraiser'];
@@ -37,31 +37,31 @@ const Events: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[400px] top-[-60px] right-[10%] opacity-25 animate-orb-float-1" />
+        <div className="orb w-[400px] h-[400px] top-[-60px] right-[10%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Calendar size={12} /> Schedule</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Calendar size={12} /> Schedule</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Events & Calendar</h1>
             <p className="section-body max-w-2xl">
               Stay on top of every meeting, competition, workshop, and social event. Never miss a deadline.
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Countdown */}
       <Countdown />
 
       {/* Filters */}
-      <div className="sticky top-16 z-30 bg-space-900/90 backdrop-blur-xl border-b border-space-500/40 py-4">
+      <div className="sticky top-16 z-30 bg-warm-950/90 backdrop-blur-xl border-b border-warm-700/40 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-3 items-center">
           <div className="flex gap-1.5">
             {(['All', 'Upcoming', 'Past'] as const).map(s => (
               <button key={s} onClick={() => setFilter(s)}
-                className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === s ? 'bg-electric-500 text-white shadow-glow-blue' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === s ? 'bg-gold text-white ' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'}`}>
                 {s}
               </button>
             ))}
@@ -70,7 +70,7 @@ const Events: React.FC = () => {
             <Filter size={13} className="text-ink-muted self-center" />
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCategory(c)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold-500 text-space-950' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold text-warm-950' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'}`}>
                 {c}
               </button>
             ))}
@@ -100,7 +100,7 @@ const Events: React.FC = () => {
                   className={`card flex gap-5 group ${event.status === 'Past' ? 'opacity-60' : ''}`}
                 >
                   {/* Date block */}
-                  <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-space-700/80 border border-space-500/60 flex flex-col items-center justify-center">
+                  <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-warm-850/60 border border-warm-700/40 flex flex-col items-center justify-center">
                     <div className="text-[10px] font-bold text-gold-500 uppercase tracking-wide">{mon}</div>
                     <div className="text-2xl font-black text-ink leading-none">{day}</div>
                     <div className="text-[10px] text-ink-muted">{yr}</div>
@@ -109,8 +109,8 @@ const Events: React.FC = () => {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
-                      <h3 className="font-bold text-ink text-lg group-hover:text-electric-400 transition-colors">{event.title}</h3>
-                      <span className={`badge ${CATEGORY_COLORS[event.category] || 'badge-blue'} flex-shrink-0`}>{event.category}</span>
+                      <h3 className="font-bold text-ink text-lg group-hover:text-gold transition-colors">{event.title}</h3>
+                      <span className={`badge ${CATEGORY_COLORS[event.category] || 'badge-muted'} flex-shrink-0`}>{event.category}</span>
                     </div>
                     {event.description && <p className="text-sm text-ink-dim mt-1.5 line-clamp-2">{event.description}</p>}
                     <div className="flex items-center gap-4 mt-3 text-xs text-ink-muted flex-wrap">

@@ -16,7 +16,7 @@ const TYPE_CONFIG: Record<OpportunityType | 'All', {
   All:         { label: 'All',         color: '#6b7280', bg: 'bg-gray-100',        darkBg: 'dark:bg-white/10',       icon: Globe       },
   Scholarship: { label: 'Scholarship', color: '#f59e0b', bg: 'bg-amber-100',       darkBg: 'dark:bg-amber-900/30',   icon: GraduationCap },
   Internship:  { label: 'Internship',  color: '#3b82f6', bg: 'bg-blue-100',        darkBg: 'dark:bg-blue-900/30',    icon: Briefcase   },
-  Program:     { label: 'Program',     color: '#8b5cf6', bg: 'bg-violet-100',      darkBg: 'dark:bg-violet-900/30',  icon: BookOpen    },
+  Program:     { label: 'Program',     color: '#8b5cf6', bg: 'bg-warm-800',      darkBg: 'dark:bg-warm-800/30',  icon: BookOpen    },
   Competition: { label: 'Competition', color: '#e05c5c', bg: 'bg-red-100',         darkBg: 'dark:bg-red-900/30',     icon: Trophy      },
   Workshop:    { label: 'Workshop',    color: '#22c55e', bg: 'bg-green-100',        darkBg: 'dark:bg-green-900/30',   icon: Zap         },
   Fellowship:  { label: 'Fellowship',  color: '#06b6d4', bg: 'bg-cyan-100',        darkBg: 'dark:bg-cyan-900/30',    icon: Star        },
@@ -227,7 +227,7 @@ const Opportunities: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-violet-500/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent/5 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-14">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 text-xs font-bold tracking-wider text-accent-blue uppercase bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-900/30">
@@ -348,7 +348,7 @@ const Opportunities: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-14 p-8 bg-gradient-to-br from-accent-blue/10 via-transparent to-violet-500/5 border border-accent-blue/20 rounded-3xl flex flex-col sm:flex-row items-center gap-6"
+          className="mt-14 p-8 bg-gradient-to-br from-accent-blue/10 via-transparent/5 border border-accent-blue/20 rounded-3xl flex flex-col sm:flex-row items-center gap-6"
         >
           <div className="w-14 h-14 rounded-2xl bg-accent-blue/15 flex items-center justify-center text-accent-blue shrink-0">
             <Sparkles size={24} />

@@ -53,9 +53,9 @@ const About: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[500px] h-[400px] top-[-80px] right-[-60px] opacity-30 animate-orb-float-1" />
+        <div className="orb w-[500px] h-[400px] top-[-80px] right-[-60px] opacity-30 animate-orb-float-1" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -63,7 +63,7 @@ const About: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="section-label inline-flex mb-4">Our Chapter</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Our Chapter</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">About LEHS TSA</h1>
             <p className="section-body max-w-2xl">
               We're a student-run Technology Student Association chapter dedicated to
@@ -72,7 +72,7 @@ const About: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* ── What is TSA ── */}
@@ -84,7 +84,7 @@ const About: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="section-label inline-flex mb-4">What We Are</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">What We Are</div>
             <h2 className="text-3xl lg:text-4xl font-bold text-ink mb-6">
               The only student org devoted entirely to STEM.
             </h2>
@@ -141,7 +141,7 @@ const About: React.FC = () => {
       </section>
 
       {/* ── Mission & Values ── */}
-      <section className="py-20 bg-space-950/60 border-y border-space-500/30">
+      <section className="py-20 bg-warm-950/60 border-y border-warm-700/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -150,7 +150,7 @@ const About: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="section-label inline-flex mb-4">What Drives Us</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">What Drives Us</div>
             <h2 className="section-title mb-4">Mission & Values</h2>
           </motion.div>
 
@@ -208,13 +208,13 @@ const About: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="section-label inline-flex mb-4">Our Story</div>
+          <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Our Story</div>
           <h2 className="section-title">Chapter Milestones</h2>
         </motion.div>
 
         <div className="relative">
           {/* Center line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-electric-500/40 via-violet-500/40 to-transparent -translate-x-1/2 hidden md:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold/30 via-warm-600/40 to-transparent -translate-x-1/2 hidden md:block" />
 
           <div className="space-y-12">
             {TIMELINE.map((item, i) => (
@@ -254,7 +254,7 @@ const About: React.FC = () => {
 
       {/* ── Officer Team ── */}
       {executive.length > 0 && (
-        <section className="py-20 bg-space-950/60 border-t border-space-500/30">
+        <section className="py-20 bg-warm-950/60 border-t border-warm-700/40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -264,11 +264,11 @@ const About: React.FC = () => {
               className="flex items-end justify-between mb-12"
             >
               <div>
-                <div className="section-label inline-flex mb-4">Leadership</div>
+                <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Leadership</div>
                 <h2 className="section-title">Meet the Officers</h2>
               </div>
               <Link to="/officers"
-                className="flex items-center gap-1.5 text-sm text-electric-500 hover:text-electric-400 transition-colors font-medium">
+                className="flex items-center gap-1.5 text-sm text-gold hover:text-gold transition-colors font-medium">
                 Full Team <ChevronRight size={16} />
               </Link>
             </motion.div>
@@ -283,16 +283,16 @@ const About: React.FC = () => {
                   transition={{ duration: 0.4, delay: i * 0.07 }}
                   className="group text-center"
                 >
-                  <div className="w-20 h-20 rounded-2xl mx-auto mb-3 overflow-hidden border-2 border-space-500/60 group-hover:border-electric-300/60 transition-all duration-300">
+                  <div className="w-20 h-20 rounded-2xl mx-auto mb-3 overflow-hidden border-2 border-warm-700/40 group-hover:border-gold-border/60 transition-all duration-300">
                     {officer.imageUrl ? (
                       <LazyImage src={officer.imageUrl} alt={officer.name} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full bg-space-700 flex items-center justify-center text-ink-muted">
+                      <div className="w-full h-full bg-warm-850 flex items-center justify-center text-ink-muted">
                         <User size={28} />
                       </div>
                     )}
                   </div>
-                  <div className="text-sm font-semibold text-ink group-hover:text-electric-400 transition-colors truncate">
+                  <div className="text-sm font-semibold text-ink group-hover:text-gold transition-colors truncate">
                     {officer.name}
                   </div>
                   <div className="text-[11px] text-ink-muted mt-0.5">{officer.role}</div>
@@ -306,12 +306,12 @@ const About: React.FC = () => {
       {/* ── Faculty Advisors ── */}
       {advisors.length > 0 && (
         <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="section-label inline-flex mb-4">Faculty</div>
+          <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Faculty</div>
           <h2 className="text-2xl font-bold text-ink mb-8">Our Advisors</h2>
           <div className="flex flex-wrap gap-4">
             {advisors.map(a => (
               <div key={a.id} className="card flex items-center gap-4 min-w-[280px]">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-space-700 flex-shrink-0">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-warm-850 flex-shrink-0">
                   {a.imageUrl ? (
                     <LazyImage src={a.imageUrl} alt={a.name} className="w-full h-full object-cover" />
                   ) : (
@@ -324,7 +324,7 @@ const About: React.FC = () => {
                   <div className="font-semibold text-ink text-sm">{a.name}</div>
                   <div className="text-xs text-ink-muted">{a.role}</div>
                   {a.email && (
-                    <a href={`mailto:${a.email}`} className="text-xs text-electric-500 hover:text-electric-400 transition-colors mt-1 block">
+                    <a href={`mailto:${a.email}`} className="text-xs text-gold hover:text-gold transition-colors mt-1 block">
                       {a.email}
                     </a>
                   )}

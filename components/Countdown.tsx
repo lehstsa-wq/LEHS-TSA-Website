@@ -50,8 +50,8 @@ export const Countdown: React.FC = () => {
       {/* Background */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e3a5f, #07111e 40%, #2d1f4f)' }} />
       <div className="absolute inset-0 grid-bg opacity-20" />
-      <div className="orb orb-blue w-[500px] h-[400px] top-[-100px] left-[-100px] opacity-25 animate-orb-float-1 absolute" />
-      <div className="orb orb-purple w-[400px] h-[300px] bottom-[-80px] right-[-80px] opacity-20 animate-orb-float-2 absolute" />
+      <div className="orb w-[500px] h-[400px] top-[-100px] left-[-100px] opacity-25 animate-orb-float-1 absolute" />
+      <div className="orb w-[400px] h-[300px] bottom-[-80px] right-[-80px] opacity-20 animate-orb-float-2 absolute" />
 
       <div className="relative max-w-3xl mx-auto text-center">
         <motion.div

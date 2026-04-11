@@ -65,13 +65,13 @@ const FAQS = [
 const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border rounded-2xl overflow-hidden transition-all duration-300 ${open ? 'border-electric-300/40' : 'border-space-500/60'}`}>
+    <div className={`border rounded-2xl overflow-hidden transition-all duration-300 ${open ? 'border-gold-border/40' : 'border-warm-700/40'}`}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-space-700/30 transition-colors"
+        className="w-full flex items-center justify-between p-5 text-left hover:bg-warm-850/60 transition-colors"
       >
         <span className="font-semibold text-ink text-sm pr-4">{q}</span>
-        {open ? <ChevronUp size={18} className="text-electric-500 flex-shrink-0" /> : <ChevronDown size={18} className="text-ink-muted flex-shrink-0" />}
+        {open ? <ChevronUp size={18} className="text-gold flex-shrink-0" /> : <ChevronDown size={18} className="text-ink-muted flex-shrink-0" />}
       </button>
       <AnimatePresence>
         {open && (
@@ -81,7 +81,7 @@ const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="px-5 pb-5 text-sm text-ink-dim leading-relaxed border-t border-space-500/40 pt-4">
+            <div className="px-5 pb-5 text-sm text-ink-dim leading-relaxed border-t border-warm-700/40 pt-4">
               {a}
             </div>
           </motion.div>
@@ -134,12 +134,12 @@ const Join: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-purple w-[500px] h-[400px] top-[-80px] right-[-60px] opacity-25 animate-orb-float-2" />
+        <div className="orb w-[500px] h-[400px] top-[-80px] right-[-60px] opacity-25 animate-orb-float-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Star size={12} /> Membership</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Star size={12} /> Membership</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Join Little Elm TSA</h1>
             <p className="section-body max-w-2xl mx-auto">
               Membership opens the door to 30+ competitive events, national conferences, leadership roles, and a community
@@ -147,13 +147,13 @@ const Join: React.FC = () => {
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* ── Benefits ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-14">
-          <div className="section-label inline-flex mb-4">Why Join?</div>
+          <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Why Join?</div>
           <h2 className="section-title mb-4">Everything membership unlocks</h2>
         </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -161,7 +161,7 @@ const Join: React.FC = () => {
             return (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
                 className="card group">
-                <CheckCircle2 size={18} className="text-electric-500 mb-4" />
+                <CheckCircle2 size={18} className="text-gold mb-4" />
                 <h3 className="font-bold text-ink mb-2">{b.title}</h3>
                 <p className="text-sm text-ink-dim leading-relaxed">{b.body}</p>
               </motion.div>
@@ -171,10 +171,10 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── How to Join ── */}
-      <section className="py-20 bg-space-950/60 border-y border-space-500/30">
+      <section className="py-20 bg-warm-950/60 border-y border-warm-700/40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-14">
-            <div className="section-label inline-flex mb-4">Process</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Process</div>
             <h2 className="section-title mb-4">4 steps to join</h2>
             <p className="section-body">Complete all four steps and you're officially a LEHS TSA member.</p>
           </motion.div>
@@ -205,7 +205,7 @@ const Join: React.FC = () => {
       {/* ── Action Links ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-12">
-          <div className="section-label inline-flex mb-4">Start Here</div>
+          <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">Start Here</div>
           <h2 className="section-title mb-4">Complete all four links below</h2>
           <p className="section-body">Click each card to open the link in a new tab. Do them in order.</p>
         </motion.div>
@@ -231,15 +231,15 @@ const Join: React.FC = () => {
                   </div>
                 ) : (
                   <a href={link.url} target="_blank" rel="noopener noreferrer"
-                    className="card flex items-center gap-4 group hover:border-electric-300/40">
+                    className="card flex items-center gap-4 group hover:border-gold-border/40">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${link.color}20`, color: link.color }}>
                       <Icon size={22} />
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-ink group-hover:text-electric-400 transition-colors">{link.label}</div>
+                      <div className="font-semibold text-ink group-hover:text-gold transition-colors">{link.label}</div>
                       <div className="text-xs text-ink-muted mt-0.5">{link.desc}</div>
                     </div>
-                    <ExternalLink size={16} className="text-ink-ghost group-hover:text-electric-500 transition-colors flex-shrink-0" />
+                    <ExternalLink size={16} className="text-ink-ghost group-hover:text-gold transition-colors flex-shrink-0" />
                   </a>
                 )}
               </motion.div>
@@ -248,15 +248,15 @@ const Join: React.FC = () => {
         </div>
 
         <p className="text-xs text-ink-muted text-center mt-6">
-          Questions? <Link to="/contact" className="text-electric-500 hover:text-electric-400 transition-colors">Contact us</Link> or ask an officer at the next meeting.
+          Questions? <Link to="/contact" className="text-gold hover:text-gold transition-colors">Contact us</Link> or ask an officer at the next meeting.
         </p>
       </section>
 
       {/* ── FAQ ── */}
-      <section className="py-20 bg-space-950/60 border-t border-space-500/30">
+      <section className="py-20 bg-warm-950/60 border-t border-warm-700/40">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-12">
-            <div className="section-label inline-flex mb-4">FAQ</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4">FAQ</div>
             <h2 className="section-title">Common questions</h2>
           </motion.div>
           <div className="space-y-3">

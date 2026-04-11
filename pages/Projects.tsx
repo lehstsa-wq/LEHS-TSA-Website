@@ -19,12 +19,12 @@ const Projects: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="absolute inset-0" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[350px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
+        <div className="orb w-[400px] h-[350px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4"><Zap size={12} /> Portfolio</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm mb-4"><Zap size={12} /> Portfolio</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-6">Project Showcase</h1>
             <p className="section-body max-w-2xl">
               Award-winning projects, innovative builds, and creative designs from LEHS TSA members.
@@ -32,16 +32,16 @@ const Projects: React.FC = () => {
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-warm-950 to-transparent" />
       </section>
 
       {/* Filter */}
-      <div className="sticky top-16 z-30 bg-space-900/90 backdrop-blur-xl border-b border-space-500/40 py-4">
+      <div className="sticky top-16 z-30 bg-warm-950/90 backdrop-blur-xl border-b border-warm-700/40 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 flex-wrap items-center">
           <Filter size={13} className="text-ink-muted" />
           {categories.map(c => (
             <button key={c} onClick={() => setFilter(c)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === c ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === c ? 'bg-gold text-white' : 'bg-warm-850/60 text-ink-muted hover:text-ink border border-warm-700/40'}`}>
               {c}
             </button>
           ))}
@@ -62,19 +62,19 @@ const Projects: React.FC = () => {
               <motion.div key={project.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (i % 6) * 0.08 }}
                 className="card group overflow-hidden !p-0">
                 {project.imageUrl && (
-                  <div className="aspect-video overflow-hidden bg-space-700">
+                  <div className="aspect-video overflow-hidden bg-warm-850">
                     <LazyImage src={project.imageUrl} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                 )}
                 <div className="p-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="badge badge-blue text-[10px]">{project.category}</span>
+                    <span className="badge badge-muted text-[10px]">{project.category}</span>
                     <span className="text-[11px] text-ink-muted">{project.year}</span>
                   </div>
-                  <h3 className="font-bold text-ink mb-2 group-hover:text-electric-400 transition-colors">{project.title}</h3>
+                  <h3 className="font-bold text-ink mb-2 group-hover:text-gold transition-colors">{project.title}</h3>
                   <p className="text-sm text-ink-dim leading-relaxed line-clamp-3">{project.description}</p>
                   {project.award && (
-                    <div className="flex items-center gap-2 mt-4 pt-3 border-t border-space-500/40">
+                    <div className="flex items-center gap-2 mt-4 pt-3 border-t border-warm-700/40">
                       <Trophy size={14} className="text-gold-500" />
                       <span className="text-sm font-semibold text-gold-400">{project.award}</span>
                     </div>
