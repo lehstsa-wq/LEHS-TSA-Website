@@ -76,7 +76,7 @@ const TEAMS_COMPONENTS = [
 
 const Competitions: React.FC = () => {
   const { user } = useAuth();
-  const { submitInterest, competitionLinks } = useData();
+  const { submitInterest, competitionLinks, competitionInterests, deleteInterest } = useData();
   const { showToast } = useToast();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,8 +84,15 @@ const Competitions: React.FC = () => {
 
   const [skills, setSkills] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
-  const [teamMembers, setTeamMembers] = useState('');
+  const [teamMemberInput, setTeamMemberInput] = useState('');
+  const [teamMembers, setTeamMembers] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+
+  // Check if current user already submitted for the selected event
+  const existingInterest = user && selectedEvent
+    ? competitionInterests.find(i => i.userId === user.id && i.competitionId === selectedEvent.id)
+    : null;
 
   const filteredCompetitions = COMPETITIONS.filter(comp => {
     const matchesCategory = activeCategory === 'all' || comp.category === activeCategory;
@@ -106,14 +113,15 @@ const Competitions: React.FC = () => {
         competitionName: selectedEvent.title,
         skills,
         notes,
-        teamMembers: teamMembers.split(',').map((m: string) => m.trim()).filter((m: string) => m),
+        teamMembers,
       });
-      showToast('Interest submitted successfully!', 'success');
+      showToast('Interest submitted!', 'success');
       setTimeout(() => {
         setIsSubmitting(false);
         setSkills([]);
         setNotes('');
-        setTeamMembers('');
+        setTeamMembers([]);
+        setTeamMemberInput('');
         setSelectedEvent(null);
       }, 500);
     } catch (err) {
@@ -123,10 +131,32 @@ const Competitions: React.FC = () => {
     }
   };
 
+  const handleWithdraw = async () => {
+    if (!existingInterest?.id) return;
+    setIsWithdrawing(true);
+    try {
+      await deleteInterest(existingInterest.id);
+      showToast('Interest withdrawn.', 'success');
+      setSelectedEvent(null);
+    } catch {
+      showToast('Failed to withdraw. Please try again.', 'error');
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
+
   const toggleSkill = (skill: string) => {
     setSkills(prev =>
       prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill]
     );
+  };
+
+  const addTeamMember = (name: string) => {
+    const trimmed = name.trim();
+    if (trimmed && !teamMembers.includes(trimmed)) {
+      setTeamMembers(prev => [...prev, trimmed]);
+    }
+    setTeamMemberInput('');
   };
 
   const currentResourceLinks = selectedEvent ? (competitionLinks[selectedEvent.id] ?? []) : [];
@@ -742,12 +772,57 @@ const Competitions: React.FC = () => {
                       <a href="#/login" className="text-electric-400 hover:text-electric-300 font-semibold transition-colors">Sign in</a>{' '}
                       to register your interest in this event.
                     </p>
+                  ) : existingInterest ? (
+                    /* ── Already submitted state ── */
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/25">
+                        <CheckCircle size={18} className="text-green-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-green-300">You've already expressed interest!</p>
+                          <p className="text-xs text-ink-muted mt-0.5">Submitted {new Date(existingInterest.timestamp).toLocaleDateString()}. Officers can see your submission.</p>
+                        </div>
+                      </div>
+                      {existingInterest.skills.length > 0 && (
+                        <div>
+                          <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Your Skills</p>
+                          <div className="flex flex-wrap gap-2">
+                            {existingInterest.skills.map(s => (
+                              <span key={s} className="px-3 py-1 rounded-xl text-xs font-semibold text-white border-transparent" style={{ background: meta?.color }}>{s}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {(existingInterest.teamMembers ?? []).length > 0 && (
+                        <div>
+                          <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Team Members</p>
+                          <div className="flex flex-wrap gap-2">
+                            {(existingInterest.teamMembers ?? []).map((m, i) => (
+                              <span key={i} className="px-3 py-1 rounded-xl text-xs font-semibold bg-space-700/60 border border-space-500/50 text-ink-muted">{m}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {existingInterest.notes && (
+                        <p className="text-xs text-ink-muted italic bg-space-700/40 rounded-xl px-4 py-3 border border-space-500/30">"{existingInterest.notes}"</p>
+                      )}
+                      <div className="flex gap-3 pt-1">
+                        <button onClick={() => setSelectedEvent(null)} className="btn-secondary flex-1 py-3">Close</button>
+                        <button
+                          onClick={handleWithdraw}
+                          disabled={isWithdrawing}
+                          className="flex-1 py-3 rounded-xl font-semibold text-white bg-red-600/80 hover:bg-red-600 transition-all duration-200 disabled:opacity-50"
+                        >
+                          {isWithdrawing ? 'Withdrawing…' : 'Withdraw Interest'}
+                        </button>
+                      </div>
+                    </div>
                   ) : (
+                    /* ── Submit form ── */
                     <div className="space-y-4">
                       <div>
                         <label className="block text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">My Skills</label>
                         <div className="flex flex-wrap gap-2">
-                          {['Coding', 'Design', 'Building', 'Writing', 'Public Speaking', 'Research'].map(skill => (
+                          {['Coding', 'Design', 'Building', 'Writing', 'Public Speaking', 'Research', 'CAD/3D Modeling', 'Video Editing'].map(skill => (
                             <button
                               key={skill}
                               onClick={() => toggleSkill(skill)}
@@ -768,11 +843,30 @@ const Competitions: React.FC = () => {
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Team Members (optional)</label>
+                        {teamMembers.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-2">
+                            {teamMembers.map((m, i) => (
+                              <span key={i} className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-space-700/60 border border-space-500/50 text-ink">
+                                {m}
+                                <button onClick={() => setTeamMembers(prev => prev.filter((_, idx) => idx !== i))} className="text-ink-muted hover:text-red-400 transition-colors">
+                                  <X size={11} />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
                         <input
                           type="text"
-                          value={teamMembers}
-                          onChange={e => setTeamMembers(e.target.value)}
-                          placeholder="Comma-separated names"
+                          value={teamMemberInput}
+                          onChange={e => setTeamMemberInput(e.target.value)}
+                          onKeyDown={e => {
+                            if ((e.key === 'Enter' || e.key === ',') && teamMemberInput.trim()) {
+                              e.preventDefault();
+                              addTeamMember(teamMemberInput);
+                            }
+                          }}
+                          onBlur={() => { if (teamMemberInput.trim()) addTeamMember(teamMemberInput); }}
+                          placeholder="Type a name and press Enter…"
                           className="w-full bg-space-700/50 border border-space-500/60 rounded-xl px-4 py-2.5 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all"
                         />
                       </div>
@@ -786,9 +880,7 @@ const Competitions: React.FC = () => {
                         />
                       </div>
                       <div className="flex gap-3 pt-1">
-                        <button onClick={() => setSelectedEvent(null)} className="btn-secondary flex-1 py-3">
-                          Cancel
-                        </button>
+                        <button onClick={() => setSelectedEvent(null)} className="btn-secondary flex-1 py-3">Cancel</button>
                         <button
                           onClick={handleInterestSubmit}
                           disabled={isSubmitting}

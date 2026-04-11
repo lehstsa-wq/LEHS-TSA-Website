@@ -158,7 +158,8 @@ interface DataContextType {
   toggleDeadlineStatus: (id: string) => void;
   
   updateSiteSettings: (settings: Partial<SiteSettings>) => void;
-  submitInterest: (interest: Omit<CompetitionInterest, 'timestamp'>) => Promise<void>;
+  submitInterest: (interest: Omit<CompetitionInterest, 'timestamp' | 'id'>) => Promise<void>;
+  deleteInterest: (id: string) => Promise<void>;
 
   addProblemReport: (report: Omit<ProblemReport, 'id' | 'status' | 'submittedDate'>) => Promise<void>;
   updateProblemReport: (id: string, data: Partial<ProblemReport>) => void;
@@ -288,7 +289,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Sync Competition Interests from Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "competition_interests"), (snapshot) => {
-      const interests = snapshot.docs.map(doc => doc.data() as CompetitionInterest);
+      const interests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CompetitionInterest));
       setCompetitionInterests(interests);
     });
     return () => unsubscribe();
@@ -520,13 +521,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   };
 
-  const submitInterest = async (interest: Omit<CompetitionInterest, 'timestamp'>) => {
+  const submitInterest = async (interest: Omit<CompetitionInterest, 'timestamp' | 'id'>) => {
       const item: CompetitionInterest = { ...interest, timestamp: new Date().toISOString() };
-      setCompetitionInterests(prev => [...prev, item]);
       try {
-          await addDoc(collection(db, "competition_interests"), item);
+          const docRef = await addDoc(collection(db, "competition_interests"), item);
+          setCompetitionInterests(prev => [...prev, { ...item, id: docRef.id }]);
       } catch (e) {
           console.error("Error submitting interest:", e);
+          setCompetitionInterests(prev => [...prev, item]);
+      }
+  };
+
+  const deleteInterest = async (id: string) => {
+      setCompetitionInterests(prev => prev.filter(i => i.id !== id));
+      try {
+          await deleteDoc(doc(db, "competition_interests", id));
+      } catch (e) {
+          console.error("Error deleting interest:", e);
       }
   };
 
@@ -861,7 +872,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,
       addResource, updateResource, deleteResource,
       addInternalDeadline, toggleDeadlineStatus,
-      updateSiteSettings, submitInterest,
+      updateSiteSettings, submitInterest, deleteInterest,
       addProblemReport, updateProblemReport, deleteProblemReport,
       addOfficer, updateOfficer, deleteOfficer,
       addEvent, updateEvent, deleteEvent,

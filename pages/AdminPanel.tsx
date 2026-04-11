@@ -41,38 +41,63 @@ const AdminPanel: React.FC = () => {
           </div>
         </div>
         <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-1 px-3">
-            {[
-              { id: 'overview', label: 'Overview', icon: Shield },
-              { id: 'members', label: 'Members & Access', icon: Users },
-              { id: 'issues', label: 'Issue Reports', icon: AlertOctagon },
-              { id: 'competitions', label: 'Competitions', icon: Briefcase },
-              { id: 'interests', label: 'Interest Tracking', icon: Users },
-              { id: 'updates', label: 'Announcements', icon: Bell },
-              { id: 'leadership', label: 'Leadership', icon: Star },
-              { id: 'events', label: 'Events', icon: Calendar },
-              { id: 'projects', label: 'Projects', icon: FolderOpen },
-              { id: 'gallery', label: 'Gallery', icon: ImageIcon },
-              { id: 'attendance', label: 'Attendance', icon: CheckCircle },
-              { id: 'results', label: 'Competition Results', icon: TrendingUp },
-              { id: 'resources', label: 'Resources', icon: LinkIcon },
-              { id: 'settings', label: 'Settings', icon: Settings },
-            ].map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setActiveTab(item.id as Tab)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === item.id
-                      ? 'bg-accent-blue/10 text-accent-blue'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'
-                  }`}
-                >
-                  <item.icon size={18} />
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
+          {[
+            {
+              label: 'General',
+              items: [
+                { id: 'overview', label: 'Overview', icon: Shield },
+                { id: 'settings', label: 'Settings', icon: Settings },
+              ]
+            },
+            {
+              label: 'Members',
+              items: [
+                { id: 'members', label: 'Members & Access', icon: Users },
+                { id: 'attendance', label: 'Attendance', icon: CheckCircle },
+                { id: 'issues', label: 'Issue Reports', icon: AlertOctagon },
+              ]
+            },
+            {
+              label: 'Competitions',
+              items: [
+                { id: 'competitions', label: 'Competition Links', icon: Briefcase },
+                { id: 'interests', label: 'Interest Tracking', icon: Activity },
+                { id: 'results', label: 'Results', icon: TrendingUp },
+              ]
+            },
+            {
+              label: 'Content',
+              items: [
+                { id: 'updates', label: 'Announcements', icon: Bell },
+                { id: 'leadership', label: 'Leadership', icon: Star },
+                { id: 'events', label: 'Events', icon: Calendar },
+                { id: 'projects', label: 'Projects', icon: FolderOpen },
+                { id: 'gallery', label: 'Gallery', icon: ImageIcon },
+                { id: 'resources', label: 'Resources', icon: LinkIcon },
+              ]
+            },
+          ].map((group) => (
+            <div key={group.label} className="mb-2">
+              <p className="px-4 pt-3 pb-1 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">{group.label}</p>
+              <ul className="space-y-0.5 px-3">
+                {group.items.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setActiveTab(item.id as Tab)}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                        activeTab === item.id
+                          ? 'bg-accent-blue/10 text-accent-blue'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <item.icon size={16} />
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
       </aside>
 
@@ -825,81 +850,200 @@ const GalleryTab: React.FC = () => {
     );
 }
 
+const SHEETS_INTERESTS_WEBHOOK = '';
+
 const InterestsTab: React.FC = () => {
-    const { competitionInterests } = useData();
+    const { competitionInterests, deleteInterest } = useData();
+    const { confirm } = useModal();
     const [search, setSearch] = useState('');
     const [filterEvent, setFilterEvent] = useState('All');
+    const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'done' | 'error'>('idle');
+    const [sheetsWebhook, setSheetsWebhook] = useState(SHEETS_INTERESTS_WEBHOOK);
+    const [showSheetsConfig, setShowSheetsConfig] = useState(false);
 
-    const uniqueEvents = ['All', ...Array.from(new Set(competitionInterests.map(i => i.competitionName)))];
+    const uniqueEvents = ['All', ...Array.from(new Set(competitionInterests.map(i => i.competitionName))).sort()];
 
     const filtered = competitionInterests.filter(i => {
-        const matchesSearch = i.userName.toLowerCase().includes(search.toLowerCase()) || 
-                              i.competitionName.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = i.userName.toLowerCase().includes(search.toLowerCase()) ||
+                              i.competitionName.toLowerCase().includes(search.toLowerCase()) ||
+                              i.skills.some(s => s.toLowerCase().includes(search.toLowerCase()));
         const matchesEvent = filterEvent === 'All' || i.competitionName === filterEvent;
         return matchesSearch && matchesEvent;
     });
 
+    // Group by competition name
+    const grouped = filtered.reduce<Record<string, typeof filtered>>((acc, i) => {
+        const key = i.competitionName;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(i);
+        return acc;
+    }, {});
+
+    const exportCSV = () => {
+        const rows = [
+            ['Member', 'Competition', 'Skills', 'Team Members', 'Notes', 'Date Submitted'],
+            ...filtered.map(i => [
+                i.userName,
+                i.competitionName,
+                i.skills.join('; '),
+                (i.teamMembers ?? []).join('; '),
+                i.notes,
+                new Date(i.timestamp).toLocaleDateString(),
+            ])
+        ];
+        const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `competition_interests_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const syncToSheets = async () => {
+        if (!sheetsWebhook) { setShowSheetsConfig(true); return; }
+        setSyncStatus('syncing');
+        try {
+            await fetch(sheetsWebhook, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'interests',
+                    timestamp: new Date().toISOString(),
+                    interests: competitionInterests.map(i => ({
+                        name: i.userName,
+                        competition: i.competitionName,
+                        skills: i.skills.join(', '),
+                        teamMembers: (i.teamMembers ?? []).join(', '),
+                        notes: i.notes,
+                        submitted: new Date(i.timestamp).toLocaleDateString(),
+                    })),
+                }),
+            });
+            setSyncStatus('done');
+            setTimeout(() => setSyncStatus('idle'), 3000);
+        } catch {
+            setSyncStatus('error');
+            setTimeout(() => setSyncStatus('idle'), 3000);
+        }
+    };
+
+    const handleDelete = async (interest: typeof filtered[0]) => {
+        const ok = await confirm('Remove Interest', `Remove ${interest.userName}'s interest in ${interest.competitionName}?`, true, 'Remove');
+        if (!ok || !interest.id) return;
+        await deleteInterest(interest.id);
+    };
+
     return (
         <div className="space-y-6 animate-fade-in">
-             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Interest Tracking</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">View members interested in competitions.</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">{competitionInterests.length} total submissions across {Object.keys(grouped).length + (filterEvent !== 'All' ? 0 : 0)} competitions.</p>
                 </div>
-                <div className="flex gap-2 w-full md:w-auto">
-                    <input 
-                        placeholder="Search members..." 
-                        value={search} 
-                        onChange={e => setSearch(e.target.value)} 
-                        className="flex-1 md:w-48 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm"
-                    />
-                    <select
-                        value={filterEvent}
-                        onChange={e => setFilterEvent(e.target.value)}
-                        className="flex-1 md:w-48 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border p-2 rounded-lg text-sm"
+                <div className="flex flex-wrap gap-2">
+                    <button onClick={exportCSV} className={`${buttonClass} bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border text-gray-700 dark:text-gray-300 hover:bg-gray-50`}>
+                        <Archive size={15} /> Export CSV
+                    </button>
+                    <button
+                        onClick={syncToSheets}
+                        className={`${buttonClass} ${syncStatus === 'done' ? 'bg-green-600 text-white' : syncStatus === 'error' ? 'bg-red-600 text-white' : 'bg-accent-blue text-white hover:bg-accent-hover'}`}
                     >
-                        {uniqueEvents.map(e => <option key={e} value={e}>{e}</option>)}
-                    </select>
+                        <Activity size={15} />
+                        {syncStatus === 'syncing' ? 'Syncing…' : syncStatus === 'done' ? 'Synced!' : syncStatus === 'error' ? 'Error' : 'Sync to Sheets'}
+                    </button>
                 </div>
-             </div>
+            </div>
 
-             <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
-                 <div className="overflow-x-auto">
-                     <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-                         <thead className="bg-gray-50 dark:bg-dark-bg/50 text-gray-900 dark:text-white font-bold border-b border-gray-200 dark:border-dark-border">
-                             <tr>
-                                 <th className="p-4">Member</th>
-                                 <th className="p-4">Competition</th>
-                                 <th className="p-4">Skills</th>
-                                 <th className="p-4">Notes</th>
-                                 <th className="p-4">Date</th>
-                             </tr>
-                         </thead>
-                         <tbody className="divide-y divide-gray-200 dark:divide-dark-border">
-                             {filtered.map((interest, idx) => (
-                                 <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                     <td className="p-4 font-bold text-gray-900 dark:text-white">{interest.userName}</td>
-                                     <td className="p-4">{interest.competitionName}</td>
-                                     <td className="p-4">
-                                         <div className="flex flex-wrap gap-1">
-                                             {interest.skills.map(s => (
-                                                 <span key={s} className="px-2 py-0.5 bg-accent-blue/10 text-accent-blue rounded text-xs">{s}</span>
-                                             ))}
-                                         </div>
-                                     </td>
-                                     <td className="p-4 italic text-xs max-w-xs truncate">{interest.notes}</td>
-                                     <td className="p-4 text-xs">{new Date(interest.timestamp).toLocaleDateString()}</td>
-                                 </tr>
-                             ))}
-                             {filtered.length === 0 && (
-                                 <tr>
-                                     <td colSpan={5} className="p-8 text-center text-gray-500">No interests found.</td>
-                                 </tr>
-                             )}
-                         </tbody>
-                     </table>
-                 </div>
-             </div>
+            {/* Sheets Config */}
+            {showSheetsConfig && (
+                <div className={`${cardClass} border-accent-blue/30`}>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2"><Activity size={16} className="text-accent-blue" /> Google Sheets Webhook</h3>
+                    <p className="text-xs text-gray-500 mb-3">Paste your Apps Script Web App URL below. The script should use the same format as the Attendance tab webhook.</p>
+                    <div className="flex gap-2">
+                        <input
+                            value={sheetsWebhook}
+                            onChange={e => setSheetsWebhook(e.target.value)}
+                            placeholder="https://script.google.com/macros/s/..."
+                            className={inputClass}
+                        />
+                        <button onClick={() => { setShowSheetsConfig(false); syncToSheets(); }} className={`${buttonClass} bg-accent-blue text-white hover:bg-accent-hover px-6`}>
+                            Save &amp; Sync
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Filters */}
+            <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input placeholder="Search members, skills…" value={search} onChange={e => setSearch(e.target.value)} className={`${inputClass} pl-9`} />
+                </div>
+                <select value={filterEvent} onChange={e => setFilterEvent(e.target.value)} className={`${inputClass} sm:w-56`}>
+                    {uniqueEvents.map(e => <option key={e} value={e}>{e}</option>)}
+                </select>
+            </div>
+
+            {/* Grouped Tables */}
+            {Object.keys(grouped).length === 0 ? (
+                <div className="text-center py-16 bg-white dark:bg-dark-surface border border-dashed border-gray-200 dark:border-dark-border rounded-xl text-gray-500">No interests found.</div>
+            ) : (
+                Object.entries(grouped).map(([compName, entries]) => (
+                    <div key={compName} className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden shadow-sm">
+                        <div className="px-5 py-3 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">
+                            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Award size={15} className="text-accent-blue" /> {compName}
+                            </h3>
+                            <span className="text-xs font-bold text-gray-500 bg-gray-200 dark:bg-white/10 px-2 py-0.5 rounded-full">{entries.length} member{entries.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                                <thead className="bg-gray-50/50 dark:bg-dark-bg/30 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-dark-border">
+                                    <tr>
+                                        <th className="px-4 py-2.5">Member</th>
+                                        <th className="px-4 py-2.5">Skills</th>
+                                        <th className="px-4 py-2.5">Team Members</th>
+                                        <th className="px-4 py-2.5">Notes</th>
+                                        <th className="px-4 py-2.5">Date</th>
+                                        <th className="px-4 py-2.5"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-dark-border">
+                                    {entries.map((interest, idx) => (
+                                        <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{interest.userName}</td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {interest.skills.map(s => (
+                                                        <span key={s} className="px-2 py-0.5 bg-accent-blue/10 text-accent-blue rounded text-[11px] font-medium">{s}</span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs text-gray-500">
+                                                {(interest.teamMembers ?? []).length > 0
+                                                    ? (interest.teamMembers ?? []).join(', ')
+                                                    : <span className="italic">None listed</span>
+                                                }
+                                            </td>
+                                            <td className="px-4 py-3 italic text-xs max-w-xs truncate">{interest.notes || '—'}</td>
+                                            <td className="px-4 py-3 text-xs whitespace-nowrap">{new Date(interest.timestamp).toLocaleDateString()}</td>
+                                            <td className="px-4 py-3">
+                                                <button onClick={() => handleDelete(interest)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ))
+            )}
         </div>
     );
 };

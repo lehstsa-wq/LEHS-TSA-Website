@@ -156,6 +156,7 @@ export interface Subscriber {
 }
 
 export interface CompetitionInterest {
+  id?: string;
   userId: string;
   userName: string;
   competitionId: string;
