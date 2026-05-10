@@ -863,6 +863,48 @@ html.light .highlight-bar { display: none !important; }
 html.light [class*="bg-space-950\/"] { background-color: #FFFFFF; }
 html.light [class*="bg-space-900\/"] { background-color: rgba(255,255,255,0.75); }
 
+/* ── GLOBAL: text-white → dark in light mode ─────────────────
+   Prevents white text on white/light backgrounds.
+   Exceptions below restore white on colored/dark-bg elements.
+   ──────────────────────────────────────────────────────────── */
+html.light .text-white       { color: #1a2533 !important; }
+html.light .text-white\/90   { color: rgba(26,37,51,0.90) !important; }
+html.light .text-white\/80   { color: rgba(26,37,51,0.80) !important; }
+html.light .text-white\/70   { color: rgba(26,37,51,0.70) !important; }
+html.light .text-white\/60   { color: rgba(26,37,51,0.60) !important; }
+html.light .text-white\/55   { color: rgba(26,37,51,0.55) !important; }
+html.light .text-white\/50   { color: rgba(26,37,51,0.50) !important; }
+html.light .text-white\/40   { color: rgba(26,37,51,0.40) !important; }
+html.light .text-white\/35   { color: rgba(26,37,51,0.35) !important; }
+html.light .text-white\/30   { color: rgba(26,37,51,0.30) !important; }
+html.light .text-white\/20   { color: rgba(26,37,51,0.20) !important; }
+html.light .text-white\/10   { color: rgba(26,37,51,0.10) !important; }
+
+/* Exceptions: restore white on elements with dark/colored backgrounds */
+
+/* Member card (always-dark gradient background) */
+html.light .rounded-2xl[style*="linear-gradient(135deg, #005DAA"] .text-white,
+html.light .rounded-2xl[style*="linear-gradient(135deg, #005DAA"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
+
+/* Buttons with colored backgrounds */
+html.light .btn-primary     { color: #ffffff !important; }
+html.light .btn-primary *   { color: #ffffff !important; }
+html.light .btn-gold        { color: #ffffff !important; }
+html.light .btn-gold *      { color: #ffffff !important; }
+
+/* Countdown component — always-dark inline background */
+html.light [style*="linear-gradient(135deg, #1e3a5f"] .text-white,
+html.light [style*="linear-gradient(135deg, #1e3a5f"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
+
+/* Footer — always dark background */
+html.light footer .text-white,
+html.light footer [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
+
+/* Any element that has a dark/blue inline style background */
+html.light [style*="background: #005DAA"] .text-white,
+html.light [style*="background:#005DAA"] .text-white,
+html.light [style*="background: 'linear-gradient"] .text-white { color: rgba(255,255,255,0.90) !important; }
+
 /* ============================================================
    UTILITIES
    ============================================================ */
