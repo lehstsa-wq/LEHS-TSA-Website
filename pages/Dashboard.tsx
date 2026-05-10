@@ -101,24 +101,17 @@ const Dashboard: React.FC = () => {
 
             {/* Check-in banner */}
             <Link to="/check-in"
-              className="flex items-center gap-4 p-4 rounded-2xl border transition-all group"
-              style={{
-                background: 'rgba(59,130,246,0.08)',
-                borderColor: 'rgba(59,130,246,0.3)',
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.12)'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.08)'; }}
+              className="flex items-center gap-4 p-4 rounded-2xl border border-electric-300/30 transition-all group bg-electric-100 hover:bg-electric-200"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white"
-                style={{ background: '#3b82f6', boxShadow: '0 0 24px rgba(59,130,246,0.4)' }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white shadow-glow-blue"
+                style={{ background: '#005DAA' }}>
                 <QrCode size={22} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-ink">Meeting Check-In</p>
                 <p className="text-xs text-ink-dim mt-0.5">Enter your PIN to mark attendance for today's meeting</p>
               </div>
-              <span className="text-xs font-bold text-electric-400 px-3.5 py-2 rounded-lg flex-shrink-0"
-                style={{ background: 'rgba(59,130,246,0.12)' }}>
+              <span className="text-xs font-bold text-electric-500 px-3.5 py-2 rounded-lg flex-shrink-0 bg-electric-100 border border-electric-300/30">
                 Check In
               </span>
             </Link>
@@ -228,9 +221,9 @@ const Dashboard: React.FC = () => {
             {/* Member card */}
             <div className="rounded-2xl p-6 text-white relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #1e3a5f 0%, #2d1f69 100%)',
-                border: '1px solid rgba(59,130,246,0.3)',
-                boxShadow: '0 0 32px rgba(59,130,246,0.15)',
+                background: 'linear-gradient(135deg, #172a44 0%, #243d62 100%)',
+                border: '1px solid rgba(0,93,170,0.35)',
+                boxShadow: '0 0 32px rgba(0,93,170,0.18)',
               }}>
               <div className="flex justify-between items-start mb-6">
                 <div>

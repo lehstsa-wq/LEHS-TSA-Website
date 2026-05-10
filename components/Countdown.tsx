@@ -58,7 +58,7 @@ export const Countdown: React.FC = () => {
           viewport={{ once: true }} transition={{ duration: 0.6 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-bold uppercase tracking-widest"
-            style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.3)', color: '#60a5fa' }}>
+            style={{ background: 'rgba(0,93,170,0.20)', border: '1px solid rgba(0,93,170,0.30)', color: '#4E8AC9' }}>
             Next Major Event
           </div>
 

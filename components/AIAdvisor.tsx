@@ -38,7 +38,8 @@ const AIAdvisor: React.FC = () => {
 
     try {
       // Create instance here to ensure fresh API key
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY });
+      // Vite exposes env vars via import.meta.env; VITE_GEMINI_API_KEY is set in .env
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
       
       // Construct history for the model
       const history = newMessages.map(m => ({
@@ -68,7 +69,7 @@ const AIAdvisor: React.FC = () => {
   };
 
   return (
-    <div className="relative group p-[3px] rounded-2xl bg-gradient-to-r from-electric-500 via-gold-500 to-gold-400 bg-[length:400%_400%] animate-gradient-xy shadow-xl overflow-hidden">
+    <div className="relative group p-[3px] rounded-2xl bg-gradient-to-r from-electric-500 via-gold-500 to-gold-400 bg-[length:400%_400%] animate-gradient-x shadow-xl overflow-hidden">
       {/* Sparkle Overlay */}
       <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-10 left-10 w-2 h-2 bg-white rounded-full animate-ping opacity-75"></div>
@@ -96,10 +97,11 @@ const AIAdvisor: React.FC = () => {
           </div>
           <button
             onClick={() => setMessages([messages[0]])}
-            className="p-2 text-ink-muted hover:text-electric-400 transition-colors rounded-lg hover:bg-electric-500/10"
+            className="px-3 py-1.5 text-xs font-semibold text-ink-muted hover:text-electric-400 transition-all rounded-lg hover:bg-electric-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-500/40"
+            aria-label="Reset chat"
             title="Reset Chat"
           >
-Reset
+            Reset
           </button>
         </div>
 
@@ -141,39 +143,24 @@ Reset
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="I love coding and graphic design..."
-              className="w-full bg-space-900 border border-space-500/30 rounded-xl pl-4 pr-12 py-3 text-sm text-ink focus:ring-2 focus:ring-electric-500/10 focus:border-electric-500 outline-none transition-all"
+              aria-label="Message the AI advisor"
+              className="w-full bg-space-900 border border-space-500/30 rounded-xl pl-4 pr-16 py-3 text-sm text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="absolute right-2 top-1.5 p-2 bg-electric-500 hover:bg-electric-600 text-white rounded-lg transition-all duration-300 disabled:opacity-50 shadow-md hover:shadow-electric-600/40 hover:scale-110 active:scale-95 hover:-translate-y-0.5"
+              aria-label="Send message"
+              className="absolute right-2 top-1.5 px-3 py-2 text-xs font-semibold bg-electric-500 hover:bg-electric-600 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
             >
-Send
+              Send
             </button>
           </div>
           <p className="text-[10px] text-ink-muted mt-2 text-center">Your AI advisor can make mistakes. Always check official TSA guidelines.</p>
         </div>
       </div>
       
-      <style>{`
-        @keyframes gradient-xy {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient-xy {
-          animation: gradient-xy 6s ease infinite;
-        }
-        .animate-spin-slow {
-          animation: spin 3s linear infinite;
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };

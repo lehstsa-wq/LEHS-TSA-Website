@@ -35,7 +35,11 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
               </div>
               <h3 className="text-xl font-bold text-ink">{title}</h3>
             </div>
-            <button onClick={onCancel} className="text-ink-muted hover:text-ink transition-colors">
+            <button
+              onClick={onCancel}
+              aria-label="Close dialog"
+              className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-space-600/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tsa-blue/60"
+            >
               <X size={20} />
             </button>
           </div>
@@ -44,7 +48,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <div className="bg-space-700/40 px-6 py-4 flex justify-end gap-3 border-t border-space-500/30">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-ink-muted hover:bg-space-700/60 rounded-lg transition-colors"
+            className="px-4 py-2 min-h-[40px] text-sm font-medium text-ink-muted hover:text-ink hover:bg-space-700/60 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tsa-blue/60"
           >
             {cancelText}
           </button>
@@ -53,10 +57,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
               onConfirm();
               onCancel();
             }}
-            className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors ${
+            className={`px-4 py-2 min-h-[40px] text-sm font-medium text-white rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${
               isDestructive
-                ? 'bg-gold-500 hover:bg-gold-600'
-                : 'bg-electric-500 hover:bg-electric-600'
+                ? 'bg-gold-500 hover:bg-gold-600 focus-visible:ring-gold-500/60'
+                : 'bg-electric-500 hover:bg-electric-600 focus-visible:ring-electric-500/60'
             }`}
           >
             {confirmText}

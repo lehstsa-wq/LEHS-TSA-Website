@@ -68,7 +68,7 @@ const Events: React.FC = () => {
           <div className="flex gap-1.5 ml-auto flex-wrap">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCategory(c)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold-500 text-space-950' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold-500 text-white shadow-glow-red' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
                 {c}
               </button>
             ))}

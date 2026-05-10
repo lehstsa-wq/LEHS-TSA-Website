@@ -92,9 +92,10 @@ const Signup: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-ink-muted uppercase ml-1">Access Code</label>
+            <label htmlFor="signup-access-code" className="text-xs font-bold text-ink-muted uppercase ml-1">Access Code</label>
             <div className="relative">
               <input
+                id="signup-access-code"
                 type="text"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
@@ -102,15 +103,16 @@ const Signup: React.FC = () => {
                 className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted uppercase font-mono tracking-wider"
                 required
               />
-              <Key size={18} className="absolute left-3.5 top-3.5 text-electric-400" />
+              <Key size={18} className="absolute left-3.5 top-3.5 text-electric-400 pointer-events-none" />
             </div>
             <p className="text-[10px] text-ink-muted ml-1">This will also be your <strong>password</strong> for future logins.</p>
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-ink-muted uppercase ml-1">Full Name</label>
+            <label htmlFor="signup-name" className="text-xs font-bold text-ink-muted uppercase ml-1">Full Name</label>
             <div className="relative">
               <input
+                id="signup-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -118,14 +120,15 @@ const Signup: React.FC = () => {
                 className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted"
                 required
               />
-              <User size={18} className="absolute left-3.5 top-3.5 text-ink-muted" />
+              <User size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-ink-muted uppercase ml-1">Email</label>
+            <label htmlFor="signup-email" className="text-xs font-bold text-ink-muted uppercase ml-1">Email</label>
             <div className="relative">
               <input
+                id="signup-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -133,40 +136,41 @@ const Signup: React.FC = () => {
                 className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted"
                 required
               />
-              <Mail size={18} className="absolute left-3.5 top-3.5 text-ink-muted" />
+              <Mail size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
             </div>
           </div>
 
           <div className="space-y-1">
-              <label className="text-xs font-bold text-ink-muted uppercase ml-1">Grade Level</label>
-              <div className="relative">
-                <select
-                  value={grade}
-                  onChange={(e) => setGrade(e.target.value)}
-                  className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Select Grade</option>
-                  <option>9th Grade</option>
-                  <option>10th Grade</option>
-                  <option>11th Grade</option>
-                  <option>12th Grade</option>
-                </select>
-                <GraduationCap size={18} className="absolute left-3.5 top-3.5 text-ink-muted" />
-              </div>
+            <label htmlFor="signup-grade" className="text-xs font-bold text-ink-muted uppercase ml-1">Grade Level</label>
+            <div className="relative">
+              <select
+                id="signup-grade"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+                className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all appearance-none cursor-pointer"
+                required
+              >
+                <option value="" disabled>Select Grade</option>
+                <option>9th Grade</option>
+                <option>10th Grade</option>
+                <option>11th Grade</option>
+                <option>12th Grade</option>
+              </select>
+              <GraduationCap size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-electric-500 hover:bg-electric-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg shadow-electric-500/25 mt-6 disabled:opacity-50 disabled:cursor-not-allowed group hover:scale-[1.02] hover:-translate-y-1"
+            className="btn-primary w-full justify-center py-3.5 mt-6 disabled:opacity-50 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (
               <Loader2 className="animate-spin" size={20} />
             ) : (
               <>
                 Create Account
-                <ChevronRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-200" />
               </>
             )}
           </button>

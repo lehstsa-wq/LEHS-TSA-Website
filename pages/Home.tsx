@@ -174,7 +174,7 @@ const MarqueeRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
       <div className={`flex gap-3 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} whitespace-nowrap`}>
         {items.map((c, i) => (
           <span key={i}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-space-800/50 text-sm text-amber-400 font-medium flex-shrink-0">
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-tsa-orange/30 bg-space-800/50 text-sm text-tsa-orange font-medium flex-shrink-0">
             {c}
           </span>
         ))}
@@ -366,7 +366,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Compete in 30+ Events"
               body="From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines."
-              accent="#3b82f6"
+              accent="#005DAA"
               link="/competitions"
               large
             />
@@ -381,7 +381,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Code & Build"
               body="Sharpen your software skills with coding competitions, hackathons, and collaborative build nights."
-              accent="#8b5cf6"
+              accent="#574E8F"
               link="/competitions"
             />
           </motion.div>
@@ -395,7 +395,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Lead & Grow"
               body="Run for officer positions, organize events, and develop the leadership skills that colleges and employers value."
-              accent="#e05c5c"
+              accent="#EE2624"
               link="/officers"
             />
           </motion.div>
@@ -409,7 +409,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Connect Nationally"
               body="Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country."
-              accent="#22c55e"
+              accent="#86BB50"
               link="/events"
             />
           </motion.div>
@@ -423,7 +423,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Design & Create"
               body="Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent."
-              accent="#eab308"
+              accent="#EC881D"
               link="/competitions"
             />
           </motion.div>
@@ -437,7 +437,7 @@ const Home: React.FC = () => {
             <BentoCard
               title="Study & Prepare"
               body="Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident."
-              accent="#06b6d4"
+              accent="#4E8AC9"
               link="/resources"
             />
           </motion.div>
@@ -455,10 +455,10 @@ const Home: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { val: 75,  suffix: '+',  label: 'Active Members',      color: '#3b82f6' },
-              { val: 50,  suffix: '+',  label: 'State Qualifiers',    color: '#e05c5c' },
-              { val: 15,  suffix: '+',  label: 'National Qualifiers', color: '#eab308' },
-              { val: 3,   suffix: '',   label: 'Years of Excellence', color: '#22c55e' },
+              { val: 75,  suffix: '+',  label: 'Active Members',      colorClass: 'text-electric-400' },
+              { val: 50,  suffix: '+',  label: 'State Qualifiers',    colorClass: 'text-gold-400' },
+              { val: 15,  suffix: '+',  label: 'National Qualifiers', colorClass: 'text-amber-400' },
+              { val: 3,   suffix: '',   label: 'Years of Excellence', colorClass: 'text-tsa-green' },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -468,7 +468,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="text-center"
               >
-                <div className="text-4xl font-black mb-1" style={{ color: stat.color }}>
+                <div className={`text-4xl font-black mb-1 ${stat.colorClass}`}>
                   <Counter value={stat.val} suffix={stat.suffix} />
                 </div>
                 <div className="text-sm text-ink-muted">{stat.label}</div>
@@ -610,19 +610,19 @@ const Home: React.FC = () => {
                 num: '01',
                 title: 'Apply',
                 body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
-                color: '#3b82f6',
+                color: '#005DAA',
               },
               {
                 num: '02',
                 title: 'Pick Events',
                 body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
-                color: '#eab308',
+                color: '#EC881D',
               },
               {
                 num: '03',
                 title: 'Compete & Win',
                 body: 'Train, collaborate, and compete at regional, state, and national conferences.',
-                color: '#8b5cf6',
+                color: '#574E8F',
               },
             ].map((step, i) => (
               <motion.div

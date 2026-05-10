@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { SEO } from '../components/SEO';
 
@@ -95,11 +95,13 @@ const Login: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-xs font-bold text-ink-dim mb-2 tracking-tight">
+              <label htmlFor="login-email" className="block text-xs font-bold text-ink-dim mb-2 tracking-tight">
                 Email Address
               </label>
               <div className="relative">
+                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
                 <input
+                  id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -118,11 +120,13 @@ const Login: React.FC = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-bold text-ink-dim mb-2 tracking-tight">
+              <label htmlFor="login-password" className="block text-xs font-bold text-ink-dim mb-2 tracking-tight">
                 Access Code (or Password)
               </label>
               <div className="relative">
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
                 <input
+                  id="login-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

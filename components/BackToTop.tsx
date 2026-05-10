@@ -21,7 +21,7 @@ export const BackToTop: React.FC = () => {
           transition={{ duration: 0.2 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-8 right-6 z-40 w-11 h-11 rounded-xl flex items-center justify-center shadow-glow-blue transition-all duration-200 hover:shadow-glow-blue hover:scale-110"
-          style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)' }}
+          style={{ background: 'linear-gradient(135deg, #005DAA, #004e91)' }}
           aria-label="Back to top"
         >
           <ArrowUp size={18} className="text-white" />

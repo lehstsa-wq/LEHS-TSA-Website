@@ -221,7 +221,10 @@ const Competitions: React.FC = () => {
 
             {/* NQE / UTE info cards */}
             <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
-              <div className="bg-space-800 border border-space-500/60 rounded-2xl p-5 flex items-start gap-4 border-l-2 border-electric-500/60">
+              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4" style={{ borderTop: '1px solid rgba(78,138,201,0.25)', borderRight: '1px solid rgba(78,138,201,0.25)', borderBottom: '1px solid rgba(78,138,201,0.25)' }}>
+                <div className="w-10 h-10 rounded-xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
+                  <ChevronRight size={18} />
+                </div>
                 <div>
                   <div className="font-bold text-ink text-sm mb-1">NQE — National Qualifying</div>
                   <p className="text-xs text-ink-dim leading-relaxed">
@@ -229,7 +232,7 @@ const Competitions: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="bg-space-800 border border-space-500/60 rounded-2xl p-5 flex items-start gap-4 border-l-2 border-electric-500/60">
+              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4" style={{ borderTop: '1px solid rgba(78,138,201,0.25)', borderRight: '1px solid rgba(78,138,201,0.25)', borderBottom: '1px solid rgba(78,138,201,0.25)' }}>
                 <div className="w-10 h-10 rounded-xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
                   <MapPin size={18} />
                 </div>
@@ -484,15 +487,15 @@ const Competitions: React.FC = () => {
 
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
-              <div className="bg-space-800 border border-space-500/60 rounded-2xl px-5 py-3 border border-gold-500/30">
+              <div className="bg-space-800 border border-gold-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2025–2026 Theme</div>
                 <div className="text-sm font-black text-gold-300">Engineering the Past</div>
               </div>
-              <div className="bg-space-800 border border-space-500/60 rounded-2xl px-5 py-3 border border-electric-500/30">
+              <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>
                 <div className="text-sm font-black text-ink">2–4 Members</div>
               </div>
-              <div className="bg-space-800 border border-space-500/60 rounded-2xl px-5 py-3 border border-electric-500/30">
+              <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Advancement</div>
                 <div className="text-sm font-black text-ink">State to Nationals</div>
               </div>
@@ -549,7 +552,7 @@ const Competitions: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="bg-space-800 border border-space-500/60 rounded-2xl p-6 border border-electric-500/25 mb-5"
+              className="bg-space-800 border border-electric-500/25 rounded-2xl p-6 mb-5"
             >
               <h3 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
                 <Download size={14} className="text-electric-400" /> TEAMS Resources
@@ -576,7 +579,7 @@ const Competitions: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-space-800 border border-space-500/60 rounded-2xl p-8 border border-electric-500/25 flex flex-col sm:flex-row items-start sm:items-center gap-6"
+            className="bg-space-800 border border-electric-500/25 rounded-2xl p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6"
           >
             <div className="w-14 h-14 rounded-2xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
               <UserCheck size={26} />
