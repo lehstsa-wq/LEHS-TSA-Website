@@ -219,7 +219,7 @@ const Dashboard: React.FC = () => {
           <div className="lg:col-span-4 space-y-5">
 
             {/* Member card */}
-            <div className="rounded-2xl overflow-hidden relative text-white"
+            <div className="member-card rounded-2xl overflow-hidden relative text-white"
               style={{
                 background: 'linear-gradient(135deg, #005DAA 0%, #003d71 60%, #002d55 100%)',
                 boxShadow: '0 8px 32px rgba(0,93,170,0.30), 0 2px 8px rgba(0,0,0,0.12)',

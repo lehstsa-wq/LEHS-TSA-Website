@@ -880,30 +880,42 @@ html.light .text-white\/30   { color: rgba(26,37,51,0.30) !important; }
 html.light .text-white\/20   { color: rgba(26,37,51,0.20) !important; }
 html.light .text-white\/10   { color: rgba(26,37,51,0.10) !important; }
 
-/* Exceptions: restore white on elements with dark/colored backgrounds */
-
-/* Member card (always-dark gradient background) */
-html.light .rounded-2xl[style*="linear-gradient(135deg, #005DAA"] .text-white,
-html.light .rounded-2xl[style*="linear-gradient(135deg, #005DAA"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
+/* ── EXCEPTIONS: restore white on dark-bg elements ─────────── */
 
 /* Buttons with colored backgrounds */
-html.light .btn-primary     { color: #ffffff !important; }
-html.light .btn-primary *   { color: #ffffff !important; }
-html.light .btn-gold        { color: #ffffff !important; }
-html.light .btn-gold *      { color: #ffffff !important; }
+html.light .btn-primary,
+html.light .btn-primary *  { color: #ffffff !important; }
+html.light .btn-gold,
+html.light .btn-gold *     { color: #ffffff !important; }
 
-/* Countdown component — always-dark inline background */
+/* ── FOOTER: always dark background — restore ALL text to light ── */
+html.light footer {
+  background-color: #0a1220 !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+html.light footer .text-white,
+html.light footer [class*="text-white"]  { color: rgba(255,255,255,0.88) !important; }
+html.light footer .text-ink             { color: rgba(255,255,255,0.88) !important; }
+html.light footer .text-ink-dim         { color: rgba(255,255,255,0.60) !important; }
+html.light footer .text-ink-muted       { color: rgba(255,255,255,0.40) !important; }
+html.light footer .bg-space-700         { background-color: rgba(255,255,255,0.10) !important; }
+html.light footer [class*="border-space-"] { border-color: rgba(255,255,255,0.12) !important; }
+html.light footer .divider              { border-color: rgba(255,255,255,0.10); }
+html.light footer .hover\:text-ink:hover { color: rgba(255,255,255,0.90) !important; }
+html.light footer .hover\:text-electric-500:hover { color: #4E8AC9 !important; }
+
+/* ── MEMBER CARD (Dashboard): always-dark gradient ── */
+html.light .member-card,
+html.light .member-card .text-white,
+html.light .member-card [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
+
+/* ── COUNTDOWN: always-dark inline background ── */
 html.light [style*="linear-gradient(135deg, #1e3a5f"] .text-white,
 html.light [style*="linear-gradient(135deg, #1e3a5f"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
 
-/* Footer — always dark background */
-html.light footer .text-white,
-html.light footer [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
-
-/* Any element that has a dark/blue inline style background */
-html.light [style*="background: #005DAA"] .text-white,
-html.light [style*="background:#005DAA"] .text-white,
-html.light [style*="background: 'linear-gradient"] .text-white { color: rgba(255,255,255,0.90) !important; }
+/* ── Icon containers / logos on TSA-blue backgrounds ── */
+html.light [style*="backgroundColor: '#005DAA'"] .text-white,
+html.light [style*="background: '#005DAA'"] .text-white  { color: #ffffff !important; }
 
 /* ============================================================
    UTILITIES
