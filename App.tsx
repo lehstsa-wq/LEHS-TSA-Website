@@ -1,0 +1,159 @@
+
+import React, { useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+import { DataProvider } from './context/DataContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './context/ToastContext';
+import { ModalProvider } from './context/ModalContext';
+import { BackToTop } from './components/BackToTop';
+
+// Pages
+import Home from './pages/Home';
+import About from './pages/About';
+import Events from './pages/Events';
+import Officers from './pages/Officers';
+import Projects from './pages/Projects';
+import Competitions from './pages/Competitions';
+import Resources from './pages/Resources';
+import Join from './pages/Join';
+import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';
+import News from './pages/News';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import StudentUpdates from './pages/StudentUpdates';
+import AdminPanel from './pages/AdminPanel';
+import Settings from './pages/Settings';
+import Interests from './pages/Interests';
+import MemberDirectory from './pages/MemberDirectory';
+import CheckIn from './pages/CheckIn';
+import Teams from './pages/Teams';
+import Opportunities from './pages/Opportunities';
+
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+// Analytics Tracker Placeholder
+const RouteTracker = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // This is where you would trigger Google Analytics or Plausible
+    // e.g., ga('send', 'pageview', location.pathname);
+    // console.log(`Page view: ${location.pathname}`);
+  }, [location]);
+
+  return null;
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <DataProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <ModalProvider>
+              <Router>
+                <ScrollToTop />
+                <RouteTracker />
+                <Layout>
+                  <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/officers" element={<Officers />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/competitions" element={<Competitions />} />
+                  <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/news" element={<News />} />
+                  <Route path="/resources" element={<Resources />} />
+                  <Route path="/join" element={<Join />} />
+                  <Route path="/contact" element={<Contact />} />
+                  
+                  {/* Auth Routes */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+
+                  {/* Protected Routes */}
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/updates" 
+                    element={
+                      <ProtectedRoute>
+                        <StudentUpdates />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/interests" 
+                    element={
+                      <ProtectedRoute>
+                        <Interests />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/settings" 
+                    element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute requireOfficer={true}>
+                        <AdminPanel />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/directory"
+                    element={
+                      <ProtectedRoute>
+                        <MemberDirectory />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/check-in" element={<CheckIn />} />
+                  <Route path="/opportunities" element={<Opportunities />} />
+                  <Route
+                    path="/teams"
+                    element={
+                      <ProtectedRoute>
+                        <Teams />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </Layout>
+              <BackToTop />
+            </Router>
+            </ModalProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </DataProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;
