@@ -221,7 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     }
                     return;
                 } catch (loginError) {
-                    throw new Error("This Admin account already exists. Please Log In. If 'LEHS-ADMIN' is not your password, use the one you originally created.");
+                    throw new Error("This Admin account already exists. Please log in with your existing password.");
                 }
             }
             throw error;
