@@ -135,7 +135,7 @@ const BentoCard: React.FC<BentoCardProps> = ({ title, body, accent, link, classN
     transition={{ duration: 0.25, ease: 'easeOut' }}
     className={`group relative rounded-2xl border border-space-500/60 overflow-hidden transition-all duration-300
       hover:border-opacity-80 cursor-pointer bg-space-800/40 h-full ${className}`}
-    style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
+    style={{ boxShadow: 'var(--shadow-card)' }}
   >
     {/* Gradient hover overlay */}
     <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}

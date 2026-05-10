@@ -82,11 +82,11 @@
    LIGHT MODE TOKEN OVERRIDES
    ============================================================ */
 html.light {
-  --c-bg:           #FFFFFF;
-  --c-surface:      #F0F4FA;
-  --c-card:         #F0F4FA;
-  --c-border:       #D5DCE0;
-  --c-border-muted: rgba(0, 93, 170, 0.15);
+  --c-bg:           #F7F9FC;
+  --c-surface:      #EAEFF7;
+  --c-card:         #FFFFFF;
+  --c-border:       rgba(0, 93, 170, 0.12);
+  --c-border-muted: rgba(0, 93, 170, 0.07);
 
   --c-blue:         #005DAA;
   --c-blue-bright:  #4E8AC9;
@@ -99,10 +99,10 @@ html.light {
   --c-purple:       #574E8F;
   --c-green:        #86BB50;
 
-  --c-text:         #324659;
-  --c-text-dim:     #324659;
-  --c-text-muted:   #4D4D4F;
-  --c-text-ghost:   rgba(77, 77, 79, 0.55);
+  --c-text:         #1a2533;
+  --c-text-dim:     #3d5166;
+  --c-text-muted:   #637382;
+  --c-text-ghost:   rgba(80, 100, 115, 0.45);
 
   --glow-blue:   0 2px 12px rgba(0, 93, 170, 0.20);
   --glow-red:    0 2px 12px rgba(238, 38, 36, 0.18);
@@ -111,9 +111,9 @@ html.light {
   --glow-purple: 0 2px 12px rgba(87, 78, 143, 0.16);
 
   /* Light mode shadows — blue-tinted, no black */
-  --shadow-card:       0 1px 3px rgba(0, 93, 170, 0.06), 0 4px 16px rgba(0, 93, 170, 0.08);
-  --shadow-card-hover: 0 4px 12px rgba(0, 93, 170, 0.10), 0 12px 32px rgba(0, 93, 170, 0.10);
-  --shadow-elevated:   0 8px 32px rgba(50, 70, 89, 0.14), 0 0 0 1px rgba(0, 93, 170, 0.10);
+  --shadow-card:       0 1px 3px rgba(26, 37, 51, 0.05), 0 4px 16px rgba(0, 93, 170, 0.07);
+  --shadow-card-hover: 0 4px 12px rgba(26, 37, 51, 0.07), 0 12px 32px rgba(0, 93, 170, 0.09);
+  --shadow-elevated:   0 8px 32px rgba(26, 37, 51, 0.10), 0 0 0 1px rgba(0, 93, 170, 0.10);
 
   color-scheme: light;
 
@@ -485,8 +485,8 @@ html.light {
    ============================================================ */
 
 html.light body {
-  background-color: #FFFFFF;
-  color: #324659;
+  background-color: #F7F9FC;
+  color: #1a2533;
 }
 
 html.light .bg-space-900\/90 {
@@ -501,8 +501,8 @@ html.light .shadow-modal {
 
 html.light .bg-space-950 { background-color: #FFFFFF; }
 html.light .bg-space-900 { background-color: #FFFFFF; }
-html.light .bg-space-800 { background-color: #F0F4FA; }
-html.light .bg-space-700 { background-color: #F0F4FA; }
+html.light .bg-space-800 { background-color: #EAEFF7; }
+html.light .bg-space-700 { background-color: #EAEFF7; }
 /* Uniform background: opacity variants become transparent so body white shows through */
 html.light [class*="bg-space-950\/"] { background-color: transparent; }
 html.light [class*="bg-space-900\/"] { background-color: transparent; }
@@ -511,10 +511,10 @@ html.light [class*="bg-space-700\/"] { background-color: rgba(0, 93, 170, 0.03);
 html.light [class*="bg-space-600\/"] { background-color: rgba(0, 93, 170, 0.04); }
 html.light [class*="bg-space-500\/"] { background-color: rgba(0, 93, 170, 0.05); }
 
-html.light .text-ink       { color: #324659; }
-html.light .text-ink-dim   { color: #324659; }
-html.light .text-ink-muted { color: #4D4D4F; }
-html.light .text-ink-ghost { color: rgba(77, 77, 79, 0.60); }
+html.light .text-ink       { color: #1a2533; }
+html.light .text-ink-dim   { color: #3d5166; }
+html.light .text-ink-muted { color: #637382; }
+html.light .text-ink-ghost { color: rgba(80, 100, 115, 0.45); }
 
 html.light [class*="border-space-500\/"] { border-color: rgba(0, 93, 170, 0.22); }
 html.light [class*="border-space-500"]   { border-color: #D5DCE0; }
@@ -718,11 +718,11 @@ html.light [class*="hover:bg-space-800"]:hover  { background-color: rgba(0, 93, 
 /* Group-hover variants */
 html.light [class*="group-hover:bg-space-"]:hover { background-color: rgba(0, 93, 170, 0.07); }
 
-/* ── Text contrast: every ink variant readable on white ── */
-html.light .text-ink        { color: #1a2e44 !important; }
-html.light .text-ink-dim    { color: #324659 !important; }
-html.light .text-ink-muted  { color: #5a6a78 !important; }
-html.light .text-ink-ghost  { color: rgba(50, 70, 89, 0.50) !important; }
+/* ── Text contrast: every ink variant readable on off-white ── */
+html.light .text-ink        { color: #1a2533 !important; }
+html.light .text-ink-dim    { color: #3d5166 !important; }
+html.light .text-ink-muted  { color: #637382 !important; }
+html.light .text-ink-ghost  { color: rgba(80, 100, 115, 0.45) !important; }
 /* amber / gold / electric shades need contrast on white */
 html.light .text-amber-400  { color: #b86200; }
 html.light .text-gold-400   { color: #c4160e; }
@@ -834,6 +834,34 @@ html.light .from-space-500 {
   --tw-gradient-from: rgba(0,93,170,0.18) var(--tw-gradient-from-position);
   --tw-gradient-to:   rgba(0,93,170,0)    var(--tw-gradient-to-position);
 }
+
+/* ── Gradient text: solid brand colors in light mode (gradient text is an AI tell) ── */
+html.light .text-gradient-blue,
+html.light .text-gradient-gold,
+html.light .text-gradient-hero,
+html.light .text-shimmer {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  animation: none !important;
+}
+html.light .text-gradient-blue { -webkit-text-fill-color: #005DAA !important; color: #005DAA !important; }
+html.light .text-gradient-gold { -webkit-text-fill-color: #EE2624 !important; color: #EE2624 !important; }
+html.light .text-gradient-hero { -webkit-text-fill-color: #005DAA !important; color: #005DAA !important; }
+html.light .text-shimmer       { -webkit-text-fill-color: #637382 !important; }
+
+/* ── Orbs: suppress on light background — they look like stains ── */
+html.light .orb { opacity: 0 !important; pointer-events: none; }
+
+/* ── Grid background: remove in light mode (AI tell) ── */
+html.light .grid-bg { background-image: none !important; }
+
+/* ── Highlight bar: side-stripe accent stripe is banned; card hover is sufficient ── */
+html.light .highlight-bar { display: none !important; }
+
+/* ── Section bg-space-950/opacity on off-white page → white panels ── */
+html.light [class*="bg-space-950\/"] { background-color: #FFFFFF; }
+html.light [class*="bg-space-900\/"] { background-color: rgba(255,255,255,0.75); }
 
 /* ============================================================
    UTILITIES
