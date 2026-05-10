@@ -219,34 +219,66 @@ const Dashboard: React.FC = () => {
           <div className="lg:col-span-4 space-y-5">
 
             {/* Member card */}
-            <div className="rounded-2xl p-6 text-white relative overflow-hidden"
+            <div className="rounded-2xl overflow-hidden relative text-white"
               style={{
-                background: 'linear-gradient(135deg, #172a44 0%, #243d62 100%)',
-                border: '1px solid rgba(0,93,170,0.35)',
-                boxShadow: '0 0 32px rgba(0,93,170,0.18)',
+                background: 'linear-gradient(135deg, #005DAA 0%, #003d71 60%, #002d55 100%)',
+                boxShadow: '0 8px 32px rgba(0,93,170,0.30), 0 2px 8px rgba(0,0,0,0.12)',
+                border: '1px solid rgba(255,255,255,0.12)',
               }}>
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">Member Card</p>
-                  <p className="text-lg font-bold mt-1">Little Elm TSA</p>
+              {/* Dot-grid texture */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
+                backgroundSize: '18px 18px',
+              }} />
+              {/* Red radial glow — top right corner */}
+              <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none" style={{
+                background: 'radial-gradient(circle at top right, rgba(238,38,36,0.22), transparent 70%)',
+              }} />
+
+              <div className="relative p-6">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-white/40 mb-0.5">
+                      Technology Student Association
+                    </p>
+                    <p className="text-base font-bold tracking-wide">LEHS Chapter</p>
+                  </div>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.18)' }}>
+                    <Cpu size={17} />
+                  </div>
                 </div>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ background: 'rgba(255,255,255,0.15)' }}>
-                  <Cpu size={20} />
+
+                {/* Name */}
+                <div className="mb-5">
+                  <p className="text-[9px] text-white/40 font-mono uppercase tracking-widest mb-0.5">Member Name</p>
+                  <p className="text-lg font-bold tracking-tight truncate">{user?.name}</p>
                 </div>
-              </div>
-              <p className="text-[10px] text-white/50 font-mono uppercase tracking-widest mb-1">Full Name</p>
-              <p className="text-base font-semibold mb-5">{user?.name}</p>
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-[10px] text-white/50 font-mono uppercase tracking-widest mb-1">Member ID</p>
-                  <p className="text-sm font-bold font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                    {user?.memberId ?? 'PENDING'}
-                  </p>
+
+                {/* ID + Grade */}
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-[9px] text-white/40 font-mono uppercase tracking-widest mb-0.5">Member ID</p>
+                    <p className="text-sm font-mono font-bold px-2 py-0.5 rounded-md"
+                      style={{ background: 'rgba(255,255,255,0.10)' }}>
+                      {user?.memberId ?? '··· PENDING ···'}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] text-white/40 font-mono uppercase tracking-widest mb-0.5">Grade</p>
+                    <p className="text-base font-bold">{user?.grade ?? '—'}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-white/50 font-mono uppercase tracking-widest mb-1">Grade</p>
-                  <p className="text-sm font-bold">{user?.grade}</p>
+
+                {/* Footer strip */}
+                <div className="mt-5 pt-4 flex items-center justify-between"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+                  <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2025–2026 Season</span>
+                  <span className="flex items-center gap-1.5 text-[9px] text-white/55">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#86BB50' }} />
+                    Active
+                  </span>
                 </div>
               </div>
             </div>
@@ -264,10 +296,8 @@ const Dashboard: React.FC = () => {
               <div className="space-y-2">
                 {recentResources.length > 0 ? recentResources.map((resource, i) => (
                   <a key={i} href={resource.url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 rounded-xl border border-space-500/40 hover:border-electric-300/40 transition-all group"
-                    style={{ background: 'rgba(4,8,15,0.4)' }}>
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border border-space-500/40"
-                      style={{ background: 'rgba(26,48,80,0.6)' }}>
+                    className="flex items-center gap-3 p-3 rounded-xl border border-space-500/40 hover:border-electric-300/40 transition-all group bg-space-800/40">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border border-space-500/40 bg-space-700/60">
                       <FileText size={14} className="text-ink-muted group-hover:text-electric-400 transition-colors" />
                     </div>
                     <div className="flex-1 min-w-0">
