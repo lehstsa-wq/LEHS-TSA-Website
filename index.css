@@ -888,17 +888,17 @@ html.light .btn-primary *  { color: #ffffff !important; }
 html.light .btn-gold,
 html.light .btn-gold *     { color: #ffffff !important; }
 
-/* ── FOOTER: always dark background — restore ALL text to light ── */
+/* ── FOOTER: light-themed in light mode ── */
 html.light footer {
-  background-color: #0a1220 !important;
-  border-color: rgba(255,255,255,0.10) !important;
+  background-color: #1a2533 !important;
+  border-color: rgba(0, 93, 170, 0.15) !important;
 }
 html.light footer .text-white,
 html.light footer [class*="text-white"]  { color: rgba(255,255,255,0.88) !important; }
 html.light footer .text-ink             { color: rgba(255,255,255,0.88) !important; }
 html.light footer .text-ink-dim         { color: rgba(255,255,255,0.60) !important; }
 html.light footer .text-ink-muted       { color: rgba(255,255,255,0.40) !important; }
-html.light footer .bg-space-700         { background-color: rgba(255,255,255,0.10) !important; }
+html.light footer .bg-space-700         { background-color: rgba(255,255,255,0.08) !important; }
 html.light footer [class*="border-space-"] { border-color: rgba(255,255,255,0.12) !important; }
 html.light footer .divider              { border-color: rgba(255,255,255,0.10); }
 html.light footer .hover\:text-ink:hover { color: rgba(255,255,255,0.90) !important; }
@@ -913,9 +913,21 @@ html.light .member-card [class*="text-white"] { color: rgba(255,255,255,0.90) !i
 html.light [style*="linear-gradient(135deg, #1e3a5f"] .text-white,
 html.light [style*="linear-gradient(135deg, #1e3a5f"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
 
-/* ── Icon containers / logos on TSA-blue backgrounds ── */
-html.light [style*="backgroundColor: '#005DAA'"] .text-white,
-html.light [style*="background: '#005DAA'"] .text-white  { color: #ffffff !important; }
+/* ── Solid blue/red bg elements: keep text white ── */
+/* Navbar Dashboard button, any bg-electric-500/600 element */
+html.light .bg-electric-500,
+html.light .bg-electric-500.text-white,
+html.light .bg-electric-600,
+html.light .bg-electric-600.text-white { color: rgba(255,255,255,0.92) !important; }
+html.light .bg-gold-500,
+html.light .bg-gold-500.text-white,
+html.light .bg-gold-600,
+html.light .bg-gold-600.text-white     { color: rgba(255,255,255,0.92) !important; }
+/* Children of solid blue/red backgrounds */
+html.light .bg-electric-500 .text-white,
+html.light .bg-electric-600 .text-white,
+html.light .bg-gold-500 .text-white,
+html.light .bg-gold-600 .text-white    { color: rgba(255,255,255,0.92) !important; }
 
 /* ============================================================
    UTILITIES
