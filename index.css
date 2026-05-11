@@ -913,9 +913,30 @@ html.light footer input[type="email"]   {
 /* Link hover */
 html.light footer .hover\:text-ink:hover         { color: #1a2533 !important; }
 html.light footer .hover\:text-electric-500:hover { color: #005DAA !important; }
-/* Logo icon: always TSA blue, always white icon */
-html.light footer [style*="background-color: #005DAA"] .text-white { color: #ffffff !important; }
-html.light footer [style*="background: #005DAA"] .text-white       { color: #ffffff !important; }
+/* ── GLOBAL: any element with TSA-blue inline bg → white text ──
+   Covers navbar logo, check-in QR icon, footer logo, stat card icons,
+   and anything else using style={{ background/backgroundColor: '#005DAA' }}
+   ──────────────────────────────────────────────────────────────────────── */
+html.light [style*="background: #005DAA"],
+html.light [style*="background:#005DAA"],
+html.light [style*="background-color: #005DAA"],
+html.light [style*="background-color:#005DAA"] { color: #ffffff !important; }
+
+html.light [style*="background: #005DAA"] .text-white,
+html.light [style*="background:#005DAA"] .text-white,
+html.light [style*="background-color: #005DAA"] .text-white,
+html.light [style*="background-color:#005DAA"] .text-white { color: #ffffff !important; }
+
+html.light [style*="background: #005DAA"] svg,
+html.light [style*="background:#005DAA"] svg,
+html.light [style*="background-color: #005DAA"] svg,
+html.light [style*="background-color:#005DAA"] svg { color: #ffffff !important; }
+
+/* Also handle any element whose text-white class appears alongside a TSA-blue inline bg */
+html.light [style*="background: #005DAA"].text-white,
+html.light [style*="background:#005DAA"].text-white,
+html.light [style*="background-color: #005DAA"].text-white,
+html.light [style*="background-color:#005DAA"].text-white { color: #ffffff !important; }
 
 /* ── MEMBER CARD (Dashboard): always-dark gradient ── */
 html.light .member-card,
