@@ -888,21 +888,34 @@ html.light .btn-primary *  { color: #ffffff !important; }
 html.light .btn-gold,
 html.light .btn-gold *     { color: #ffffff !important; }
 
-/* ── FOOTER: light-themed in light mode ── */
+/* ── FOOTER: fully light-themed in light mode ── */
 html.light footer {
-  background-color: #1a2533 !important;
-  border-color: rgba(0, 93, 170, 0.15) !important;
+  background-color: #eaeff7 !important;
+  border-top: 1px solid rgba(0, 93, 170, 0.14) !important;
+  border-color: rgba(0, 93, 170, 0.14) !important;
 }
+/* All text → dark ink in footer light mode */
 html.light footer .text-white,
-html.light footer [class*="text-white"]  { color: rgba(255,255,255,0.88) !important; }
-html.light footer .text-ink             { color: rgba(255,255,255,0.88) !important; }
-html.light footer .text-ink-dim         { color: rgba(255,255,255,0.60) !important; }
-html.light footer .text-ink-muted       { color: rgba(255,255,255,0.40) !important; }
-html.light footer .bg-space-700         { background-color: rgba(255,255,255,0.08) !important; }
-html.light footer [class*="border-space-"] { border-color: rgba(255,255,255,0.12) !important; }
-html.light footer .divider              { border-color: rgba(255,255,255,0.10); }
-html.light footer .hover\:text-ink:hover { color: rgba(255,255,255,0.90) !important; }
-html.light footer .hover\:text-electric-500:hover { color: #4E8AC9 !important; }
+html.light footer [class*="text-white"]  { color: #1a2533 !important; }
+html.light footer .text-ink             { color: #1a2533 !important; }
+html.light footer .text-ink-dim         { color: #3d5166 !important; }
+html.light footer .text-ink-muted       { color: #637382 !important; }
+/* Social icon buttons */
+html.light footer .bg-space-700         { background-color: rgba(0,93,170,0.08) !important; }
+html.light footer [class*="border-space-"] { border-color: rgba(0,93,170,0.14) !important; }
+html.light footer .divider              { border-color: rgba(0,93,170,0.14); }
+/* Newsletter input */
+html.light footer input[type="email"]   {
+  background-color: #ffffff !important;
+  border-color: rgba(0,93,170,0.25) !important;
+  color: #1a2533 !important;
+}
+/* Link hover */
+html.light footer .hover\:text-ink:hover         { color: #1a2533 !important; }
+html.light footer .hover\:text-electric-500:hover { color: #005DAA !important; }
+/* Logo icon: always TSA blue, always white icon */
+html.light footer [style*="background-color: #005DAA"] .text-white { color: #ffffff !important; }
+html.light footer [style*="background: #005DAA"] .text-white       { color: #ffffff !important; }
 
 /* ── MEMBER CARD (Dashboard): always-dark gradient ── */
 html.light .member-card,

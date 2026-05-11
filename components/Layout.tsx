@@ -535,7 +535,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-space-950 border-t border-space-500/40 pt-16 pb-8 mt-auto">
+    <footer className="footer-root bg-space-950 border-t border-space-500/40 pt-16 pb-8 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Main grid */}
@@ -544,12 +544,12 @@ export const Footer: React.FC = () => {
           {/* Brand column (2 cols on lg) */}
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                <Cpu size={18} className="text-white" />
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
+                <Cpu size={18} className="text-white" style={{ color: '#ffffff' }} />
               </div>
               <div>
-                <div className="font-bold text-white text-sm" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</div>
-                <div className="text-[10px] tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, color: 'rgba(255,255,255,0.60)' }}>Little Elm High School</div>
+                <div className="font-bold text-ink text-sm" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</div>
+                <div className="text-[10px] tracking-wide uppercase mt-0.5 text-ink-muted" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600 }}>Little Elm High School</div>
               </div>
             </div>
             <p className="text-ink-dim text-sm leading-relaxed mb-6 max-w-xs">
@@ -649,7 +649,7 @@ export const Footer: React.FC = () => {
             </ul>
 
             <div className="mt-6">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px]" style={{ backgroundColor: 'rgba(255,255,255,0.10)', borderColor: 'rgba(255,255,255,0.20)', color: 'rgba(255,255,255,0.70)', fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.05em' }}>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] bg-electric-100 border-electric-300/40 text-electric-500" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.05em' }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-tsa-green animate-pulse" />
                 Chapter Active 2025–2026
               </div>
