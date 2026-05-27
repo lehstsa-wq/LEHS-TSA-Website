@@ -95,18 +95,7 @@ const MOCK_RESOURCES: ResourceLink[] = [
     }
 ];
 
-const MOCK_REPORTS: ProblemReport[] = [
-    {
-        id: 'rep1',
-        reporterName: 'John Doe',
-        reporterEmail: 'john.doe@leisd.ws',
-        category: 'Website Bug',
-        description: 'The gallery images load very slowly on mobile data.',
-        priority: 'Medium',
-        status: 'Open',
-        submittedDate: '2024-10-02'
-    }
-];
+const MOCK_REPORTS: ProblemReport[] = [];
 
 interface DataContextType {
   announcements: Announcement[];
@@ -908,8 +897,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'open',
       createdAt: new Date().toISOString(),
     };
-    const docRef = await addDoc(collection(db, "teams"), newTeam);
-    return docRef.id;
+    // Optimistic update so the team appears immediately in the UI
+    const tempId = `temp-${Date.now()}`;
+    setTeams(prev => [{ ...newTeam, id: tempId }, ...prev]);
+    try {
+      const docRef = await addDoc(collection(db, "teams"), newTeam);
+      // Replace temp entry with real Firestore id (onSnapshot will also reconcile)
+      setTeams(prev => prev.map(t => t.id === tempId ? { ...t, id: docRef.id } : t));
+      return docRef.id;
+    } catch (e) {
+      // Roll back optimistic update on failure
+      setTeams(prev => prev.filter(t => t.id !== tempId));
+      throw e;
+    }
   };
 
   const joinTeam = async (teamId: string, userId: string, userName: string) => {

@@ -138,14 +138,7 @@ const App: React.FC = () => {
                   <Route path="/check-in" element={<CheckIn />} />
                   <Route path="/opportunities" element={<Opportunities />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route
-                    path="/teams"
-                    element={
-                      <ProtectedRoute>
-                        <Teams />
-                      </ProtectedRoute>
-                    }
-                  />
+                  <Route path="/teams" element={<Teams />} />
                 </Routes>
               </Layout>
               <BackToTop />
