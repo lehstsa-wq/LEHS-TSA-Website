@@ -12,7 +12,7 @@ const CheckIn: React.FC = () => {
   const [message, setMessage] = useState('');
   const [meetingTitle, setMeetingTitle] = useState('');
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA');
   const todayMeetings = meetings.filter(m => m.date === today);
 
   const handleSubmit = async (e: React.FormEvent) => {

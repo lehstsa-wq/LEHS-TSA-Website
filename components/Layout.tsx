@@ -66,20 +66,19 @@ export const Navbar: React.FC = () => {
   const { announcements } = useData();
   const { theme, toggleTheme } = useTheme();
 
-  // Unread announcement count — initialize seen list on first load so existing
-  // announcements don't permanently trigger the badge for new/returning users.
+  // Unread announcement count — timestamp-based so mock/Firestore ID mismatches
+  // never cause a permanent badge. Counts announcements dated after last clear.
   const unreadCount = (() => {
     if (!user || announcements.length === 0) return 0;
     try {
-      const key = `lehs-seen-${user.id}`;
+      const key = `lehs-cleared-${user.id}`;
       const raw = localStorage.getItem(key);
       if (raw === null) {
-        // First time: mark everything current as seen so badge starts at 0
-        localStorage.setItem(key, JSON.stringify(announcements.map(a => a.id)));
+        localStorage.setItem(key, new Date().toISOString());
         return 0;
       }
-      const seen: string[] = JSON.parse(raw);
-      return announcements.filter(a => !seen.includes(a.id)).length;
+      const clearedDate = raw.substring(0, 10); // YYYY-MM-DD
+      return announcements.filter(a => a.date > clearedDate).length;
     } catch { return 0; }
   })();
 

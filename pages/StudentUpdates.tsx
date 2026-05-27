@@ -10,13 +10,12 @@ const StudentUpdates: React.FC = () => {
   const { user } = useAuth();
   const [filter, setFilter] = useState('All');
 
-  // Mark all current announcements as read when page is visited
+  // Mark all announcements as read when page is visited (timestamp-based)
   useEffect(() => {
     if (!user) return;
-    const key = `lehs-seen-${user.id}`;
-    const ids = announcements.map(a => a.id);
-    localStorage.setItem(key, JSON.stringify(ids));
-  }, [announcements, user]);
+    const key = `lehs-cleared-${user.id}`;
+    localStorage.setItem(key, new Date().toISOString());
+  }, [user]);
 
   const filteredUpdates = filter === 'All' 
     ? announcements 

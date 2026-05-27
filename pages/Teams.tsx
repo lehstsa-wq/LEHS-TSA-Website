@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Users, Plus, Search, Filter,
   UserPlus, UserMinus, Trash2, ChevronDown, ChevronUp,
-  Lock, Unlock, CheckCircle, X, Shield
+  Lock, Unlock, CheckCircle, X, Shield, Send, Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
@@ -147,11 +147,12 @@ const CreateTeamForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 // ── Team Card ─────────────────────────────────────────────────────────────────
 const TeamCard: React.FC<{ team: Team }> = ({ team }) => {
   const { user } = useAuth();
-  const { joinTeam, leaveTeam, deleteTeam, updateTeamStatus } = useData();
+  const { joinTeam, leaveTeam, deleteTeam, updateTeamStatus, siteSettings } = useData();
   const { showToast } = useToast();
   const { confirm } = useModal();
   const [expanded, setExpanded] = useState(false);
   const [acting, setActing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const isLeader = user?.id === team.leaderId;
   const isMember = user ? team.memberIds.includes(user.id) : false;
@@ -197,6 +198,36 @@ const TeamCard: React.FC<{ team: Team }> = ({ team }) => {
   const handleToggleClosed = async () => {
     const newStatus = team.status === 'closed' ? (spotsLeft > 0 ? 'open' : 'full') : 'closed';
     await updateTeamStatus(team.id, newStatus);
+  };
+
+  const handleSubmitRoster = async () => {
+    const webhookUrl = (siteSettings as any).sheetsWebhookUrl;
+    if (!webhookUrl) {
+      showToast('No Sheets webhook configured. Set it in Admin → Site Settings.', 'error');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          type: 'team_roster',
+          teamId: team.id,
+          teamName: team.name,
+          competition: team.competitionName,
+          leader: team.leaderName,
+          members: team.memberNames,
+          memberCount: team.memberIds.length,
+          submittedAt: new Date().toISOString(),
+        }),
+      });
+      showToast(`Roster for "${team.name}" submitted to Google Sheets!`, 'success');
+    } catch {
+      showToast('Failed to submit roster. Check the webhook URL in Site Settings.', 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -325,6 +356,16 @@ const TeamCard: React.FC<{ team: Team }> = ({ team }) => {
                 >
                   {team.status === 'closed' ? <><Unlock size={14} /> Reopen</> : <><Lock size={14} /> Close</>}
                 </button>
+                {team.status === 'closed' && (
+                  <button
+                    onClick={handleSubmitRoster}
+                    disabled={submitting}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border border-electric-500/40 text-electric-400 hover:bg-electric-500/10 transition-colors disabled:opacity-50"
+                  >
+                    {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                    {submitting ? 'Submitting…' : 'Submit Roster'}
+                  </button>
+                )}
                 <button
                   onClick={handleDelete}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-ink-muted hover:text-gold-500 hover:bg-gold-500/10 border border-space-500/50 transition-colors"

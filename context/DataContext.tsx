@@ -848,7 +848,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const checkInMeeting = async (pin: string, userId: string, _userName: string): Promise<{ success: boolean; meetingTitle?: string; error?: string }> => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
     const match = meetings.find(m => m.pin === pin.trim() && m.date === today);
     if (!match) return { success: false, error: 'No meeting found with that PIN today.' };
     if (match.attendees.includes(userId)) return { success: false, error: `You're already checked in to ${match.title}.` };
