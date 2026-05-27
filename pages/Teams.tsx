@@ -90,25 +90,31 @@ const CreateTeamForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
         <div>
           <label className="block text-xs font-bold text-ink-muted uppercase tracking-wider mb-1.5">Competition *</label>
-          <select
-            value={competitionId}
-            onChange={e => setCompetitionId(e.target.value)}
-            required
-            className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 py-2.5 text-sm text-ink focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-colors appearance-none"
-          >
-            <option value="">Select event…</option>
-            {allComps.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
-          </select>
+          <div className="relative">
+            <select
+              value={competitionId}
+              onChange={e => setCompetitionId(e.target.value)}
+              required
+              className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 pr-9 py-2.5 text-sm text-ink focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-colors appearance-none cursor-pointer"
+            >
+              <option value="">Select event…</option>
+              {allComps.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+            </select>
+            <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
+          </div>
         </div>
         <div>
           <label className="block text-xs font-bold text-ink-muted uppercase tracking-wider mb-1.5">Max Team Size</label>
-          <select
-            value={maxSize}
-            onChange={e => setMaxSize(Number(e.target.value))}
-            className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 py-2.5 text-sm text-ink focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-colors appearance-none"
-          >
-            {MAX_SIZES.map(n => <option key={n} value={n}>{n} members</option>)}
-          </select>
+          <div className="relative">
+            <select
+              value={maxSize}
+              onChange={e => setMaxSize(Number(e.target.value))}
+              className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 pr-9 py-2.5 text-sm text-ink focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-colors appearance-none cursor-pointer"
+            >
+              {MAX_SIZES.map(n => <option key={n} value={n}>{n} members</option>)}
+            </select>
+            <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
+          </div>
         </div>
         <div className="sm:col-span-2">
           <label className="block text-xs font-bold text-ink-muted uppercase tracking-wider mb-1.5">Description (optional)</label>

@@ -10,6 +10,7 @@ const Signup: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [grade, setGrade] = useState('');
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signup } = useAuth();
@@ -19,6 +20,12 @@ const Signup: React.FC = () => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
+
+    if (!ageConfirmed) {
+      setError('You must be 13 years of age or older to create an account.');
+      setIsSubmitting(false);
+      return;
+    }
 
     if (!accessCode.trim()) {
       setError('An Access Code is required to join.');
@@ -160,9 +167,21 @@ const Signup: React.FC = () => {
             </div>
           </div>
 
+          <label className="flex items-start gap-3 cursor-pointer mt-2">
+            <input
+              type="checkbox"
+              checked={ageConfirmed}
+              onChange={e => setAgeConfirmed(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-space-500/60 bg-space-700/60 accent-electric-500 cursor-pointer flex-shrink-0"
+            />
+            <span className="text-xs text-ink-muted leading-relaxed">
+              I confirm that I am <strong className="text-ink">13 years of age or older</strong>. This site does not collect data from children under 13 in compliance with COPPA.
+            </span>
+          </label>
+
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !ageConfirmed}
             className="btn-primary w-full justify-center py-3.5 mt-6 disabled:opacity-50 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (

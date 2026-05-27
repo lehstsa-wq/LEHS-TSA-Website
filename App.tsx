@@ -33,6 +33,7 @@ import MemberDirectory from './pages/MemberDirectory';
 import CheckIn from './pages/CheckIn';
 import Teams from './pages/Teams';
 import Opportunities from './pages/Opportunities';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -136,6 +137,7 @@ const App: React.FC = () => {
                   />
                   <Route path="/check-in" element={<CheckIn />} />
                   <Route path="/opportunities" element={<Opportunities />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route
                     path="/teams"
                     element={

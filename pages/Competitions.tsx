@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
   AlertTriangle, Search,
@@ -82,6 +82,9 @@ const Competitions: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
+  const [filterType, setFilterType] = useState<'all' | 'nqe' | 'ute'>('all');
+  const teamsSectionRef = useRef<HTMLElement>(null);
+
   const [skills, setSkills] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [teamMemberInput, setTeamMemberInput] = useState('');
@@ -95,6 +98,9 @@ const Competitions: React.FC = () => {
     : null;
 
   const filteredCompetitions = COMPETITIONS.filter(comp => {
+    const isUTE = comp.id.startsWith('ute-') || comp.title.includes('(UTE)');
+    if (filterType === 'nqe' && isUTE) return false;
+    if (filterType === 'ute' && !isUTE) return false;
     const matchesCategory = activeCategory === 'all' || comp.category === activeCategory;
     const matchesSearch =
       comp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -269,11 +275,70 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           STICKY FILTER BAR
       ════════════════════════════════════════ */}
-      <div className="sticky top-16 z-30 border-b border-space-500/40 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-3 items-center">
+      <div className="sticky top-16 z-30 border-b border-space-500/40 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
 
-          {/* Category pills */}
-          <div className="flex gap-1.5 flex-1 overflow-x-auto no-scrollbar">
+          {/* Row 1: Type filters + TEAMS button + Search */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* Type pills: All / NQE / UTE */}
+            <div className="flex gap-1 shrink-0">
+              {([
+                { id: 'all', label: 'All Events' },
+                { id: 'nqe', label: 'NQE' },
+                { id: 'ute', label: 'UTE' },
+              ] as const).map(type => (
+                <button
+                  key={type.id}
+                  onClick={() => setFilterType(type.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
+                    filterType === type.id
+                      ? 'bg-electric-500 text-white border-transparent'
+                      : 'bg-space-700/50 text-ink-muted border-space-500/50 hover:text-ink'
+                  }`}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="w-px h-5 bg-space-500/50 hidden sm:block" />
+
+            {/* TEAMS scroll button */}
+            <button
+              onClick={() => teamsSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gold-500/10 text-gold-400 border border-gold-500/30 hover:bg-gold-500/20 transition-all whitespace-nowrap shrink-0"
+            >
+              <Users size={11} /> TEAMS ↓
+            </button>
+
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Search */}
+            <div className="relative shrink-0 w-full sm:w-56">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+              <input
+                type="text"
+                placeholder="Search events…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full bg-space-700/50 border border-space-500/60 rounded-xl pl-9 pr-9 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink">
+                  <X size={13} />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Row 2: Category pills with visible thin scrollbar */}
+          <div
+            className="flex gap-1.5 overflow-x-auto pb-1"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(106,155,204,0.35) transparent' }}
+          >
             {CATEGORIES.map(cat => {
               const catMeta = CATEGORY_META[cat.id];
               const active = activeCategory === cat.id;
@@ -299,23 +364,6 @@ const Competitions: React.FC = () => {
             })}
           </div>
 
-          {/* Search */}
-          <div className="relative shrink-0 w-full sm:w-56">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input
-              type="text"
-              placeholder="Search events…"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-space-700/50 border border-space-500/60 rounded-xl pl-9 pr-9 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all"
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink">
-                <X size={13} />
-              </button>
-            )}
-          </div>
         </div>
 
         {/* Count + clear */}
@@ -323,9 +371,9 @@ const Competitions: React.FC = () => {
           <span className="text-xs text-ink-muted">
             Showing <span className="text-ink font-semibold">{filteredCompetitions.length}</span> event{filteredCompetitions.length !== 1 ? 's' : ''}
           </span>
-          {(activeCategory !== 'all' || searchQuery) && (
+          {(activeCategory !== 'all' || searchQuery || filterType !== 'all') && (
             <button
-              onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
+              onClick={() => { setActiveCategory('all'); setSearchQuery(''); setFilterType('all'); }}
               className="text-xs text-electric-400 hover:text-electric-300 transition-colors"
             >
               Clear filters ×
@@ -456,7 +504,7 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
-      <section className="relative py-24 border-t border-space-500/30 overflow-hidden">
+      <section ref={teamsSectionRef} className="relative py-24 border-t border-space-500/30 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
         <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]  left-[-100px] opacity-10 animate-orb-float-2 pointer-events-none" />

@@ -599,6 +599,7 @@ export const Footer: React.FC = () => {
               {status === 'error' && (
                 <p className="text-xs text-gold-400 mt-1.5">Something went wrong. Try again.</p>
               )}
+              <p className="text-[10px] text-ink-ghost mt-1.5">For ages 13 and older only.</p>
             </div>
           </div>
 
@@ -661,9 +662,12 @@ export const Footer: React.FC = () => {
         <div className="divider mb-8" />
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-[12px] text-ink-muted">
           <p>© 2025–2026 Little Elm High School TSA. All rights reserved.</p>
-          <p className="font-mono">
-            Built by LEHS TSA Webmaster Team
-          </p>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy-policy" className="hover:text-ink transition-colors">
+              Privacy Policy
+            </Link>
+            <p className="font-mono">Built by LEHS TSA Webmaster Team</p>
+          </div>
         </div>
       </div>
     </footer>
