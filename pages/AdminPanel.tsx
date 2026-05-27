@@ -13,6 +13,7 @@ import {
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
+import { useToast } from '../context/ToastContext';
 import { Officer, Announcement } from '../types';
 import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
@@ -1477,7 +1478,9 @@ const CompetitionsTab: React.FC = () => {
 const AttendanceTab: React.FC = () => {
     const { meetings, addMeeting, deleteMeeting, members, siteSettings, updateSiteSettings } = useData();
     const { confirm } = useModal();
-    const [form, setForm] = useState({ title: '', date: '', time: '', location: '', pin: '', type: 'General' as const });
+    const { showToast } = useToast();
+    const [form, setForm] = useState<{ title: string; date: string; time: string; location: string; pin: string; type: 'General' | 'Officer' | 'Competition' | 'Workshop' }>({ title: '', date: '', time: '', location: '', pin: '', type: 'General' });
+    const [saving, setSaving] = useState(false);
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [webhookUrl, setWebhookUrl] = useState((siteSettings as any).sheetsWebhookUrl ?? '');
     const [webhookSaving, setWebhookSaving] = useState(false);
@@ -1489,8 +1492,17 @@ const AttendanceTab: React.FC = () => {
 
     const handleAdd = async () => {
         if (!form.title.trim() || !form.date || !form.pin.trim()) return;
-        await addMeeting({ title: form.title.trim(), date: form.date, time: form.time, location: form.location.trim(), pin: form.pin.trim(), type: form.type, description: '' });
-        setForm({ title: '', date: '', time: '', location: '', pin: '', type: 'General' });
+        setSaving(true);
+        try {
+            await addMeeting({ title: form.title.trim(), date: form.date, time: form.time, location: form.location.trim(), pin: form.pin.trim(), type: form.type, description: '' });
+            setForm({ title: '', date: '', time: '', location: '', pin: '', type: 'General' });
+            showToast('Meeting created!', 'success');
+        } catch (e: any) {
+            console.error('Create meeting error:', e);
+            showToast(e?.message ?? 'Failed to create meeting. Check Firestore permissions.', 'error');
+        } finally {
+            setSaving(false);
+        }
     };
 
     const handleDelete = async (id: string) => {
@@ -1680,8 +1692,8 @@ function doPost(e) {
                         </div>
                     </div>
                 </div>
-                <button onClick={handleAdd} disabled={!form.title.trim() || !form.date || !form.pin.trim()} className={`${buttonClass} bg-electric-500 text-white hover:bg-electric-400 disabled:opacity-40`}>
-                    <Plus size={15} /> Create Meeting
+                <button onClick={handleAdd} disabled={saving || !form.title.trim() || !form.date || !form.pin.trim()} className={`${buttonClass} bg-electric-500 text-white hover:bg-electric-400 disabled:opacity-40`}>
+                    <Plus size={15} /> {saving ? 'Creating…' : 'Create Meeting'}
                 </button>
             </div>
 
