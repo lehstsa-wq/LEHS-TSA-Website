@@ -1,0 +1,116 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the caller is an authenticated officer or advisor
+    function isOfficer() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role in ['officer', 'advisor'];
+    }
+
+    // Helper: caller is any authenticated member
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // ── Public-facing content (read by anyone, write by officers only) ──────
+    match /announcements/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /events/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /officers/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /projects/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /gallery/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /resources/{id} {
+      allow read: if isSignedIn();
+      allow write: if isOfficer();
+    }
+
+    match /competition_results/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    match /opportunities/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    // ── Meetings & attendance ───────────────────────────────────────────────
+    match /meetings/{id} {
+      allow read: if true;
+      allow create, delete: if isOfficer();
+      // Allow any signed-in user to update attendees (check-in), officers can update anything
+      allow update: if isOfficer() ||
+        (isSignedIn() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['attendees']));
+    }
+
+    // ── Member directory ────────────────────────────────────────────────────
+    match /members/{userId} {
+      allow read: if isSignedIn();
+      // Users can update their own profile; officers can update anyone
+      allow update: if isOfficer() || (isSignedIn() && request.auth.uid == userId);
+      allow create: if isSignedIn();
+      allow delete: if isOfficer();
+    }
+
+    // ── Access codes (officer-only) ─────────────────────────────────────────
+    match /access_codes/{id} {
+      allow read: if isOfficer();
+      allow write: if isOfficer();
+    }
+
+    // ── Competition interests (any member can submit) ───────────────────────
+    match /competition_interests/{id} {
+      allow read: if isOfficer();
+      allow create: if isSignedIn();
+      allow delete: if isOfficer();
+    }
+
+    // ── Problem reports ─────────────────────────────────────────────────────
+    match /problem_reports/{id} {
+      allow read: if isOfficer();
+      allow create: if isSignedIn();
+      allow update, delete: if isOfficer();
+    }
+
+    // ── Teams (members create/join, officers can manage) ────────────────────
+    match /teams/{id} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // ── Site settings & competition links ───────────────────────────────────
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isOfficer();
+    }
+
+    // ── Newsletter subscribers ──────────────────────────────────────────────
+    match /subscribers/{id} {
+      allow read: if isOfficer();
+      allow create: if true;
+    }
+  }
+}
