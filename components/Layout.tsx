@@ -648,13 +648,6 @@ export const Footer: React.FC = () => {
                 </a>
               </li>
             </ul>
-
-            <div className="mt-6">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] bg-electric-100 border-electric-300/40 text-electric-500" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.05em' }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-tsa-green animate-pulse" />
-                Chapter Active 2025–2026
-              </div>
-            </div>
           </div>
         </div>
 

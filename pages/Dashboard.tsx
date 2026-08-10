@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import AIAdvisor from '../components/AIAdvisor';
 import { SEO } from '../components/SEO';
 
 const STAT_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
@@ -46,7 +45,7 @@ const Dashboard: React.FC = () => {
               <div className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center text-white text-3xl font-black flex-shrink-0 border-2 border-white/10 overflow-hidden"
                 style={{
                   background: 'linear-gradient(135deg, #005DAA, #4E8AC9)',
-                  boxShadow: '0 0 24px rgba(0,93,170,0.35)',
+                  boxShadow: 'none',
                 }}>
                 {user?.avatar
                   ? <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
@@ -139,11 +138,6 @@ const Dashboard: React.FC = () => {
               })}
             </div>
 
-            {/* AI Advisor */}
-            <div className="animate-fade-in">
-              <AIAdvisor />
-            </div>
-
             {/* Recent Updates + Competitions */}
             <div className="grid md:grid-cols-2 gap-5">
 
@@ -222,7 +216,7 @@ const Dashboard: React.FC = () => {
             <div className="member-card rounded-2xl overflow-hidden relative text-white"
               style={{
                 background: 'linear-gradient(135deg, #005DAA 0%, #003d71 60%, #002d55 100%)',
-                boxShadow: '0 8px 32px rgba(0,93,170,0.30), 0 2px 8px rgba(0,0,0,0.12)',
+                boxShadow: 'none',
                 border: '1px solid rgba(255,255,255,0.12)',
               }}>
               {/* Dot-grid texture */}

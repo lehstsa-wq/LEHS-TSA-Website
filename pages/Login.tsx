@@ -72,7 +72,7 @@ const Login: React.FC = () => {
             <div className="w-14 h-14 rounded-[14px] mx-auto mb-4 flex items-center justify-center text-white"
               style={{
                 background: '#005DAA',
-                boxShadow: '0 0 24px rgba(0,93,170,0.4)',
+                boxShadow: 'none',
               }}>
             </div>
             <h1 className="text-[28px] font-black tracking-tight text-ink mb-1.5">Member Portal</h1>
