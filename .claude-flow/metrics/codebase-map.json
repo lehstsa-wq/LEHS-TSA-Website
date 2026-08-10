@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-06-02T11:55:22.427Z",
+  "projectRoot": "/Users/saivemula/Downloads/LEHS-TSA-Website-d88abbf41a856db53dd3dd8a7fdce97ee7030a48 3",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": true,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1780401322427
+}

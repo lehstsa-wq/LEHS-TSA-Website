@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { Gear } from '../components/art/LineArt';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   competition: BookOpen,
@@ -55,9 +56,10 @@ const Resources: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
+        <Gear className="sr-art sr-float" size="min(22vw, 15rem)"
+          style={{ top: '6%', right: '5%', color: 'var(--sr-amber)', opacity: 0.5 }} />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[400px] top-[-60px] right-[5%] opacity-25 animate-orb-float-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Resources</div>
@@ -110,7 +112,7 @@ const Resources: React.FC = () => {
             <div className="flex gap-1.5 flex-wrap">
               {categories.map(c => (
                 <button key={c} onClick={() => setCategory(c)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-electric-500 text-white shadow-glow-blue' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
                   {c.charAt(0).toUpperCase() + c.slice(1)}
                 </button>
               ))}

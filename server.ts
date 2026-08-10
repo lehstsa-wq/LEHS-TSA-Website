@@ -32,7 +32,19 @@ async function startServer() {
   // -----------------------------------------------------------------------
   // Task 4: Security headers via Helmet
   // -----------------------------------------------------------------------
-  app.use(helmet());
+  const isDev = process.env.NODE_ENV !== "production";
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        connectSrc: isDev
+          ? ["'self'", "ws://localhost:*", "http://localhost:*"]
+          : ["'self'"],
+        scriptSrc: ["'self'", "'module'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  }));
 
   // -----------------------------------------------------------------------
   // Task 4: Restricted CORS — honour ALLOWED_ORIGIN env var; default to

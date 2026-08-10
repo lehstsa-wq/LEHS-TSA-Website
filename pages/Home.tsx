@@ -6,6 +6,8 @@ import {
 import { motion, useInView, useMotionValue, useSpring } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { MeasureRing } from '../components/art/LineArt';
+import { ArtCanvas } from '../components/art/ArtCanvas';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
@@ -36,85 +38,6 @@ const Counter: React.FC<{ value: number; suffix?: string; duration?: number }> =
   }, [spring]);
 
   return <span ref={ref}>{display}{suffix}</span>;
-};
-
-/* ─────────────────────────────────────────────────────────────
-   TERMINAL — JSON chapter.json
-───────────────────────────────────────────────────────────── */
-const TERMINAL_LINES = [
-  { text: '$ cat chapter.json', color: 'green' as const },
-  { text: '{', color: 'ink' as const },
-  { text: '  "members": 75,', color: 'json' as const },
-  { text: '  "stateQualifiers": 50,', color: 'json' as const },
-  { text: '  "nationalQualifiers": 15,', color: 'json' as const },
-  { text: '  "events": 30,', color: 'json' as const },
-  { text: '  "status": "active"', color: 'json' as const },
-  { text: '}', color: 'ink' as const },
-  { text: '$ ./join.sh', color: 'green' as const },
-];
-
-
-const JsonLine: React.FC<{ text: string }> = ({ text }) => {
-  const m = text.match(/^(\s*)("[\w]+")(: )(.+)(,?)$/);
-  if (!m) return <span className="text-ink-dim">{text}</span>;
-  const [, indent, key, colon, val, comma] = m;
-  const isStr = val.startsWith('"');
-  return (
-    <span>
-      {indent}
-      <span className="text-amber-400">{key}</span>
-      <span className="text-ink-dim">{colon}</span>
-      <span className={isStr ? 'text-gold-400' : 'text-electric-400'}>{val}</span>
-      <span className="text-ink-dim">{comma}</span>
-    </span>
-  );
-};
-
-const Terminal: React.FC = () => {
-  const [visibleCount, setVisibleCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!inView || visibleCount >= TERMINAL_LINES.length) return;
-    const t = setTimeout(() => setVisibleCount(n => n + 1), visibleCount === 0 ? 300 : 180);
-    return () => clearTimeout(t);
-  }, [inView, visibleCount]);
-
-  return (
-    <div ref={ref} className="rounded-2xl overflow-hidden border border-space-500/60 bg-space-950 shadow-card font-mono text-sm"
-      style={{ boxShadow: 'var(--shadow-card)' }}>
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-space-500/40 bg-space-800/60">
-        <span className="w-3 h-3 rounded-full bg-gold-500" />
-        <span className="w-3 h-3 rounded-full bg-gold-400" />
-        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#788c5d' }} />
-        <span className="ml-3 text-ink-muted text-[11px] tracking-wide">~ tsa-chapter</span>
-      </div>
-      <div className="p-5 space-y-1.5 min-h-[220px] leading-relaxed">
-        {TERMINAL_LINES.slice(0, visibleCount).map((line, i) => (
-          <div key={i}>
-            {line.color === 'green' && (
-              <span>
-                <span style={{ color: '#788c5d' }}>$</span>
-                <span className="text-ink-dim"> {line.text.slice(2)}</span>
-              </span>
-            )}
-            {line.color === 'ink' && <span className="text-ink">{line.text}</span>}
-            {line.color === 'json' && <JsonLine text={line.text} />}
-          </div>
-        ))}
-        {visibleCount < TERMINAL_LINES.length && (
-          <span className="inline-block w-2 h-4 bg-electric-400 align-middle animate-pulse" />
-        )}
-        {visibleCount >= TERMINAL_LINES.length && (
-          <div className="mt-1">
-            <span style={{ color: '#788c5d' }}>$</span>
-            <span className="inline-block w-2 h-4 bg-electric-400 align-middle ml-1.5 animate-pulse" />
-          </div>
-        )}
-      </div>
-    </div>
-  );
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -209,13 +132,11 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 grid-bg opacity-40" />
 
         {/* Gradient mesh */}
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
+        <MeasureRing className="sr-art sr-float sr-float--late" size="min(30vw, 22rem)"
+          style={{ bottom: '-8%', left: '-4%', color: 'var(--sr-amber)', opacity: 0.4 }} />
 
         {/* Orbs */}
-        <div className="orb orb-blue w-[600px] h-[600px] top-[-100px] right-[-100px] opacity-40 animate-orb-float-1" />
-        <div className="orb orb-purple w-[400px] h-[400px] bottom-[50px] left-[-80px] opacity-30 animate-orb-float-2" />
-        <div className="orb orb-gold w-[300px] h-[300px] bottom-[-50px] right-[30%] opacity-20 animate-orb-float-3" />
-        <div className="orb orb-amber w-[250px] h-[250px] top-[20%] left-[15%] opacity-15 animate-orb-float-1" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -244,10 +165,10 @@ const Home: React.FC = () => {
                 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance"
               >
                 Where{' '}
-                <span className="text-gradient-blue">Technology</span>
+                <span style={{ color: '#4E8AC9' }}>Technology</span>
                 <br />
                 Meets{' '}
-                <span className="text-gradient-gold">Ambition.</span>
+                <span style={{ color: '#EE2624' }}>Ambition.</span>
               </motion.h1>
 
               <motion.p
@@ -298,16 +219,17 @@ const Home: React.FC = () => {
               </motion.div>
             </div>
 
-            {/* Right: Terminal */}
+            {/* Right: 3D wireframe artifact (all screen sizes) */}
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="hidden lg:block"
             >
-              <Terminal />
+              <div style={{ position: 'relative', aspectRatio: '1 / 0.9', maxHeight: 'min(58vh, 34rem)' }}>
+                <ArtCanvas artifact="icosa" zoom={3.4} />
+              </div>
 
-              {/* Mini cards below terminal */}
+              {/* Mini cards below the artifact */}
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {[
                   { label: 'Next Event', value: siteSettings.nextEventTitle || 'State Conference' },

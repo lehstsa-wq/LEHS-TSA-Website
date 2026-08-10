@@ -103,7 +103,7 @@ const Dashboard: React.FC = () => {
             <Link to="/check-in"
               className="flex items-center gap-4 p-4 rounded-2xl border border-electric-300/30 transition-all group bg-electric-100 hover:bg-electric-200"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white shadow-glow-blue"
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white"
                 style={{ background: '#005DAA' }}>
                 <QrCode size={22} />
               </div>

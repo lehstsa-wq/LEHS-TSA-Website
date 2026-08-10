@@ -52,9 +52,8 @@ const About: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[500px] h-[400px] top-[-80px] right-[-60px] opacity-30 animate-orb-float-1" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

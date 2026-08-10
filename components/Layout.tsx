@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useTheme } from '../context/ThemeContext';
+import { MeasureRing, Constellation, Circuit } from './art/LineArt';
 
 /* ─────────────────────────────────────────────────────────────
    NAV LINK DEFINITIONS
@@ -254,7 +255,7 @@ export const Navbar: React.FC = () => {
                 <div className="flex items-center gap-3 ml-1 pl-3 border-l border-space-500/50">
                   <Link
                     to="/dashboard"
-                    className="relative flex items-center gap-2 px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-medium shadow-glow-blue transition-all duration-200"
+                    className="relative flex items-center gap-2 px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-medium transition-all duration-200"
                   >
                     <LayoutDashboard size={15} />
                     Dashboard
@@ -534,7 +535,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="footer-root bg-space-950 border-t border-space-500/40 pt-16 pb-8 mt-auto">
+    <footer className="footer-root relative z-[1] bg-space-950 border-t border-space-500/40 pt-16 pb-8 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Main grid */}
@@ -676,11 +677,34 @@ export const Footer: React.FC = () => {
 /* ─────────────────────────────────────────────────────────────
    LAYOUT WRAPPER
 ───────────────────────────────────────────────────────────── */
+/* ── ART BACKDROP — the canvas behind everything, both themes.
+   Fixed under the content: two aurora washes + faint blueprint line-art.
+   Content (main/footer) stacks above via z-index. */
+const ArtBackdrop: React.FC = () => (
+  <div className="art-backdrop" aria-hidden>
+    <div className="sr-aurora" style={{ inset: '-20% 30% 35% -15%' }} />
+    <div className="sr-aurora" style={{ inset: '40% -15% -20% 45%', animationDelay: '-14s' }} />
+    <MeasureRing
+      className="sr-art" draw={false} size="min(34vw, 26rem)"
+      style={{ bottom: '-9rem', left: '-7rem', color: 'var(--sr-amber)' }}
+    />
+    <Constellation
+      className="sr-art" draw={false} size="min(26vw, 19rem)"
+      style={{ top: '8%', right: '-4rem', color: 'var(--sr-violet)' }}
+    />
+    <Circuit
+      className="sr-art" draw={false} size="min(18vw, 13rem)"
+      style={{ top: '55%', left: '2%', color: 'var(--sr-teal)' }}
+    />
+  </div>
+);
+
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: 'var(--c-bg)', color: 'var(--c-text)' }}>
+      <ArtBackdrop />
       <Navbar />
-      <main className="flex-grow w-full">{children}</main>
+      <main className="flex-grow w-full relative z-[1]">{children}</main>
       <Footer />
     </div>
   );

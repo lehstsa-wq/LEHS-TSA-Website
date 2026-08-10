@@ -289,12 +289,12 @@ html.light {
     font-family: var(--font-heading);
     background: #005DAA;
     color: #FFFFFF;
-    box-shadow: 0 4px 15px rgba(0, 93, 170, 0.40);
+    box-shadow: none;
   }
   .btn-primary:hover {
     background: #0069c0;
     transform: translateY(-1px);
-    box-shadow: 0 8px 25px rgba(0, 93, 170, 0.55);
+    box-shadow: none;
   }
   .btn-primary:active { transform: translateY(0); }
 
@@ -318,12 +318,12 @@ html.light {
     font-family: var(--font-heading);
     background: #EE2624;
     color: #FFFFFF;
-    box-shadow: 0 4px 15px rgba(238, 38, 36, 0.40);
+    box-shadow: none;
   }
   .btn-gold:hover {
     background: #d41f1d;
     transform: translateY(-1px);
-    box-shadow: 0 8px 25px rgba(238, 38, 36, 0.55);
+    box-shadow: none;
   }
 
   /* ── CARD VARIANTS ───────────────────────────────────────── */
@@ -352,33 +352,33 @@ html.light {
   }
 
   .badge-blue {
-    background: rgba(0, 93, 170, 0.15);
-    color: #4E8AC9;
-    border: 1px solid rgba(0, 93, 170, 0.30);
+    background: #005DAA;
+    color: #FFFFFF;
+    border: none;
   }
 
   .badge-gold {
-    background: rgba(238, 38, 36, 0.12);
-    color: #EE2624;
-    border: 1px solid rgba(238, 38, 36, 0.28);
+    background: #EE2624;
+    color: #FFFFFF;
+    border: none;
   }
 
   .badge-purple {
-    background: rgba(87, 78, 143, 0.15);
-    color: #574E8F;
-    border: 1px solid rgba(87, 78, 143, 0.28);
+    background: #574E8F;
+    color: #FFFFFF;
+    border: none;
   }
 
   .badge-green {
-    background: rgba(134, 187, 80, 0.15);
-    color: #86BB50;
-    border: 1px solid rgba(134, 187, 80, 0.28);
+    background: #86BB50;
+    color: #FFFFFF;
+    border: none;
   }
 
   .badge-amber {
-    background: rgba(236, 136, 29, 0.12);
-    color: #EC881D;
-    border: 1px solid rgba(236, 136, 29, 0.26);
+    background: #EC881D;
+    color: #FFFFFF;
+    border: none;
   }
 
   /* ── SECTION HEADINGS ────────────────────────────────────── */
@@ -528,7 +528,7 @@ html.light .hover\:bg-electric-600:hover             { background-color: #004e91
 html.light .border-electric-300                      { border-color: rgba(0, 93, 170, 0.35); }
 html.light .border-electric-500                      { border-color: #005DAA; }
 html.light .focus\:border-electric-500:focus         { border-color: #005DAA; }
-html.light .shadow-glow-blue                         { box-shadow: 0 0 20px rgba(0, 93, 170, 0.22); }
+html.light .shadow-glow-blue                         { box-shadow: none; }
 html.light [class*="group-hover\:bg-electric-100"]   { background-color: rgba(0, 93, 170, 0.10); }
 html.light [class*="group-hover\:text-electric-500"] { color: #005DAA; }
 
@@ -567,29 +567,29 @@ html.light .btn-secondary:hover {
 }
 
 html.light .badge-blue {
-  background: rgba(0, 93, 170, 0.12);
-  color: #005DAA;
-  border-color: rgba(0, 93, 170, 0.28);
+  background: #005DAA;
+  color: #FFFFFF;
+  border: none;
 }
 html.light .badge-gold {
-  background: rgba(238, 38, 36, 0.10);
-  color: #d41f1d;
-  border-color: rgba(238, 38, 36, 0.26);
+  background: #EE2624;
+  color: #FFFFFF;
+  border: none;
 }
 html.light .badge-purple {
-  background: rgba(87, 78, 143, 0.12);
-  color: #574E8F;
-  border-color: rgba(87, 78, 143, 0.26);
+  background: #574E8F;
+  color: #FFFFFF;
+  border: none;
 }
 html.light .badge-green {
-  background: rgba(134, 187, 80, 0.14);
-  color: #5a8f22;
-  border-color: rgba(134, 187, 80, 0.28);
+  background: #86BB50;
+  color: #FFFFFF;
+  border: none;
 }
 html.light .badge-amber {
-  background: rgba(236, 136, 29, 0.12);
-  color: #b86200;
-  border-color: rgba(236, 136, 29, 0.26);
+  background: #EC881D;
+  color: #FFFFFF;
+  border: none;
 }
 
 html.light footer {

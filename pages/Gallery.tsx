@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { Crosshair } from '../components/art/LineArt';
 
 const Gallery: React.FC = () => {
   const { galleryList } = useData();
@@ -19,9 +20,10 @@ const Gallery: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
+        <Crosshair className="sr-art sr-float" size="min(20vw, 13rem)"
+          style={{ top: '8%', right: '6%', color: 'var(--sr-violet)', opacity: 0.5 }} />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-purple w-[400px] h-[350px] top-[-60px] right-[5%] opacity-25 animate-orb-float-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Gallery</div>

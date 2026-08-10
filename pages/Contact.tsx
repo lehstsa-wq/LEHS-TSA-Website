@@ -3,6 +3,7 @@ import { Mail, MapPin, Instagram, Twitter, Send, ExternalLink, AlertCircle, Chec
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { Circuit } from '../components/art/LineArt';
 
 const Contact: React.FC = () => {
   const { siteSettings, addProblemReport } = useData();
@@ -34,9 +35,10 @@ const Contact: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
+        <Circuit className="sr-art sr-float" size="min(20vw, 14rem)"
+          style={{ top: '10%', right: '6%', color: 'var(--sr-magenta)', opacity: 0.5 }} />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[400px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Contact</div>

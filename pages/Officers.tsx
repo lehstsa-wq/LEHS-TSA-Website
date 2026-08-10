@@ -25,9 +25,8 @@ const Officers: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-gold w-[400px] h-[400px] top-[-60px] right-[5%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Leadership</div>
@@ -50,7 +49,7 @@ const Officers: React.FC = () => {
               {executive.map((officer, i) => (
                 <motion.div key={officer.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.07 }}
                   className="group text-center">
-                  <div className="relative w-20 h-20 rounded-2xl mx-auto mb-3 overflow-hidden border-2 border-gold-500/40 group-hover:border-gold-500/80 transition-all duration-300 shadow-glow-gold/30">
+                  <div className="relative w-20 h-20 rounded-2xl mx-auto mb-3 overflow-hidden border-2 border-gold-500/40 group-hover:border-gold-500/80 transition-all duration-300/30">
                     {officer.imageUrl ? (
                       <LazyImage src={officer.imageUrl} alt={officer.name} className="w-full h-full object-cover" />
                     ) : (
@@ -74,7 +73,7 @@ const Officers: React.FC = () => {
         <div className="flex items-center gap-2 mb-10 flex-wrap">
           {categories.map(c => (
             <button key={c} onClick={() => setFilter(c as typeof filter)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${filter === c ? 'bg-electric-500 text-white shadow-glow-blue' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${filter === c ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
               {c}
             </button>
           ))}

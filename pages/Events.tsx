@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { Orbit } from '../components/art/LineArt';
 import { Countdown } from '../components/Countdown';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -36,9 +37,10 @@ const Events: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
+        <Orbit className="sr-art sr-float" size="min(22vw, 15rem)"
+          style={{ top: '8%', right: '5%', color: 'var(--sr-teal)', opacity: 0.55 }} />
         <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="orb orb-blue w-[400px] h-[400px] top-[-60px] right-[10%] opacity-25 animate-orb-float-1" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Schedule</div>
@@ -60,7 +62,7 @@ const Events: React.FC = () => {
           <div className="flex gap-1.5">
             {(['All', 'Upcoming', 'Past'] as const).map(s => (
               <button key={s} onClick={() => setFilter(s)}
-                className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === s ? 'bg-electric-500 text-white shadow-glow-blue' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === s ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
                 {s}
               </button>
             ))}
@@ -68,7 +70,7 @@ const Events: React.FC = () => {
           <div className="flex gap-1.5 ml-auto flex-wrap">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCategory(c)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold-500 text-white shadow-glow-red' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${category === c ? 'bg-gold-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
                 {c}
               </button>
             ))}

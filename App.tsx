@@ -9,6 +9,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import { ModalProvider } from './context/ModalContext';
 import { BackToTop } from './components/BackToTop';
+import { Cursor, Grain } from './components/art/Cursor';
 
 // Pages
 import Home from './pages/Home';
@@ -67,6 +68,8 @@ const App: React.FC = () => {
               <Router>
                 <ScrollToTop />
                 <RouteTracker />
+                <Grain />
+                <Cursor />
                 <Layout>
                   <Routes>
                   {/* Public Routes */}

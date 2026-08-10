@@ -176,13 +176,10 @@ const Competitions: React.FC = () => {
           HERO
       ════════════════════════════════════════ */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-hero-mesh" />
+        <div className="sr-aurora" />
         <div className="absolute inset-0 grid-bg opacity-25" />
 
         {/* Orbs */}
-        <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]   right-[-60px]  opacity-30 animate-orb-float-1" />
-        <div className="orb orb-gold w-[350px] h-[350px] bottom-[0px]  left-[5%]      opacity-20 animate-orb-float-2" />
-        <div className="orb orb-gold   w-[280px] h-[280px] top-[20%]     right-[25%]    opacity-15 animate-orb-float-3" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -194,9 +191,9 @@ const Competitions: React.FC = () => {
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance">
               Compete.{' '}
-              <span className="text-gradient-blue">Build.</span>
+              <span style={{ color: '#4E8AC9' }}>Build.</span>
               <br />
-              <span className="text-gradient-gold">Win.</span>
+              <span style={{ color: '#EE2624' }}>Win.</span>
             </h1>
 
             <p className="text-xl text-ink-dim leading-relaxed max-w-2xl mb-10">
@@ -507,8 +504,6 @@ const Competitions: React.FC = () => {
       <section ref={teamsSectionRef} className="relative py-24 border-t border-space-500/30 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
-        <div className="orb orb-blue   w-[600px] h-[500px] top-[-80px]  left-[-100px] opacity-10 animate-orb-float-2 pointer-events-none" />
-        <div className="orb orb-gold w-[300px] h-[300px] bottom-[0px] right-[5%]   opacity-10 animate-orb-float-3 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -523,7 +518,7 @@ const Competitions: React.FC = () => {
             <div className="section-label inline-flex mb-4">TSA TEAMS Program</div>
             <div className="flex flex-wrap items-end gap-4 mb-5">
               <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-                <span className="text-gradient-blue">TEAMS</span>
+                <span style={{ color: '#4E8AC9' }}>TEAMS</span>
               </h2>
               <span className="text-ink-muted text-base font-medium mb-1 leading-snug">
                 Tests of Engineering Aptitude,<br className="hidden sm:block" /> Mathematics &amp; Science

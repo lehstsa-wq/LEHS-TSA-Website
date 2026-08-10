@@ -1,0 +1,461 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   LEHS TSA — SHOWROOM DESIGN SYSTEM · PHASE 1 TOKENS
+   ───────────────────────────────────────────────────────────────────────
+   Paradigm (from wow-showroom.com/mouse-parallax):
+     · spatial black canvas — depth lives in motion, never in shadow/gradient
+     · two-register typography — huge literary display vs microscopic anchors
+     · TSA Pantone blue + red are the ONLY chroma on the void
+   These tokens are ADDITIVE. They do not remove the existing --c-* theme
+   tokens the rest of the site depends on; showroom surfaces opt in via the
+   `.sr` scope applied by <ParallaxStage>.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── DEPTH / CANVAS ──────────────────────────────────────────────── */
+  --sr-void:        #000000;                 /* the stage, not a "dark theme" */
+  --sr-void-lift:   #0a0a0a;                 /* tier-B panel fill, barely off-void */
+  --sr-hairline:    rgba(255, 255, 255, 0.12);   /* the ONLY border weight     */
+  --sr-hairline-hi: rgba(255, 255, 255, 0.28);   /* hover / focus rule         */
+
+  /* ── INK (typography) ────────────────────────────────────────────── */
+  --sr-ink:       #ffffff;
+  --sr-ink-dim:   rgba(255, 255, 255, 0.64);
+  --sr-ink-ghost: rgba(255, 255, 255, 0.38);     /* micro-labels at rest       */
+
+  /* ── CHROMA — spectral studio palette (technology × art print) ──── */
+  --sr-blue:    #005daa;
+  --sr-blue-hi: #3b9eff;                     /* electric                       */
+  --sr-red:     #e93d82;                     /* magenta — rules, indices       */
+  --sr-magenta: #e93d82;
+  --sr-amber:   #ffb224;
+  --sr-violet:  #8250ff;
+  --sr-teal:    #12c6a2;
+  --sr-spectral: linear-gradient(100deg, #3b9eff 0%, #8250ff 32%, #e93d82 62%, #ffb224 100%);
+  --sr-ghost-stroke: rgba(255, 255, 255, 0.06);
+
+  /* ── TYPE REGISTER 1 · DISPLAY (literary) ────────────────────────── */
+  --sr-font-display: "Proxima Nova", "Franklin Gothic Medium", "Source Sans 3", Arial, sans-serif;
+  --sr-display-xl: clamp(4rem, 12vw, 11.5rem);   /* one word per viewport      */
+  --sr-display-lg: clamp(3rem, 8vw, 7rem);
+  --sr-display-md: clamp(2rem, 4.5vw, 3.75rem);
+  --sr-display-tracking: -0.03em;
+  --sr-display-leading: 0.92;
+
+  /* ── TYPE REGISTER 2 · MICRO (functional anchors) ────────────────── */
+  --sr-font-body: "Source Sans 3", "Source Sans Pro", Arial, sans-serif;
+  --sr-font-mono: "JetBrains Mono", monospace;   /* coordinates, indices       */
+  --sr-micro:    0.6875rem;                   /* 11px — nav, breadcrumb anchors */
+  --sr-micro-xs: 0.625rem;                    /* 10px — chapter №, HUD readouts */
+  --sr-micro-tracking: 0.22em;                /* always uppercase               */
+  --sr-body:    1rem;
+  --sr-body-lg: 1.1875rem;                    /* tier-B prose; max-width 34em   */
+  /* NOTE: the 1.5–2.5rem "card-heading" register is deliberately absent */
+
+  /* ── SPATIAL SYSTEM (viewport-relative, no container grid) ────────── */
+  --sr-stage-h:   100dvh;
+  --sr-edge:      clamp(1.25rem, 4vw, 4rem);  /* HUD inset from viewport edge   */
+  --sr-stack-gap: clamp(3rem, 8vh, 5.5rem);   /* between sections — tight, no dead air */
+  --sr-chapter-pad: clamp(3.5rem, 9vh, 6.5rem); /* vertical padding of non-hero chapters */
+  --sr-radius:    0px;                         /* rounded SaaS cards abolished   */
+  --sr-measure:   34em;
+
+  /* ── Z-STACKING MATRIX ───────────────────────────────────────────── */
+  --sr-z-deep: -1;
+  --sr-z-mid: 1;
+  --sr-z-content: 1;
+  --sr-z-hud: 3;
+  --sr-z-chrome: 50;
+  --sr-z-modal: 80;
+  --sr-z-toast: 90;
+
+  /* ── MOTION CONSTANTS (consumed by the parallax engine) ──────────── */
+  /* Tier A — experiential (Home, About, Officers, Join, Competitions LP) */
+  --px-perspective: 1100px;
+  --px-amp-deep: 10; --px-amp-mid: 24; --px-amp-hud: 44;   /* px at |n| = 1     */
+  --px-lambda-deep: 3; --px-lambda-mid: 5; --px-lambda-hud: 8;  /* s⁻¹          */
+  --px-swivel-deg: 9;
+
+  /* Tier B — editorial semi-parallax (Dashboard, Admin, Teams, forms) */
+  --px-b-amp-deep: 4; --px-b-amp-mid: 8; --px-b-amp-hud: 0;
+  --px-b-lambda-deep: 2; --px-b-lambda-mid: 3.5;
+  --px-b-swivel-deg: 1.5;
+
+  --sr-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --sr-dur-reveal: 900ms;
+  --sr-dur-ui: 200ms;
+}
+
+/* Touch / reduced-motion: parallax locked; composition stands statically */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  :root {
+    --px-amp-deep: 0; --px-amp-mid: 0; --px-amp-hud: 0; --px-swivel-deg: 0;
+    --px-b-amp-deep: 0; --px-b-amp-mid: 0; --px-b-amp-hud: 0; --px-b-swivel-deg: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SHOWROOM SCOPE — everything below only applies inside a <ParallaxStage>,
+   which renders `.sr`. Keeps the paradigm from leaking into legacy pages.
+   ═══════════════════════════════════════════════════════════════════════ */
+.sr {
+  position: relative;
+  background: var(--sr-void);
+  color: var(--sr-ink);
+  font-family: var(--sr-font-body);
+  isolation: isolate;                          /* own stacking context          */
+  overflow: clip;
+}
+
+/* ── LIGHT MODE — warm paper studio; same system, inverted ink ──────── */
+html.light .sr,
+html.light .sr-cursor-scope {
+  --sr-void:        #faf7f1;                 /* warm paper                     */
+  --sr-void-lift:   #f1ece1;
+  --sr-hairline:    rgba(20, 20, 26, 0.14);
+  --sr-hairline-hi: rgba(20, 20, 26, 0.32);
+  --sr-ink:         #14141a;
+  --sr-ink-dim:     rgba(20, 20, 26, 0.68);
+  --sr-ink-ghost:   rgba(20, 20, 26, 0.40);
+  --sr-ghost-stroke: rgba(20, 20, 26, 0.09);
+}
+html.light .sr-grain { filter: invert(1); opacity: 0.07; }
+
+/* ── AURORA — localized chromatic field behind art clusters. Deliberately
+   tight and placed, never a full-page wash: that's the anti-slop rule. ── */
+.sr-aurora {
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+  background:
+    radial-gradient(34% 42% at 24% 30%, rgba(233, 61, 130, 0.50), transparent 70%),
+    radial-gradient(38% 46% at 76% 26%, rgba(59, 158, 255, 0.48), transparent 70%),
+    radial-gradient(36% 40% at 60% 80%, rgba(255, 178, 36, 0.38), transparent 72%),
+    radial-gradient(26% 34% at 40% 62%, rgba(130, 80, 255, 0.34), transparent 70%);
+  opacity: 0.22;
+  filter: blur(52px) saturate(1.25);
+  animation: sr-aurora-drift 26s ease-in-out infinite alternate;
+}
+html.light .sr-aurora { opacity: 0.5; }
+@keyframes sr-aurora-drift {
+  0%   { transform: rotate(0deg) scale(1);      filter: blur(52px) saturate(1.25) hue-rotate(0deg); }
+  100% { transform: rotate(6deg) scale(1.12);   filter: blur(52px) saturate(1.25) hue-rotate(28deg); }
+}
+@media (prefers-reduced-motion: reduce) { .sr-aurora { animation: none; } }
+
+/* ── ART BACKDROP — the artful canvas BEHIND all elements, site-wide.
+   A fixed layer under the content: aurora washes + faint line-art, so
+   cards, buttons, and text sit on top of an art print in both themes. */
+.art-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.art-backdrop .sr-aurora { opacity: 0.28; animation-duration: 38s; }
+html.light .art-backdrop .sr-aurora { opacity: 0.3; }
+.art-backdrop .sr-art { opacity: 0.26; }
+html.light .art-backdrop .sr-art { opacity: 0.2; }
+
+/* ── SPECTRAL TEXT — gradient-filled display words ──────────────────── */
+.sr-grad-text {
+  background: var(--sr-spectral);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── ENTRANCE RISE — hero elements assemble on mount, staggered ─────── */
+.sr-rise {
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(6px);
+  animation: sr-rise 1000ms var(--sr-ease-out-expo) forwards;
+  animation-delay: calc(var(--rise, 0) * 140ms);
+}
+@keyframes sr-rise {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-rise { animation: none; opacity: 1; transform: none; filter: none; }
+}
+
+/* ── ART FLOAT — slow drift so artwork breathes without page movement ── */
+.sr-float { animation: sr-float 16s ease-in-out infinite; }
+.sr-float--late { animation-delay: -8s; }
+@keyframes sr-float {
+  0%, 100% { translate: 0 -1.2%; rotate: 0deg; }
+  50%      { translate: 0  1.2%; rotate: 1.6deg; }
+}
+@media (prefers-reduced-motion: reduce) { .sr-float { animation: none; } }
+
+.sr-stage {
+  position: relative;
+  min-height: var(--sr-stage-h);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  perspective: var(--px-perspective);
+  perspective-origin: 50% 50%;
+}
+
+/* content-height chapter: breathing room without viewport-sized dead air */
+.sr-chapter { padding: var(--sr-chapter-pad) 0; }
+.sr-hero--compact { min-height: min(62dvh, 34rem); }
+
+/* Layers are transformed by the engine via inline style; this is the resting
+   frame + GPU hint. `will-change` is scoped to layers only. */
+.sr-layer {
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────────────────── */
+.sr-display {
+  font-family: var(--sr-font-display);
+  font-weight: 800;
+  line-height: var(--sr-display-leading);
+  letter-spacing: var(--sr-display-tracking);
+  text-transform: uppercase;
+  margin: 0;
+}
+.sr-display--xl { font-size: var(--sr-display-xl); }
+.sr-display--lg { font-size: var(--sr-display-lg); }
+.sr-display--md { font-size: var(--sr-display-md); text-transform: none; letter-spacing: -0.02em; }
+
+.sr-micro {
+  font-family: var(--sr-font-mono);
+  font-size: var(--sr-micro);
+  letter-spacing: var(--sr-micro-tracking);
+  text-transform: uppercase;
+  color: var(--sr-ink-ghost);
+}
+.sr-micro--xs { font-size: var(--sr-micro-xs); }
+
+.sr-lede {
+  font-size: var(--sr-body-lg);
+  line-height: 1.6;
+  color: var(--sr-ink-dim);
+  max-width: var(--sr-measure);
+}
+
+/* ── HUD CHROME (corner-anchored functional labels) ─────────────────── */
+.sr-hud {
+  position: absolute;
+  inset: 0;
+  z-index: var(--sr-z-hud);
+  pointer-events: none;
+}
+.sr-hud > * { pointer-events: auto; }
+.sr-hud__corner {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.sr-hud__tl { top: var(--sr-edge); left: var(--sr-edge); }
+.sr-hud__tr { top: var(--sr-edge); right: var(--sr-edge); }
+.sr-hud__bl { bottom: var(--sr-edge); left: var(--sr-edge); }
+.sr-hud__br { bottom: var(--sr-edge); right: var(--sr-edge); }
+
+/* ── ACCENT RULE — the single red hairline permitted per viewport ───── */
+.sr-rule {
+  display: inline-block;
+  width: 3rem;
+  height: 2px;
+  background: var(--sr-red);
+  vertical-align: middle;
+}
+.sr-index {
+  font-family: var(--sr-font-mono);
+  font-size: var(--sr-micro-xs);
+  letter-spacing: var(--sr-micro-tracking);
+  color: var(--sr-red);
+}
+
+/* ── LINK / CTA (underline-grow, no fill, no glow) ──────────────────── */
+.sr-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--sr-font-mono);
+  font-size: var(--sr-micro);
+  letter-spacing: var(--sr-micro-tracking);
+  text-transform: uppercase;
+  color: var(--sr-ink);
+  text-decoration: none;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sr-hairline);
+  transition: border-color var(--sr-dur-ui) var(--sr-ease-out-expo),
+              color var(--sr-dur-ui) var(--sr-ease-out-expo);
+}
+.sr-link:hover { color: var(--sr-ink); border-bottom-color: var(--sr-red); }
+.sr-link .sr-link__arrow { transition: transform var(--sr-dur-ui) var(--sr-ease-out-expo); }
+.sr-link:hover .sr-link__arrow { transform: translateX(4px); }
+
+/* ── EDITORIAL ROW (Tier B — Obscure-derived hover, no cards) ───────── */
+.sr-rows > * {
+  transition: opacity var(--sr-dur-ui) ease, color var(--sr-dur-ui) ease;
+}
+.sr-rows:hover > * { opacity: 0.5; }
+.sr-rows:hover > *:hover {
+  opacity: 1;
+  border-left: 2px solid var(--sr-red);
+}
+
+/* ── SCROLL-REVEAL (used by both tiers) ─────────────────────────────── */
+.sr-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.sr-reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--sr-dur-reveal) var(--sr-ease-out-expo),
+              transform var(--sr-dur-reveal) var(--sr-ease-out-expo);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-reveal { opacity: 1; transform: none; }
+}
+
+/* ── CARD (hairline frame, no radius, no glow) ──────────────────────── */
+.sr-card {
+  border: 1px solid var(--sr-hairline);
+  background: var(--sr-void);
+  transition: border-color var(--sr-dur-ui) var(--sr-ease-out-expo);
+}
+.sr-card:hover { border-color: var(--sr-hairline-hi); }
+.sr-card__img { filter: grayscale(0.4) contrast(1.05); transition: filter 400ms var(--sr-ease-out-expo); }
+.sr-card:hover .sr-card__img { filter: grayscale(0) contrast(1); }
+
+/* ── PILL (filter toggle) ───────────────────────────────────────────── */
+.sr-pill {
+  font-family: var(--sr-font-mono);
+  font-size: var(--sr-micro-xs);
+  letter-spacing: var(--sr-micro-tracking);
+  text-transform: uppercase;
+  color: var(--sr-ink-ghost);
+  background: none;
+  border: 1px solid var(--sr-hairline);
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--sr-dur-ui) ease, border-color var(--sr-dur-ui) ease;
+}
+.sr-pill:hover { color: var(--sr-ink); }
+.sr-pill[data-active="true"] { color: var(--sr-ink); border-color: var(--sr-ink); }
+
+/* ── FIELD (form inputs on the void) ────────────────────────────────── */
+.sr-field {
+  width: 100%;
+  background: var(--sr-void-lift);
+  border: 1px solid var(--sr-hairline);
+  color: var(--sr-ink);
+  font-family: var(--sr-font-body);
+  font-size: var(--sr-body);
+  padding: 0.7rem 0.9rem;
+  transition: border-color var(--sr-dur-ui) ease;
+}
+.sr-field:focus { outline: none; border-color: var(--sr-blue-hi); }
+.sr-field::placeholder { color: var(--sr-ink-ghost); }
+
+/* ── CUSTOM CURSOR (activated by <Cursor/> inside .sr regions) ──────── */
+.sr-cursor-on .sr,
+.sr-cursor-on .sr a,
+.sr-cursor-on .sr button { cursor: none; }
+.sr-cursor-on .sr input,
+.sr-cursor-on .sr textarea,
+.sr-cursor-on .sr select { cursor: auto; }
+
+.sr-cursor-dot,
+.sr-cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 99;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+}
+.sr-cursor-dot {
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #fff;
+  border-radius: 50%;
+}
+.sr-cursor-ring {
+  width: 34px; height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 250ms var(--sr-ease-out-expo), height 250ms var(--sr-ease-out-expo),
+              margin 250ms var(--sr-ease-out-expo), border-color 250ms ease,
+              background 250ms ease;
+}
+.sr-cursor-ring[data-state="labeled"] {
+  width: 72px; height: 72px;
+  margin: -36px 0 0 -36px;
+  background: rgba(255,255,255,0.96);
+  border-color: transparent;
+}
+.sr-cursor-ring.is-pressed { transform-origin: center; scale: 0.8; }
+.sr-cursor-label {
+  font-family: var(--sr-font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: #000;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.sr-cursor-ring[data-state="labeled"] .sr-cursor-label { opacity: 1; }
+
+/* ── FILM GRAIN ─────────────────────────────────────────────────────── */
+.sr-grain {
+  position: fixed;
+  inset: -100px;
+  z-index: 70;                /* above chrome (50), below modal (80) */
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: sr-grain-shift 0.9s steps(6) infinite;
+}
+@keyframes sr-grain-shift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-28px, 14px); }
+  40%  { transform: translate(16px, -30px); }
+  60%  { transform: translate(-12px, -18px); }
+  80%  { transform: translate(30px, 22px); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-grain { animation: none; }
+}
+
+/* ── VELOCITY SKEW (applied by the engine to [data-skew] display type) ─ */
+.sr-skew { will-change: transform; }
+
+/* ── LINE-ART placement helper ──────────────────────────────────────── */
+.sr-art {
+  position: absolute;
+  pointer-events: none;
+  color: var(--sr-ink);
+  opacity: 0.5;
+}
+.sr-art--blue { color: var(--sr-blue-hi); }
+.sr-art--faint { opacity: 0.25; }
+
+/* ── SCROLL CUE ─────────────────────────────────────────────────────── */
+.sr-cue {
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(var(--sr-ink-ghost), transparent);
+  animation: sr-cue 2.4s var(--sr-ease-out-expo) infinite;
+}
+@keyframes sr-cue {
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.3; }
+  50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
+}
