@@ -187,7 +187,7 @@ const Competitions: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <div className="section-label inline-flex mb-5">2025–2026 Season</div>
+            <div className="section-label inline-flex mb-5">2026–2027 Season</div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance">
               Compete.{' '}
@@ -260,7 +260,7 @@ const Competitions: React.FC = () => {
           >
             <AlertTriangle size={15} className="flex-shrink-0" />
             <span>
-              <strong className="text-gold-300">2025–2026 Update:</strong>{' '}
+              <strong className="text-gold-300">2026–2027 Update:</strong>{' '}
               Events reflect the current National TSA High School Competitive Events Summary and Texas UTE list.
             </span>
           </motion.div>

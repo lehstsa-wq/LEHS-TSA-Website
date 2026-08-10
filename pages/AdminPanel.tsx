@@ -743,7 +743,7 @@ const EventsTab: React.FC = () => {
 const ProjectsTab: React.FC = () => {
     const { projectsList, addProject, deleteProject } = useData();
     const { confirm } = useModal();
-    const [form, setForm] = useState({ title: '', category: 'Software Development', year: '2025', description: '', award: '' });
+    const [form, setForm] = useState({ title: '', category: 'Software Development', year: '2026', description: '', award: '' });
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const toggleExpand = (id: string) => {
@@ -760,7 +760,7 @@ const ProjectsTab: React.FC = () => {
                          <input value={form.award} onChange={e => setForm({...form, award: e.target.value})} className={inputClass} placeholder="Award (e.g., 1st Place State)" />
                      </div>
                      <div className="space-y-3">
-                         <input value={form.year} onChange={e => setForm({...form, year: e.target.value})} className={inputClass} placeholder="Year (e.g. 2025)" />
+                         <input value={form.year} onChange={e => setForm({...form, year: e.target.value})} className={inputClass} placeholder="Year (e.g. 2026)" />
                          <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className={`${inputClass} h-24 resize-none`} placeholder="Detailed Description..." />
                      </div>
                 </div>
@@ -768,7 +768,7 @@ const ProjectsTab: React.FC = () => {
                     onClick={() => {
                         if(!form.title) return;
                         addProject(form);
-                        setForm({ title: '', category: 'Software Development', year: '2025', description: '', award: '' });
+                        setForm({ title: '', category: 'Software Development', year: '2026', description: '', award: '' });
                     }}
                     className={`${buttonClass} bg-electric-500 text-white w-full mt-4`}
                 >
@@ -828,7 +828,7 @@ const GalleryTab: React.FC = () => {
                     <button
                         onClick={() => {
                             if(!url) return;
-                            addGalleryItem({ title, imageUrl: url, category: 'Event', date: '2025' });
+                            addGalleryItem({ title, imageUrl: url, category: 'Event', date: '2026' });
                             setUrl(''); setTitle('');
                         }}
                         className={`${buttonClass} bg-electric-500 text-white whitespace-nowrap`}
@@ -1358,7 +1358,7 @@ const CompetitionsTab: React.FC = () => {
                                                 autoFocus
                                                 value={editName}
                                                 onChange={e => setEditName(e.target.value)}
-                                                placeholder='Label  (e.g. "2025–2026 Rulebook")'
+                                                placeholder='Label  (e.g. "2026–2027 Rulebook")'
                                                 className={inputClass}
                                             />
                                             <input
@@ -1436,7 +1436,7 @@ const CompetitionsTab: React.FC = () => {
                                     autoFocus
                                     value={addName}
                                     onChange={e => setAddName(e.target.value)}
-                                    placeholder='Label  (e.g. "2025–2026 Rulebook")'
+                                    placeholder='Label  (e.g. "2026–2027 Rulebook")'
                                     className={inputClass}
                                 />
                                 <input
@@ -1875,7 +1875,7 @@ const ResultsTab: React.FC = () => {
                     </div>
                     <div>
                         <label className={labelClass}>Year</label>
-                        <input value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="2025" className={inputClass} />
+                        <input value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="2026" className={inputClass} />
                     </div>
                     <div className="sm:col-span-2">
                         <label className={labelClass}>Members (comma separated)</label>

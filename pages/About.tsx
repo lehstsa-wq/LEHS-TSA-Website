@@ -12,25 +12,25 @@ const TIMELINE = [
   {
     year: '2022',
     title: 'Chapter Founded',
-    body: 'Little Elm High School officially chartered its TSA chapter, welcoming its first 20 founding members.',
+    body: 'Little Elm High School officially chartered its TSA chapter, welcoming its first 10 founding members.',
     accent: '#6a9bcc',
   },
   {
-    year: '2023',
-    title: 'First Regional Competition',
-    body: 'The chapter sent its first team to regionals, earning multiple top-3 placements in Webmaster and Coding.',
+    year: '2023–24',
+    title: 'First National Qualifier',
+    body: 'The chapter sent its first competitor to the National TSA Conference — a first in LEHS TSA history.',
     accent: '#d97757',
   },
   {
-    year: '2024',
-    title: 'State Conference Debut',
-    body: 'LEHS TSA qualified 50+ members for the Texas State Conference — a landmark milestone for the chapter.',
+    year: '2024–25',
+    title: 'State and Nationals',
+    body: 'Eight members advanced to the Texas State Conference and went on to compete at Nationals.',
     accent: '#6a9bcc',
   },
   {
-    year: '2025',
-    title: 'National Qualifiers',
-    body: 'For the first time in chapter history, LEHS TSA members advanced to the National TSA Conference.',
+    year: '2025–26',
+    title: 'Grew Past 50 Members',
+    body: 'The chapter grew to over 50 members, becoming one of the largest STEM organizations at Little Elm High School.',
     accent: '#788c5d',
   },
 ];
@@ -110,10 +110,10 @@ const About: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: '75+',  label: 'Active Members',      color: '#6a9bcc' },
-              { val: '50+',  label: 'State Qualifiers',    color: '#d97757' },
-              { val: '15+',  label: 'National Qualifiers', color: '#6a9bcc' },
-              { val: '3',    label: 'Years of Excellence', color: '#788c5d' },
+              { val: '50',  label: 'Active Members',      color: '#6a9bcc' },
+              { val: '20',  label: 'State Qualifiers',    color: '#d97757' },
+              { val: '14',  label: 'National Qualifiers', color: '#6a9bcc' },
+              { val: '5',    label: 'Years of Excellence', color: '#788c5d' },
             ].map((s, i) => (
               <motion.div
                 key={i}

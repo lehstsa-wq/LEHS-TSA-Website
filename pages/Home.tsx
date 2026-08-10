@@ -191,9 +191,9 @@ const Home: React.FC = () => {
                 className="flex gap-10 mt-10"
               >
                 {[
-                  { num: 75, suffix: '+', label: 'MEMBERS',          color: 'text-electric-400' },
-                  { num: 50, suffix: '+', label: 'STATE QUALIFIERS',  color: 'text-gold-400' },
-                  { num: 15, suffix: '+', label: "NAT'L QUALIFIERS",  color: 'text-amber-400' },
+                  { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
+                  { num: 20, suffix: '', label: 'STATE QUALIFIERS',  color: 'text-gold-400' },
+                  { num: 14, suffix: '', label: "NAT'L QUALIFIERS",  color: 'text-amber-400' },
                 ].map((s, i) => (
                   <div key={i}>
                     <div className={`stat-value ${s.color}`}>
@@ -574,7 +574,7 @@ const Home: React.FC = () => {
               Your future in tech starts here.
             </h3>
             <p className="text-ink-dim text-base">
-              Applications open for 2025–2026. Get started in 3 steps.
+              Applications open for 2026–2027. Get started in 3 steps.
             </p>
           </div>
           <div className="flex gap-3 flex-shrink-0">

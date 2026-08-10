@@ -25,7 +25,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 const QUICK_LINKS = [
   { name: 'TSA National',              url: 'https://tsaweb.org/',                                              desc: 'Official TSA website with rulebooks, forms, and competition info' },
   { name: 'Texas TSA',                 url: 'https://www.texastsa.org/',                                       desc: 'Texas state chapter portal — schedules, results, registration' },
-  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2025–2026 competition guidelines' },
+  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2026–2027 competition guidelines' },
   { name: 'Khan Academy (STEM)',        url: 'https://www.khanacademy.org/',                                    desc: 'Free prep material for STEM competitions and events' },
   { name: 'Code.org',                  url: 'https://code.org/',                                               desc: 'Programming tutorials for coding competition prep' },
   { name: 'Figma (free for students)', url: 'https://www.figma.com/education/',                                desc: 'Free design tool for Graphic Design, Promotional Design events' },

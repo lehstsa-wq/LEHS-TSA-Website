@@ -85,13 +85,13 @@ const MOCK_GALLERY: GalleryItem[] = [
 const MOCK_RESOURCES: ResourceLink[] = [
     {
         id: 'r1',
-        title: '2025 High School Comp Guide',
+        title: '2026 High School Comp Guide',
         url: '#',
         type: 'PDF',
         category: 'competition',
         accessLevel: 'member',
         description: 'The official rulebook for all events.',
-        dateAdded: '2024-09-01'
+        dateAdded: '2026-09-01'
     }
 ];
 
@@ -409,7 +409,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     twitterLink: 'https://twitter.com/littleelmhighschooltsa',
     
     nextEventTitle: 'State Competition',
-    nextEventDate: '2025-04-15T09:00:00.000Z',
+    nextEventDate: '2027-04-15T09:00:00.000Z',
     stats: {
       members: '50+',
       wins: '25+',
