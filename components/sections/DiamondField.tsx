@@ -10,10 +10,15 @@ interface DiamondFieldProps {
   className?: string;
 }
 
+/**
+ * Larger `size` means wider spacing, so fewer diamonds. The hero keeps a
+ * visible-but-quiet texture; band and corner are dialled well back so the
+ * lattice reads as grain rather than pattern.
+ */
 const CONFIG = {
-  hero:   { size: 88, opacity: 0.16, stroke: 1.1 },
-  band:   { size: 64, opacity: 0.08, stroke: 1.0 },
-  corner: { size: 26, opacity: 0.5,  stroke: 1.0 },
+  hero:   { size: 150, opacity: 0.11,  stroke: 1.0 },
+  band:   { size: 190, opacity: 0.022, stroke: 1.0 },
+  corner: { size: 44,  opacity: 0.13,  stroke: 1.0 },
 } as const;
 
 /**
