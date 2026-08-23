@@ -52,7 +52,7 @@ const About: React.FC = () => {
       />
 
       {/* ── Hero ── */}
-      <section className="relative py-10 overflow-hidden">
+      <section className="relative py-6 overflow-hidden">
         <DiamondField variant="hero" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,8 +74,8 @@ const About: React.FC = () => {
       </section>
 
       {/* ── What is TSA ── */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+      <section className="py-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -124,12 +124,12 @@ const About: React.FC = () => {
       </section>
 
       {/* ── Mission & Values ── */}
-      <section className="py-12 bg-space-950/60 border-y border-space-500/30">
+      <section className="py-7 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="What Drives Us"
             title="Mission & Values"
-            className="mb-10"
+            className="mb-7"
           />
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -167,11 +167,11 @@ const About: React.FC = () => {
       </section>
 
       {/* ── Timeline ── */}
-      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <SectionHeader
           eyebrow="Our Story"
           title="Chapter Milestones"
-          className="mb-10"
+          className="mb-7"
         />
 
         <div className="relative">
@@ -216,14 +216,14 @@ const About: React.FC = () => {
 
       {/* ── Officer Team ── */}
       {executive.length > 0 && (
-        <section className="py-12 bg-space-950/60 border-t border-space-500/30">
+        <section className="py-7 bg-space-950/60 border-t border-space-500/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="flex items-end justify-between mb-8"
+              className="flex items-end justify-between mb-6"
             >
               <div>
                 <div className="section-label inline-flex mb-4">Leadership</div>
@@ -267,9 +267,9 @@ const About: React.FC = () => {
 
       {/* ── Faculty Advisors ── */}
       {advisors.length > 0 && (
-        <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="section-label inline-flex mb-4">Faculty</div>
-          <h2 className="text-2xl font-bold text-ink mb-8">Our Advisors</h2>
+          <h2 className="text-2xl font-bold text-ink mb-6">Our Advisors</h2>
           <div className="flex flex-wrap gap-4">
             {advisors.map(a => (
               <div key={a.id} className="card flex items-center gap-4 min-w-[280px]">
@@ -298,7 +298,7 @@ const About: React.FC = () => {
       )}
 
       {/* ── CTA ── */}
-      <section className="py-14 px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -307,7 +307,7 @@ const About: React.FC = () => {
           className="max-w-xl mx-auto"
         >
           <h2 className="text-3xl font-bold text-ink mb-4">Ready to be part of the story?</h2>
-          <p className="text-ink-dim mb-8">Join us this year and add your chapter to the next milestone.</p>
+          <p className="text-ink-dim mb-6">Join us this year and add your chapter to the next milestone.</p>
           <Link to="/join" className="btn-primary text-base px-8 py-4">
             Join LEHS TSA
           </Link>

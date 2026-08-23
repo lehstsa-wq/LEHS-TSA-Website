@@ -215,13 +215,13 @@ const Competitions: React.FC = () => {
               <span style={{ color: '#EE2624' }}>Win.</span>
             </h1>
 
-            <p className="section-dek mx-auto mb-10">
+            <p className="section-dek mx-auto mb-7">
               40 official TSA events spanning engineering, coding, design, and leadership.
               Find your event, join a team, and make it to nationals.
             </p>
 
             {/* Quick-stat chips */}
-            <div className="flex flex-wrap gap-3 mb-10 justify-center">
+            <div className="flex flex-wrap gap-3 mb-7 justify-center">
               {[
                 { val: '40', label: 'Total Events',  color: '#6a9bcc' },
                 { val: '8',  label: 'Categories',    color: '#d97757' },
@@ -388,9 +388,9 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           COMPETITION GRID
       ════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 mb-7">
         {filteredCompetitions.length === 0 ? (
-          <div className="text-center py-14 text-ink-muted">
+          <div className="text-center py-8 text-ink-muted">
               <p className="text-lg font-medium mb-1">No events found</p>
             <p className="text-sm">Try adjusting your filters or search term.</p>
           </div>
@@ -507,7 +507,7 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
-      <section ref={teamsSectionRef} className="relative py-14 border-t border-space-500/30 overflow-hidden">
+      <section ref={teamsSectionRef} className="relative py-8 border-t border-space-500/30 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
 
@@ -519,7 +519,7 @@ const Competitions: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
+            className="mb-7"
           >
             <div className="section-label inline-flex mb-4">TSA TEAMS Program</div>
             <div className="flex flex-wrap items-end gap-4 mb-5">
@@ -564,7 +564,7 @@ const Competitions: React.FC = () => {
             </h3>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
             {TEAMS_COMPONENTS.map((comp, i) => {
               const Icon = comp.icon;
               return (
@@ -724,12 +724,12 @@ const Competitions: React.FC = () => {
               {/* Body */}
               <div className="p-8">
                 {/* Description */}
-                <p className="text-ink-dim text-base leading-relaxed mb-8 pb-8 border-b border-space-500/40">
+                <p className="text-ink-dim text-base leading-relaxed mb-6 pb-8 border-b border-space-500/40">
                   {selectedEvent.details.fullDescription}
                 </p>
 
                 {/* Info grid */}
-                <div className="grid md:grid-cols-2 gap-4 mb-8">
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
                   <div className="bg-space-800 border border-space-500/60 rounded-xl p-5">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
                       <Users size={14} className="text-electric-400" /> Eligibility
@@ -778,7 +778,7 @@ const Competitions: React.FC = () => {
 
                 {/* Requirements */}
                 {selectedEvent.details.requirements?.length > 0 && (
-                  <div className="mb-8">
+                  <div className="mb-6">
                     <h4 className="font-bold text-ink text-sm mb-3 flex items-center gap-2">
                       <CheckCircle size={14} style={{ color: meta?.color }} /> Requirements
                     </h4>

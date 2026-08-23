@@ -162,12 +162,12 @@ export const StageScene: React.FC<StageSceneProps> = ({
   return (
     <section className={className}>
       {/* The track's extra height is the distance the pinned panel scrubs through. */}
-      <div ref={trackRef} style={{ height: `${100 + stages.length * 42}vh` }}>
-        <div className="sticky top-16 flex min-h-[calc(100vh-4rem)] items-center">
-          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div ref={trackRef} style={{ height: `${85 + stages.length * 26}vh` }}>
+        <div className="sticky top-16 flex min-h-[calc(85vh-4rem)] items-center">
+          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {header}
 
-            <div className="mt-8 grid gap-8 md:grid-cols-2 md:items-center">
+            <div className="mt-6 grid gap-6 md:grid-cols-2 md:items-center">
               <div>
                 <ol className="space-y-3">
                   {stages.map((s, i) => stageRow(s, i === active))}

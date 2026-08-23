@@ -34,7 +34,7 @@ const Contact: React.FC = () => {
       <SEO title="Contact" description="Get in touch with the Little Elm TSA chapter. We're happy to answer any questions." />
 
       {/* Hero */}
-      <section className="relative py-10 overflow-hidden">
+      <section className="relative py-6 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -50,12 +50,12 @@ const Contact: React.FC = () => {
       </section>
 
       {/* Main content */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-10">
+      <section className="py-7 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8">
 
           {/* Left: info */}
           <div>
-            <h2 className="text-2xl font-bold text-ink mb-8">Chapter Information</h2>
+            <h2 className="text-2xl font-bold text-ink mb-6">Chapter Information</h2>
             <div className="space-y-6">
 
               <div className="card flex items-start gap-4">
@@ -122,11 +122,11 @@ const Contact: React.FC = () => {
 
           {/* Right: form */}
           <div>
-            <h2 className="text-2xl font-bold text-ink mb-8">Send a Message</h2>
+            <h2 className="text-2xl font-bold text-ink mb-6">Send a Message</h2>
 
             {status === 'done' ? (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                className="card text-center py-10">
+                className="card text-center py-6">
                 <CheckCircle2 size={48} className="text-electric-400 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-ink mb-2">Message Sent!</h3>
                 <p className="text-ink-dim text-sm">We'll get back to you as soon as possible.</p>

@@ -189,7 +189,7 @@ const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-scrim absolute inset-0" />
         <DiamondField variant="hero" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-7 w-full text-center">
           {/* Announcement */}
           {nextEvent && (
             <motion.div
@@ -252,7 +252,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-wrap gap-10 mt-8 justify-center"
+            className="flex flex-wrap gap-8 mt-8 justify-center"
           >
             {[
               { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
@@ -301,7 +301,7 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           COMPETITION MARQUEE
       ═══════════════════════════════════════════════════ */}
-      <section className="py-10 overflow-hidden border-y border-space-500/30 bg-space-950">
+      <section className="py-6 overflow-hidden border-y border-space-500/30 bg-space-950">
         <div className="space-y-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
           <LogoMarquee items={COMPETITIONS} />
           <LogoMarquee items={COMPETITIONS} reverse />
@@ -333,11 +333,11 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           FEATURES BENTO GRID
       ═══════════════════════════════════════════════════ */}
-      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SectionHeader
           eyebrow="What We Do"
           title="Compete. Innovate. Lead."
-          className="mb-10"
+          className="mb-7"
         />
 
         <TabRail items={WHAT_WE_DO} />
@@ -346,7 +346,7 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           STATS SECTION
       ═══════════════════════════════════════════════════ */}
-      <section className="py-12 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
+      <section className="py-7 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
         <DiamondField variant="band" />
@@ -375,12 +375,12 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           NEWS + EVENTS PREVIEW
       ═══════════════════════════════════════════════════ */}
-      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="space-y-14">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="space-y-10">
 
           {/* Latest News */}
           <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <div className="section-label inline-flex mb-2">Updates</div>
                 <h2 className="text-2xl font-bold text-ink">Latest News</h2>
@@ -417,7 +417,7 @@ const Home: React.FC = () => {
                   </div>
                 </motion.div>
               )) : (
-                <div className="card text-center py-10 text-ink-muted text-sm">
+                <div className="card text-center py-6 text-ink-muted text-sm">
                   No announcements yet, check back soon!
                 </div>
               )}
@@ -426,7 +426,7 @@ const Home: React.FC = () => {
 
           {/* Upcoming Events */}
           <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <div className="section-label inline-flex mb-2">Schedule</div>
                 <h2 className="text-2xl font-bold text-ink">Upcoming Events</h2>
@@ -473,7 +473,7 @@ const Home: React.FC = () => {
                   </motion.div>
                 );
               }) : (
-                <div className="card text-center py-10 text-ink-muted text-sm">
+                <div className="card text-center py-6 text-ink-muted text-sm">
                   No upcoming events scheduled yet.
                 </div>
               )}
@@ -496,13 +496,13 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           FINAL CTA
       ═══════════════════════════════════════════════════ */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="cta-gradient-box flex flex-col lg:flex-row justify-between items-center gap-10 rounded-3xl px-10 py-14"
+          className="cta-gradient-box flex flex-col lg:flex-row justify-between items-center gap-8 rounded-3xl px-10 py-8"
         >
           <div>
             <div className="badge badge-gold mb-3 uppercase tracking-widest text-[11px]">Apply Now</div>

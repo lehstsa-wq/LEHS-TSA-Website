@@ -78,7 +78,7 @@
   --login-input-border: rgba(26, 48, 80, 0.80);
 
   /* ── Layout rhythm (public page restyle) ─────────────────── */
-  --section-py:   clamp(2.75rem, 5vw, 5rem);
+  --section-py:   clamp(1.75rem, 3.2vw, 3.25rem);
   --measure-dek:  58ch;
   --card-radius:  1.25rem;
   --card-pad:     2rem;
