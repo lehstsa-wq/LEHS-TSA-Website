@@ -230,7 +230,10 @@ Remove from `package.json` once `Home.tsx` stops using `ArtCanvas`. `three` is
 dynamically imported (`ArtCanvas.tsx:130`), so it is already code-split —
 removal saves install size and a lazy chunk, not entry-bundle weight.
 
-`gsap` is also imported nowhere, but is **out of scope** and left alone.
+### Drop `gsap`
+
+`gsap` is imported nowhere in the codebase — zero call-sites. Removed from
+`package.json` in the same task as `three`. Added to scope 2026-08-22.
 
 ---
 
