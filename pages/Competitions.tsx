@@ -204,7 +204,7 @@ const Competitions: React.FC = () => {
           >
             <p className="section-eyebrow justify-center">
               <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
-              2026–2027 Season
+              2026 to 2027 Season
               <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
             </p>
 
@@ -248,7 +248,7 @@ const Competitions: React.FC = () => {
                   <ChevronRight size={18} />
                 </div>
                 <div>
-                  <div className="font-bold text-ink text-sm mb-1">NQE — National Qualifying</div>
+                  <div className="font-bold text-ink text-sm mb-1">NQE: National Qualifying</div>
                   <p className="text-xs text-ink-dim leading-relaxed">
                     Winners advance from state to the National TSA Conference.
                   </p>
@@ -259,7 +259,7 @@ const Competitions: React.FC = () => {
                   <MapPin size={18} />
                 </div>
                 <div>
-                  <div className="font-bold text-ink text-sm mb-1">UTE — Unique to Texas</div>
+                  <div className="font-bold text-ink text-sm mb-1">UTE: Unique to Texas</div>
                   <p className="text-xs text-ink-dim leading-relaxed">
                     Texas-only events aligned with CTE programs.
                   </p>
@@ -279,7 +279,7 @@ const Competitions: React.FC = () => {
           >
             <AlertTriangle size={15} className="flex-shrink-0" />
             <span>
-              <strong className="text-gold-300">2026–2027 Update:</strong>{' '}
+              <strong className="text-gold-300">2026 to 2027 Update:</strong>{' '}
               Events reflect the current National TSA High School Competitive Events Summary and Texas UTE list.
             </span>
           </motion.div>
@@ -417,7 +417,7 @@ const Competitions: React.FC = () => {
                     (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-card)';
                   }}
                 >
-                  {/* Top gradient stripe — category color */}
+                  {/* Top gradient stripe: category color */}
                   <div
                     className="absolute top-0 left-0 right-0 h-0.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{ background: `linear-gradient(to right, ${catMeta.color}, transparent)` }}
@@ -431,7 +431,7 @@ const Competitions: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500"
                     />
 
-                    {/* Gradient overlay — tinted with category color */}
+                    {/* Gradient overlay: tinted with category color */}
                     <div
                       className="absolute inset-0 transition-opacity duration-300"
                       style={{
@@ -531,18 +531,18 @@ const Competitions: React.FC = () => {
               </span>
             </div>
             <p className="text-ink-dim text-lg max-w-2xl leading-relaxed mb-6">
-              A nationally recognized TSA competition where teams of 2–4 students tackle real-world engineering challenges using math and science. Winners advance from state to the National TSA Conference.
+              A nationally recognized TSA competition where teams of 2 to 4 students tackle real-world engineering challenges using math and science. Winners advance from state to the National TSA Conference.
             </p>
 
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
               <div className="bg-space-800 border border-gold-500/30 rounded-2xl px-5 py-3">
-                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026–2027 Theme</div>
+                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026 to 2027 Theme</div>
                 <div className="text-sm font-black text-gold-300">Engineering for Good</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>
-                <div className="text-sm font-black text-ink">2–4 Members</div>
+                <div className="text-sm font-black text-ink">2 to 4 Members</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Advancement</div>
@@ -636,7 +636,7 @@ const Competitions: React.FC = () => {
             <div className="flex-1">
               <h4 className="font-black text-ink text-lg mb-1">Interested in TEAMS?</h4>
               <p className="text-sm text-ink-dim leading-relaxed">
-                TEAMS is open to all LEHS TSA members. Teams of 2–4 compete together across all four components — talk to an officer to get placed on a team or form your own.
+                TEAMS is open to all LEHS TSA members. Teams of 2 to 4 compete together across all four components. Talk to an officer to get placed on a team or form your own.
               </p>
             </div>
             <a
@@ -771,7 +771,7 @@ const Competitions: React.FC = () => {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-ink-muted italic">No resource link yet — check back soon.</p>
+                      <p className="text-xs text-ink-muted italic">No resource link yet, check back soon.</p>
                     )}
                   </div>
                 </div>
@@ -802,7 +802,7 @@ const Competitions: React.FC = () => {
                   style={{ borderColor: `${meta?.color}25` }}
                 >
                   <h3 className="font-bold text-ink mb-1">Express Interest</h3>
-                  <p className="text-xs text-ink-muted mb-5">Let officers know you're interested — no commitment required.</p>
+                  <p className="text-xs text-ink-muted mb-5">Let officers know you're interested, no commitment required.</p>
 
                   {!user ? (
                     <p className="text-sm text-ink-muted">

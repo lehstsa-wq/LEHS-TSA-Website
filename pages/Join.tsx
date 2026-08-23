@@ -10,11 +10,11 @@ import { SectionHeader, DiamondField } from '../components/sections';
    BENEFITS
 ───────────────────────────────────────────────────────────── */
 const BENEFITS = [
-  { title: 'Compete in 30+ Events',    body: 'From coding to design to engineering — every skill has a competition.' },
+  { title: 'Compete in 30+ Events',    body: 'From coding to design to engineering. Every skill has a competition.' },
   { title: 'Build Lifetime Connections', body: 'Network with like-minded STEM students from across Texas and the nation.' },
   { title: 'National Conferences',      body: 'Travel to state and national TSA conferences and compete on the biggest stage.' },
   { title: 'College-Ready Resume',      body: 'TSA membership and competition results make standout college application material.' },
-  { title: 'Real Project Experience',   body: 'Build actual software, hardware, and design pieces — not just schoolwork.' },
+  { title: 'Real Project Experience',   body: 'Build actual software, hardware, and design pieces, not just schoolwork.' },
   { title: 'Leadership Opportunities',  body: 'Run for officer positions and lead the chapter from day one.' },
 ];
 
@@ -30,7 +30,7 @@ const STEPS = [
   {
     num: '02', icon: FileCheck, color: '#e05c5c',
     title: 'Complete the Application',
-    body: 'Fill out the official TSA membership application through JotForm. Takes about 5 minutes — have your student ID and email ready.',
+    body: 'Fill out the official TSA membership application through JotForm. Takes about 5 minutes. Have your student ID and email ready.',
   },
   {
     num: '03', icon: CreditCard, color: '#8b5cf6',
@@ -104,7 +104,7 @@ const Join: React.FC = () => {
     },
     {
       label: 'TSA Application',
-      desc:  'Official membership form — takes 5 minutes',
+      desc:  'Official membership form, takes 5 minutes',
       url:   siteSettings.jotformLink,
       icon:  FileCheck,
       color: '#e05c5c',

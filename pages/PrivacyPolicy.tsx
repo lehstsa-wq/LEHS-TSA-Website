@@ -12,7 +12,7 @@ const SECTIONS = [
     body: `We use the information we collect solely to manage LEHS TSA membership, coordinate competition teams, communicate club announcements, and display your profile in the member directory. We do not use your information for advertising or any commercial purpose.`,
   },
   {
-    title: 'Age Requirement — COPPA Compliance',
+    title: 'Age Requirement: COPPA Compliance',
     body: `This website is intended for students who are at least 13 years of age. In compliance with the Children's Online Privacy Protection Act (COPPA), we do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child under 13 has registered, please contact us immediately at lehstsa@gmail.com and we will promptly delete the account and all associated data.`,
   },
   {
@@ -40,7 +40,7 @@ const SECTIONS = [
 const PrivacyPolicy: React.FC = () => {
   return (
     <div className="min-h-screen animate-fade-in pb-24">
-      <SEO title="Privacy Policy" description="LEHS TSA Privacy Policy — how we collect, use, and protect your information." />
+      <SEO title="Privacy Policy" description="LEHS TSA Privacy Policy. How we collect, use, and protect your information." />
 
       {/* Hero */}
       <div className="bg-electric-500/5 border-b border-space-500/30">

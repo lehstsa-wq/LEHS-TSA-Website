@@ -34,7 +34,7 @@ const COMPETITIONS = [
    HOME PAGE
 ───────────────────────────────────────────────────────────── */
 /* ─────────────────────────────────────────────────────────────
-   HOW IT WORKS — stages for the scroll scene
+   HOW IT WORKS: stages for the scroll scene
 ───────────────────────────────────────────────────────────── */
 const HOW_IT_WORKS: Stage[] = [
   {
@@ -64,7 +64,7 @@ const HOW_IT_WORKS: Stage[] = [
 ];
 
 /* ─────────────────────────────────────────────────────────────
-   WHAT WE DO — tab rail
+   WHAT WE DO: tab rail
 ───────────────────────────────────────────────────────────── */
 const WHAT_WE_DO: TabItem[] = [
   {
@@ -132,7 +132,7 @@ const WHAT_WE_DO: TabItem[] = [
     image: '/assets/photos/design.jpg',
     imageAlt: 'Two members working on an architectural scale model',
     accent: '#86BB50',
-    description: 'Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent.',
+    description: 'Graphic design, video game design, architectural modeling, fashion design. TSA rewards every kind of creative talent.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Design & Create</h3>
@@ -147,7 +147,7 @@ const WHAT_WE_DO: TabItem[] = [
     image: '/assets/photos/study.jpg',
     imageAlt: 'Members preparing their gliders together before an event',
     accent: '#4E8AC9',
-    description: 'Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident.',
+    description: 'Access competition guides, past results, and expert prep materials, everything you need to walk into any event confident.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Study & Prepare</h3>
@@ -171,7 +171,7 @@ const Home: React.FC = () => {
     <div className="overflow-x-hidden">
       <SEO
         title="Home"
-        description="Little Elm High School TSA — Compete. Innovate. Lead. Join Texas's most driven TSA chapter."
+        description="Little Elm High School TSA. Compete. Innovate. Lead. Join Texas's most driven TSA chapter."
       />
 
       {/* ═══════════════════════════════════════════════════
@@ -283,7 +283,7 @@ const Home: React.FC = () => {
                   ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
                   : undefined,
               },
-              { label: 'Chapter Status', value: 'Active — TX' },
+              { label: 'Chapter Status', value: 'Active, TX' },
             ].map((item, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
@@ -418,7 +418,7 @@ const Home: React.FC = () => {
                 </motion.div>
               )) : (
                 <div className="card text-center py-10 text-ink-muted text-sm">
-                  No announcements yet — check back soon!
+                  No announcements yet, check back soon!
                 </div>
               )}
             </StoryTrack>
@@ -510,7 +510,7 @@ const Home: React.FC = () => {
               Your future in tech starts here.
             </h3>
             <p className="text-ink-dim text-base">
-              Applications open for 2026–2027. Get started in 3 steps.
+              Applications open for 2026 to 2027. Get started in 3 steps.
             </p>
           </div>
           <div className="flex gap-3 flex-shrink-0">

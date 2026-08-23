@@ -17,19 +17,19 @@ const TIMELINE = [
     accent: '#6a9bcc',
   },
   {
-    year: '2023–24',
+    year: '2023 to 2024',
     title: 'First National Qualifier',
-    body: 'The chapter sent its first competitor to the National TSA Conference — a first in LEHS TSA history.',
+    body: 'The chapter sent its first competitor to the National TSA Conference, a first in LEHS TSA history.',
     accent: '#d97757',
   },
   {
-    year: '2024–25',
+    year: '2024 to 2025',
     title: 'State and Nationals',
     body: 'Eight members advanced to the Texas State Conference and went on to compete at Nationals.',
     accent: '#6a9bcc',
   },
   {
-    year: '2025–26',
+    year: '2025 to 2026',
     title: 'Grew Past 50 Members',
     body: 'The chapter grew to over 50 members, becoming one of the largest STEM organizations at Little Elm High School.',
     accent: '#788c5d',
@@ -48,7 +48,7 @@ const About: React.FC = () => {
     <div>
       <SEO
         title="About"
-        description="Learn about Little Elm High School TSA — our history, mission, leadership team, and chapter milestones."
+        description="Learn about Little Elm High School TSA. Our history, mission, leadership team, and chapter milestones."
       />
 
       {/* ── Hero ── */}
@@ -98,7 +98,7 @@ const About: React.FC = () => {
                 through 30+ competitive events and collaborative projects.
               </p>
               <p>
-                Whether you're into coding, design, engineering, or leadership — there's a TSA event
+                Whether you're into coding, design, engineering, or leadership, there's a TSA event
                 built for you.
               </p>
             </div>

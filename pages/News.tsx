@@ -47,7 +47,7 @@ const News: React.FC = () => {
               as="h1"
               eyebrow="Updates"
               title="Chapter News"
-              dek="Announcements, deadlines, competition news, and chapter updates — all in one place."
+              dek="Announcements, deadlines, competition news, and chapter updates, all in one place."
             />
           </motion.div>
         </div>

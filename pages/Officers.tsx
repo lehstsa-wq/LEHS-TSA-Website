@@ -22,7 +22,7 @@ const Officers: React.FC = () => {
 
   return (
     <div>
-      <SEO title="Officers" description="Meet the Little Elm TSA leadership team — dedicated students driving our chapter forward." />
+      <SEO title="Officers" description="Meet the Little Elm TSA leadership team, dedicated students driving our chapter forward." />
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
@@ -33,7 +33,7 @@ const Officers: React.FC = () => {
               as="h1"
               eyebrow="Leadership"
               title="Officer Team"
-              dek="Meet the students who keep LEHS TSA running — from organizing competitions to leading workshops and representing the chapter at conferences."
+              dek="Meet the students who keep LEHS TSA running, from organizing competitions to leading workshops and representing the chapter at conferences."
             />
           </motion.div>
         </div>
