@@ -169,11 +169,12 @@ const Join: React.FC = () => {
       {/* ── How to Join ── */}
       <section className="py-20 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-14">
-            <div className="section-label inline-flex mb-4">Process</div>
-            <h2 className="section-title mb-4">4 steps to join</h2>
-            <p className="section-body">Complete all four steps and you're officially a LEHS TSA member.</p>
-          </motion.div>
+          <SectionHeader
+            eyebrow="Process"
+            title="4 steps to join"
+            dek="Complete all four steps and you're officially a LEHS TSA member."
+            className="mb-14"
+          />
 
           <div className="space-y-4">
             {STEPS.map((step, i) => {
@@ -200,11 +201,12 @@ const Join: React.FC = () => {
 
       {/* ── Action Links ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-12">
-          <div className="section-label inline-flex mb-4">Start Here</div>
-          <h2 className="section-title mb-4">Complete all four links below</h2>
-          <p className="section-body">Click each card to open the link in a new tab. Do them in order.</p>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Start Here"
+          title="Complete all four links below"
+          dek="Click each card to open the link in a new tab. Do them in order."
+          className="mb-14"
+        />
 
         <div className="grid sm:grid-cols-2 gap-4">
           {links.map((link, i) => {

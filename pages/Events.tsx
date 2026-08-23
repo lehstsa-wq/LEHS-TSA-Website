@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { Countdown } from '../components/Countdown';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader, DiamondField, SegmentedToggle } from '../components/sections';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
@@ -57,14 +57,11 @@ const Events: React.FC = () => {
       {/* Filters */}
       <div className="sticky top-16 z-30 bg-space-900 border-b border-space-500/40 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-3 items-center">
-          <div className="flex gap-1.5">
-            {(['All', 'Upcoming', 'Past'] as const).map(s => (
-              <button key={s} onClick={() => setFilter(s)}
-                className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${filter === s ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
-                {s}
-              </button>
-            ))}
-          </div>
+          <SegmentedToggle
+            options={['All', 'Upcoming', 'Past'] as const}
+            value={filter}
+            onChange={v => setFilter(v as typeof filter)}
+          />
           <div className="flex gap-1.5 ml-auto flex-wrap">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCategory(c)}

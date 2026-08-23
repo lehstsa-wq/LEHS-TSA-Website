@@ -27,6 +27,14 @@ CENTERED_HEADER_INLINE = re.compile(
     r'[ \t]*</motion\.div>\n'
 )
 
+H2_TRIO_INLINE = re.compile(
+    r'[ \t]*<motion\.div [^\n]*className="text-center[^"]*"[^\n]*>\n'
+    r'[ \t]*<div className="section-label inline-flex mb-4">(?P<eyebrow>[^<]+)</div>\n'
+    r'[ \t]*<h2 className="section-title[^"]*">(?P<title>[^<]+)</h2>\n'
+    r'[ \t]*<p className="section-body[^"]*">(?P<dek>[^<]+)</p>\n'
+    r'[ \t]*</motion\.div>\n'
+)
+
 DECOR = re.compile(
     r'[ \t]*<div className="sr-aurora" />\n'
     r'(?:[ \t]*<[A-Z][A-Za-z]* className="sr-art[^\n]*\n(?:[ \t]*style=\{\{[^\n]*\n)?)?'
@@ -61,12 +69,24 @@ def apply(path):
                 f'{indent}  className="mb-16"\n'
                 f'{indent}/>\n')
 
+    def h2trio_sub(m):
+        hits.append(f'section+dek  "{m["eyebrow"]}" / "{m["title"]}"')
+        indent = re.match(r'[ \t]*', m.group(0)).group(0)
+        dek = squash(m['dek']).replace('"', '&quot;')
+        return (f'{indent}<SectionHeader\n'
+                f'{indent}  eyebrow="{m["eyebrow"]}"\n'
+                f'{indent}  title="{m["title"]}"\n'
+                f'{indent}  dek="{dek}"\n'
+                f'{indent}  className="mb-14"\n'
+                f'{indent}/>\n')
+
     def decor_sub(m):
         hits.append('decor -> DiamondField')
         indent = re.match(r'[ \t]*', m.group(0)).group(0)
         return f'{indent}<DiamondField variant="hero" />\n'
 
     src = HERO_TRIO.sub(hero_sub, src)
+    src = H2_TRIO_INLINE.sub(h2trio_sub, src)
     src = CENTERED_HEADER.sub(centered_sub, src)
     src = CENTERED_HEADER_INLINE.sub(centered_sub, src)
     src = DECOR.sub(decor_sub, src)

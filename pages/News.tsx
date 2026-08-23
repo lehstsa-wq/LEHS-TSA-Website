@@ -3,7 +3,7 @@ import { Search, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader, DiamondField, SegmentedToggle } from '../components/sections';
 
 const TYPE_COLORS: Record<string, string> = {
   Meeting:     'badge-blue',
@@ -63,14 +63,11 @@ const News: React.FC = () => {
               className="w-full bg-space-700/50 border border-space-500/60 rounded-xl pl-9 pr-3 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/30 transition-all" />
             {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"><X size={13} /></button>}
           </div>
-          <div className="flex gap-1.5 flex-wrap">
-            {types.map(t => (
-              <button key={t} onClick={() => setTypeFilter(t)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${typeFilter === t ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
-                {t}
-              </button>
-            ))}
-          </div>
+          <SegmentedToggle
+            options={types}
+            value={typeFilter}
+            onChange={v => setTypeFilter(v as typeof typeFilter)}
+          />
         </div>
       </div>
 
