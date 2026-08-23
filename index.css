@@ -55,8 +55,8 @@
   --glow-purple: 0 0 24px rgba(87, 78, 143, 0.32),  0 0 64px rgba(87, 78, 143, 0.10);
 
   /* Shadows — override per mode */
-  --shadow-card:       0 4px 24px rgba(0, 0, 0, 0.22);
-  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.28);
+  --shadow-card:       0 20px 50px rgba(0, 93, 170, 0.10);
+  --shadow-card-hover: 0 24px 60px rgba(0, 93, 170, 0.16);
   --shadow-elevated:   0 24px 80px rgba(0, 0, 0, 0.55);
 
   /* TSA typography */
@@ -76,6 +76,15 @@
   --login-card-bg:     rgba(16, 32, 53, 0.60);
   --login-input-bg:    rgba(4, 8, 15, 0.60);
   --login-input-border: rgba(26, 48, 80, 0.80);
+
+  /* ── Layout rhythm (public page restyle) ─────────────────── */
+  --section-py:   clamp(4rem, 8vw, 7.5rem);
+  --measure-dek:  58ch;
+  --card-radius:  1.25rem;
+  --card-pad:     3rem;
+  --stat-radius:  0.375rem;
+  --stat-pad:     2rem;
+  --c-hairline:   rgba(78, 138, 201, 0.16);
 }
 
 /* ============================================================
@@ -399,6 +408,53 @@ html.light {
     color: var(--c-text-dim);
   }
 
+  /* ── PUBLIC PAGE HEADERS (restyle) ───────────────────────── */
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
+  }
+
+  .section-h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--c-text);
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--c-blue-bright);
+    margin-bottom: 1rem;
+  }
+
+  .section-eyebrow__flank {
+    font-size: 0.5em;
+    opacity: 0.7;
+    line-height: 1;
+  }
+
+  .section-dek {
+    font-family: var(--font-body);
+    font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+    line-height: 1.36;
+    color: var(--c-text-dim);
+    max-width: var(--measure-dek);
+    margin-top: 1rem;
+  }
+
   /* ── DIVIDERS ────────────────────────────────────────────── */
   .divider {
     height: 1px;
@@ -483,6 +539,12 @@ html.light {
 /* ============================================================
    LIGHT MODE COMPONENT OVERRIDES
    ============================================================ */
+
+html.light {
+  --c-hairline: rgba(0, 0, 0, 0.08);
+}
+
+html.light .section-eyebrow { color: var(--c-blue); }
 
 html.light body {
   background-color: #FFFFFF;
