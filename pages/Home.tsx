@@ -8,7 +8,7 @@ import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import {
   SectionHeader, Reveal, StatCard, Counter, LogoMarquee, DiamondField,
-  StageScene, TabRail, StoryTrack, AnnouncementPill,
+  StageScene, TabRail, StoryTrack, AnnouncementPill, VideoEmbed,
 } from '../components/sections';
 import type { Stage, TabItem } from '../components/sections';
 
@@ -42,24 +42,24 @@ const HOW_IT_WORKS: Stage[] = [
     title: 'Apply',
     body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
     accent: '#005DAA',
-    image: '/assets/illustrations/step-apply.png',
-    imageAlt: 'Hand filling in a membership form on a tablet',
+    image: '/assets/photos/step-apply.jpg',
+    imageAlt: 'Illuminated TSA marquee letters at a chapter event',
   },
   {
     num: '02',
     title: 'Pick Events',
     body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
     accent: '#EC881D',
-    image: '/assets/illustrations/step-pick.png',
-    imageAlt: 'Screen showing a search, a calendar and messages',
+    image: '/assets/photos/step-pick.jpg',
+    imageAlt: 'A member choosing and preparing a glider for competition',
   },
   {
     num: '03',
     title: 'Compete & Win',
     body: 'Train, collaborate, and compete at regional, state, and national conferences.',
     accent: '#574E8F',
-    image: '/assets/illustrations/step-compete.png',
-    imageAlt: 'TSA dragster racing car',
+    image: '/assets/photos/step-win.jpg',
+    imageAlt: 'Chapter members holding a competition trophy',
   },
 ];
 
@@ -69,8 +69,8 @@ const HOW_IT_WORKS: Stage[] = [
 const WHAT_WE_DO: TabItem[] = [
   {
     label: 'Compete in 30+ Events',
-    image: '/assets/illustrations/compete.png',
-    imageAlt: 'Engineers collaborating around gears and a target',
+    image: '/assets/photos/compete.jpg',
+    imageAlt: 'Chapter members in TSA blazers holding their competition dragster',
     accent: '#005DAA',
     description: 'From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.',
     panel: (
@@ -84,8 +84,8 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Code & Build',
-    image: '/assets/illustrations/code.png',
-    imageAlt: 'Code editor showing HTML, CSS and PHP',
+    image: '/assets/photos/build.jpg',
+    imageAlt: 'Members building and testing structures at a competition table',
     accent: '#574E8F',
     description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
     panel: (
@@ -99,8 +99,8 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Lead & Grow',
-    image: '/assets/illustrations/lead.png',
-    imageAlt: 'Student speaking at a podium',
+    image: '/assets/photos/lead.jpg',
+    imageAlt: 'A chapter member presenting on stage at the state conference',
     accent: '#EC881D',
     description: 'Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.',
     panel: (
@@ -114,8 +114,8 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Connect Nationally',
-    image: '/assets/illustrations/connect.png',
-    imageAlt: 'Globe with a location pin',
+    image: '/assets/photos/connect.jpg',
+    imageAlt: 'A member holding a collector pin map at the national conference',
     accent: '#EE2624',
     description: 'Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country.',
     panel: (
@@ -129,8 +129,8 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Design & Create',
-    image: '/assets/illustrations/design.png',
-    imageAlt: 'Lightbulb and pencil with design tools',
+    image: '/assets/photos/design.jpg',
+    imageAlt: 'Two members working on an architectural scale model',
     accent: '#86BB50',
     description: 'Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent.',
     panel: (
@@ -144,8 +144,8 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Study & Prepare',
-    image: '/assets/illustrations/study.png',
-    imageAlt: 'Study desk with a laptop, books and notes',
+    image: '/assets/photos/study.jpg',
+    imageAlt: 'Members preparing their gliders together before an event',
     accent: '#4E8AC9',
     description: 'Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident.',
     panel: (
@@ -178,6 +178,15 @@ const Home: React.FC = () => {
           HERO
       ═══════════════════════════════════════════════════ */}
       <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+        {/* Chapter photo backdrop, dimmed so the headline keeps its contrast */}
+        <img
+          src="/assets/photos/hero-chapter.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+        />
+        <div aria-hidden="true" className="hero-scrim absolute inset-0" />
         <DiamondField variant="hero" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full text-center">
@@ -296,6 +305,28 @@ const Home: React.FC = () => {
         <div className="space-y-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
           <LogoMarquee items={COMPETITIONS} />
           <LogoMarquee items={COMPETITIONS} reverse />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          CHAPTER VIDEO
+      ═══════════════════════════════════════════════════ */}
+      <section
+        className="px-4 sm:px-6 lg:px-8"
+        style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <SectionHeader
+            eyebrow="Watch"
+            title="See the chapter in action"
+            className="mb-12"
+          />
+          <Reveal>
+            <VideoEmbed
+              src="https://player.vimeo.com/video/986072709?h=49a2c22ff7"
+              title="Little Elm TSA chapter video"
+            />
+          </Reveal>
         </div>
       </section>
 

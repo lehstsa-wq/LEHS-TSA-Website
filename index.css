@@ -455,6 +455,15 @@ html.light {
     margin-top: 1rem;
   }
 
+  /* ── HERO PHOTO SCRIM ────────────────────────────────────────
+     Dims the hero photograph so the headline keeps its contrast.
+     Heavier in dark mode; in light mode it lifts toward white. */
+  .hero-scrim {
+    background:
+      linear-gradient(180deg, rgba(10,18,32,0.86) 0%, rgba(10,18,32,0.72) 45%, rgba(10,18,32,0.94) 100%),
+      radial-gradient(ellipse at 50% 40%, rgba(0,93,170,0.28), transparent 70%);
+  }
+
   /* ── DIVIDERS ────────────────────────────────────────────── */
   .divider {
     height: 1px;
@@ -545,6 +554,12 @@ html.light {
 }
 
 html.light .section-eyebrow { color: var(--c-blue); }
+
+html.light .hero-scrim {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.80) 45%, rgba(255,255,255,0.96) 100%),
+    radial-gradient(ellipse at 50% 40%, rgba(0,93,170,0.10), transparent 70%);
+}
 
 html.light body {
   background-color: #FFFFFF;

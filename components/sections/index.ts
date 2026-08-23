@@ -11,3 +11,4 @@ export { TabRail } from './TabRail';
 export type { TabItem } from './TabRail';
 export { StoryTrack } from './StoryTrack';
 export { AnnouncementPill } from './AnnouncementPill';
+export { VideoEmbed } from './VideoEmbed';
