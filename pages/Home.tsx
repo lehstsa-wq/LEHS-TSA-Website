@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, ChevronRight,
 } from 'lucide-react';
-import { motion, useInView, useMotionValue, useSpring } from 'motion/react';
+import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { MeasureRing } from '../components/art/LineArt';
-import { ArtCanvas } from '../components/art/ArtCanvas';
+import {
+  SectionHeader, Reveal, StatCard, Counter, LogoMarquee, DiamondField,
+} from '../components/sections';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
@@ -15,29 +16,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   Workshop: 'badge-purple',
   Social: 'badge-green',
   Fundraiser: 'badge-purple',
-};
-
-/* ─────────────────────────────────────────────────────────────
-   ANIMATED COUNTER
-───────────────────────────────────────────────────────────── */
-const Counter: React.FC<{ value: number; suffix?: string; duration?: number }> = ({
-  value, suffix = '', duration = 1.5
-}) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const mv = useMotionValue(0);
-  const spring = useSpring(mv, { duration: duration * 1000, bounce: 0 });
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    if (inView) mv.set(value);
-  }, [inView, mv, value]);
-
-  useEffect(() => {
-    return spring.on('change', v => setDisplay(Math.floor(v)));
-  }, [spring]);
-
-  return <span ref={ref}>{display}{suffix}</span>;
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -90,22 +68,6 @@ const COMPETITIONS = [
   'Engineering Design', 'Fashion Design', 'Graphic Design',
 ];
 
-const MarqueeRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
-  const items = [...COMPETITIONS, ...COMPETITIONS];
-  return (
-    <div className="flex overflow-hidden">
-      <div className={`flex gap-3 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} whitespace-nowrap`}>
-        {items.map((c, i) => (
-          <span key={i}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-tsa-orange/30 bg-space-800/50 text-sm text-tsa-orange font-medium flex-shrink-0">
-            {c}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 /* ─────────────────────────────────────────────────────────────
    HOME PAGE
 ───────────────────────────────────────────────────────────── */
@@ -128,114 +90,94 @@ const Home: React.FC = () => {
           HERO
       ═══════════════════════════════════════════════════ */}
       <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-        {/* Grid background */}
-        <div className="absolute inset-0 grid-bg opacity-40" />
+        <DiamondField variant="hero" />
 
-        {/* Gradient mesh */}
-        <div className="sr-aurora" />
-        <MeasureRing className="sr-art sr-float sr-float--late" size="min(30vw, 22rem)"
-          style={{ bottom: '-8%', left: '-4%', color: 'var(--sr-amber)', opacity: 0.4 }} />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full text-center">
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="hero-title mb-6 text-balance"
+          >
+            Where{' '}
+            <span style={{ color: '#4E8AC9' }}>Technology</span>
+            <br />
+            Meets{' '}
+            <span style={{ color: '#EE2624' }}>Ambition.</span>
+          </motion.h1>
 
-        {/* Orbs */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="section-dek mx-auto mb-8"
+          >
+            Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
+            develop real-world skills, and build the future alongside your peers.
+          </motion.p>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-wrap gap-4 justify-center"
+          >
+            <Link to="/join" className="btn-primary text-base px-7 py-3.5 group">
+              Join the Chapter
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link to="/competitions" className="btn-secondary text-base px-7 py-3.5 group">
+              View Competitions
+            </Link>
+          </motion.div>
 
-            {/* Left: Text */}
-            <div>
-              {/* Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance"
-              >
-                Where{' '}
-                <span style={{ color: '#4E8AC9' }}>Technology</span>
-                <br />
-                Meets{' '}
-                <span style={{ color: '#EE2624' }}>Ambition.</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg text-ink-dim leading-relaxed mb-8 max-w-lg"
-              >
-                Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
-                develop real-world skills, and build the future alongside your peers.
-              </motion.p>
-
-              {/* CTAs */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-wrap gap-4"
-              >
-                <Link to="/join" className="btn-primary text-base px-7 py-3.5 group">
-                  Join the Chapter
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link to="/competitions" className="btn-secondary text-base px-7 py-3.5 group">
-                  View Competitions
-                </Link>
-              </motion.div>
-
-              {/* Stats row */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex gap-10 mt-10"
-              >
-                {[
-                  { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
-                  { num: 20, suffix: '', label: 'STATE QUALIFIERS',  color: 'text-gold-400' },
-                  { num: 14, suffix: '', label: "NAT'L QUALIFIERS",  color: 'text-amber-400' },
-                ].map((s, i) => (
-                  <div key={i}>
-                    <div className={`stat-value ${s.color}`}>
-                      <Counter value={s.num} suffix={s.suffix} />
-                    </div>
-                    <div className="stat-label">{s.label}</div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Right: 3D wireframe artifact (all screen sizes) */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-            >
-              <div style={{ position: 'relative', aspectRatio: '1 / 0.9', maxHeight: 'min(58vh, 34rem)' }}>
-                <ArtCanvas artifact="icosa" zoom={3.4} />
+          {/* Stats row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-wrap gap-10 mt-10 justify-center"
+          >
+            {[
+              { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
+              { num: 20, suffix: '', label: 'STATE QUALIFIERS',  color: 'text-gold-400' },
+              { num: 14, suffix: '', label: "NAT'L QUALIFIERS",  color: 'text-amber-400' },
+            ].map((s, i) => (
+              <div key={i}>
+                <div className={`stat-value ${s.color}`}>
+                  <Counter value={s.num} suffix={s.suffix} />
+                </div>
+                <div className="stat-label">{s.label}</div>
               </div>
+            ))}
+          </motion.div>
 
-              {/* Mini cards below the artifact */}
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                {[
-                  {
-                    label: 'Next Event',
-                    value: nextEvent?.title ?? 'To be announced',
-                    sub: nextEvent
-                      ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-                      : undefined,
-                  },
-                  { label: 'Chapter Status', value: 'Active — TX' },
-                ].map((item, i) => (
-                  <div key={i} className="glass-card rounded-xl p-4">
-                    <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
-                    <div className="text-sm font-semibold text-ink truncate">{item.value}</div>
-                    {item.sub && <div className="text-[11px] text-ink-muted mt-0.5">{item.sub}</div>}
-                  </div>
-                ))}
+          {/* Mini cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.7 }}
+            className="grid grid-cols-2 gap-3 mt-10 max-w-lg mx-auto text-left"
+          >
+            {[
+              {
+                label: 'Next Event',
+                value: nextEvent?.title ?? 'To be announced',
+                sub: nextEvent
+                  ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                  : undefined,
+              },
+              { label: 'Chapter Status', value: 'Active — TX' },
+            ].map((item, i) => (
+              <div key={i} className="glass-card rounded-xl p-4">
+                <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
+                <div className="text-sm font-semibold text-ink truncate">{item.value}</div>
+                {item.sub && <div className="text-[11px] text-ink-muted mt-0.5">{item.sub}</div>}
               </div>
-            </motion.div>
-          </div>
+            ))}
+          </motion.div>
         </div>
 
         {/* Bottom fade */}
@@ -247,8 +189,8 @@ const Home: React.FC = () => {
       ═══════════════════════════════════════════════════ */}
       <section className="py-10 overflow-hidden border-y border-space-500/30 bg-space-950">
         <div className="space-y-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <MarqueeRow />
-          <MarqueeRow reverse />
+          <LogoMarquee items={COMPETITIONS} />
+          <LogoMarquee items={COMPETITIONS} reverse />
         </div>
       </section>
 
@@ -256,18 +198,11 @@ const Home: React.FC = () => {
           FEATURES BENTO GRID
       ═══════════════════════════════════════════════════ */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <div className="section-label inline-flex mb-4">What We Do</div>
-          <h2 className="section-title text-4xl md:text-5xl mb-4">
-            Compete. Innovate. Lead.
-          </h2>
-        </motion.div>
+        <SectionHeader
+          eyebrow="What We Do"
+          title="Compete. Innovate. Lead."
+          className="mb-16"
+        />
 
         {/* Bento grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
@@ -365,29 +300,24 @@ const Home: React.FC = () => {
       <section className="py-20 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
-        <div className="absolute inset-0 grid-bg opacity-20" />
+        <DiamondField variant="band" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { val: 75,  suffix: '+',  label: 'Active Members',      colorClass: 'text-electric-400' },
-              { val: 50,  suffix: '+',  label: 'State Qualifiers',    colorClass: 'text-gold-400' },
-              { val: 15,  suffix: '+',  label: 'National Qualifiers', colorClass: 'text-amber-400' },
-              { val: 3,   suffix: '',   label: 'Years of Excellence', colorClass: 'text-tsa-green' },
+              { val: 75,  suffix: '+',  label: 'Active Members',      accent: 'var(--c-blue-bright)' },
+              { val: 50,  suffix: '+',  label: 'State Qualifiers',    accent: 'var(--c-red)' },
+              { val: 15,  suffix: '+',  label: 'National Qualifiers', accent: 'var(--c-amber)' },
+              { val: 3,   suffix: '',   label: 'Years of Excellence', accent: 'var(--c-green)' },
             ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className={`text-4xl font-black mb-1 ${stat.colorClass}`}>
-                  <Counter value={stat.val} suffix={stat.suffix} />
-                </div>
-                <div className="text-sm text-ink-muted">{stat.label}</div>
-              </motion.div>
+              <Reveal key={i} delay={i * 80}>
+                <StatCard
+                  value={stat.val}
+                  suffix={stat.suffix}
+                  label={stat.label}
+                  accent={stat.accent}
+                />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -508,16 +438,11 @@ const Home: React.FC = () => {
       ═══════════════════════════════════════════════════ */}
       <section className="py-24 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <div className="flex justify-center mb-4"><div className="section-label">Membership</div></div>
-            <h2 className="section-title mb-4">Get started in 3 steps</h2>
-          </motion.div>
+          <SectionHeader
+            eyebrow="Membership"
+            title="Get started in 3 steps"
+            className="mb-16"
+          />
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
