@@ -455,6 +455,14 @@ html.light {
     margin-top: 0.75rem;
   }
 
+  /* Stage illustration: fades in when the active step changes. */
+  .stage-visual { animation: stageFade 500ms ease both; }
+  @keyframes stageFade { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage-visual { animation: none; }
+  }
+
   /* ── HERO PHOTO SCRIM ────────────────────────────────────────
      Dims the hero photograph so the headline keeps its contrast.
      Heavier in dark mode; in light mode it lifts toward white. */

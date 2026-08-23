@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useReducedMotion } from 'motion/react';
 
 export interface Stage {
@@ -19,51 +19,45 @@ interface StageSceneProps {
   title: string;
   dek?: string;
   stages: Stage[];
+  /** Milliseconds each stage is shown before advancing. */
+  interval?: number;
   className?: string;
 }
 
 /**
- * Scroll-driven scene: the steps sit beside an illustration panel, and both pin
- * to the viewport while the page scrolls through a tall track, advancing one
- * step at a time.
+ * Steps beside an illustration that advances on its own every few seconds.
  *
- * Progress comes from a passive scroll listener reading getBoundingClientRect,
- * so nothing intercepts wheel or touch input — scrolling stays entirely under
- * the reader's control. Under prefers-reduced-motion the scene collapses to a
- * plain stacked list with every step and its illustration shown at once.
+ * Rotation pauses while the pointer is over the scene or keyboard focus is
+ * inside it, so nobody loses their place mid-read, and the step buttons let
+ * you take over entirely. Under prefers-reduced-motion nothing rotates: every
+ * step is shown at once beside its own illustration.
  */
 export const StageScene: React.FC<StageSceneProps> = ({
   eyebrow,
   title,
   dek,
   stages,
+  interval = 5000,
   className = '',
 }) => {
-  const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const prefersReduced = useReducedMotion();
+  const timer = useRef<number | null>(null);
 
-  const syncStage = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const scrubbable = rect.height - window.innerHeight;
-    if (scrubbable <= 0) return;
-    const progress = Math.min(1, Math.max(0, -rect.top / scrubbable));
-    const next = Math.min(stages.length - 1, Math.floor(progress * stages.length));
-    setActive(prev => (prev === next ? prev : next));
-  }, [stages.length]);
+  const select = useCallback((i: number) => setActive(i), []);
+
 
   useEffect(() => {
-    if (prefersReduced) return;
-    syncStage();
-    window.addEventListener('scroll', syncStage, { passive: true });
-    window.addEventListener('resize', syncStage);
+    if (prefersReduced || paused || stages.length < 2) return;
+    timer.current = window.setInterval(
+      () => setActive(i => (i + 1) % stages.length),
+      interval,
+    );
     return () => {
-      window.removeEventListener('scroll', syncStage);
-      window.removeEventListener('resize', syncStage);
+      if (timer.current !== null) window.clearInterval(timer.current);
     };
-  }, [syncStage, prefersReduced]);
+  }, [prefersReduced, paused, stages.length, interval]);
 
   const header = (
     <div className="text-center">
@@ -77,78 +71,94 @@ export const StageScene: React.FC<StageSceneProps> = ({
     </div>
   );
 
-  /** The illustration box. Every image is mounted and cross-faded so switching
-   *  stages never shows a blank frame while a new file loads. */
+  /** Illustration box. Every image stays mounted and cross-fades, so a switch
+   *  never shows a blank frame while a file loads. */
   const visual = (current: Stage) => (
     <div
       className="relative overflow-hidden w-full"
       style={{
         borderRadius: 'var(--card-radius)',
         border: '1px solid var(--c-hairline)',
-        background: '#FFFFFF',
-        boxShadow: 'var(--shadow-card)',
+        background: 'var(--c-card)',
         aspectRatio: '4 / 3',
       }}
     >
       <span
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-1 z-10"
+        className="absolute inset-x-0 top-0 h-1 z-10 transition-colors duration-500"
         style={{ background: current.accent }}
       />
-      {stages.map(s => {
-        const shown = s.num === current.num;
-        return (
-          <img
-            key={s.num}
-            src={s.image}
-            alt={shown ? s.imageAlt : ''}
-            aria-hidden={shown ? undefined : true}
-            className="absolute inset-0 h-full w-full object-contain p-8 sm:p-12 transition-opacity duration-500"
-            style={{ opacity: shown ? 1 : 0 }}
-            decoding="async"
-          />
-        );
-      })}
+      <img
+        key={current.num}
+        src={current.image}
+        alt={current.imageAlt}
+        className="stage-visual absolute inset-0 h-full w-full object-cover"
+        decoding="async"
+      />
     </div>
   );
 
-  const stageRow = (stage: Stage, isActive: boolean) => (
-    <li
-      key={stage.num}
-      aria-current={isActive ? 'step' : undefined}
-      className="flex items-start gap-4 transition-all duration-500"
-      style={{
-        opacity: isActive ? 1 : 0.4,
-        borderRadius: 'var(--card-radius)',
-        padding: '1rem 1.25rem',
-        background: isActive ? 'var(--c-card)' : 'transparent',
-        border: `1px solid ${isActive ? stage.accent + '55' : 'transparent'}`,
-      }}
-    >
-      <span
-        className="font-mono text-xs pt-1 flex-shrink-0"
-        style={{ color: isActive ? stage.accent : 'var(--c-text-muted)' }}
-      >
-        {stage.num}
-      </span>
-      <div>
-        <h3 className="font-bold text-ink">{stage.title}</h3>
-        <p className="text-sm leading-relaxed text-ink-dim mt-1">{stage.body}</p>
-      </div>
-    </li>
-  );
+  const stageRow = (stage: Stage, isActive: boolean, i?: number) => {
+    const inner = (
+      <>
+        <span
+          className="font-mono text-xs pt-1 flex-shrink-0 transition-colors duration-300"
+          style={{ color: isActive ? stage.accent : 'var(--c-text-muted)' }}
+        >
+          {stage.num}
+        </span>
+        <span className="block">
+          <span className="block font-bold text-ink">{stage.title}</span>
+          <span className="block text-sm leading-relaxed text-ink-dim mt-1">{stage.body}</span>
+        </span>
+      </>
+    );
+
+    const style: React.CSSProperties = {
+      opacity: isActive ? 1 : 0.45,
+      borderRadius: 'var(--card-radius)',
+      padding: '0.85rem 1.1rem',
+      background: isActive ? 'var(--c-card)' : 'transparent',
+      border: `1px solid ${isActive ? stage.accent + '55' : 'transparent'}`,
+    };
+
+    // Static list under reduced motion; otherwise each step is selectable.
+    if (i === undefined) {
+      return (
+        <li key={stage.num} className="flex items-start gap-4" style={style}>
+          {inner}
+        </li>
+      );
+    }
+
+    return (
+      <li key={stage.num}>
+        <button
+          type="button"
+          onClick={() => select(i)}
+          aria-current={isActive ? 'step' : undefined}
+          className="flex w-full items-start gap-4 text-left transition-all duration-500"
+          style={style}
+        >
+          {inner}
+        </button>
+      </li>
+    );
+  };
+
+  const wrapperPadding = {
+    paddingTop: 'var(--section-py)',
+    paddingBottom: 'var(--section-py)',
+  };
 
   if (prefersReduced) {
     return (
-      <section
-        className={className}
-        style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}
-      >
+      <section className={className} style={wrapperPadding}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {header}
-          <div className="mt-10 space-y-10">
+          <div className="mt-8 space-y-8">
             {stages.map(s => (
-              <div key={s.num} className="grid gap-6 md:grid-cols-2 md:items-center">
+              <div key={s.num} className="grid gap-5 md:grid-cols-2 md:items-center">
                 <ol>{stageRow(s, true)}</ol>
                 {visual(s)}
               </div>
@@ -160,36 +170,41 @@ export const StageScene: React.FC<StageSceneProps> = ({
   }
 
   return (
-    <section className={className}>
-      {/* The track's extra height is the distance the pinned panel scrubs through. */}
-      <div ref={trackRef} style={{ height: `${85 + stages.length * 26}vh` }}>
-        <div className="sticky top-16 flex min-h-[calc(85vh-4rem)] items-center">
-          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {header}
+    <section
+      className={className}
+      style={wrapperPadding}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {header}
 
-            <div className="mt-6 grid gap-6 md:grid-cols-2 md:items-center">
-              <div>
-                <ol className="space-y-3">
-                  {stages.map((s, i) => stageRow(s, i === active))}
-                </ol>
+        <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-center">
+          <div>
+            <ol className="space-y-2">
+              {stages.map((s, i) => stageRow(s, i === active, i))}
+            </ol>
 
-                <div className="mt-6 flex gap-1.5" aria-hidden="true">
-                  {stages.map((s, i) => (
-                    <span
-                      key={s.num}
-                      className="h-1 rounded-full transition-all duration-500"
-                      style={{
-                        width: i === active ? '2rem' : '0.75rem',
-                        background: i === active ? s.accent : 'var(--c-hairline)',
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {visual(stages[active])}
+            <div className="mt-5 flex gap-1.5">
+              {stages.map((s, i) => (
+                <button
+                  key={s.num}
+                  type="button"
+                  onClick={() => select(i)}
+                  aria-label={`Show step ${s.num}, ${s.title}`}
+                  className="h-1.5 rounded-full transition-all duration-500"
+                  style={{
+                    width: i === active ? '2rem' : '0.9rem',
+                    background: i === active ? s.accent : 'var(--c-hairline)',
+                  }}
+                />
+              ))}
             </div>
           </div>
+
+          {visual(stages[active])}
         </div>
       </div>
     </section>
