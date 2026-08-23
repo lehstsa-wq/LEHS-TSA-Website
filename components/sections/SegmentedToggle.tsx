@@ -24,7 +24,7 @@ export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
   return (
     <div
       role="radiogroup"
-      className={`inline-flex gap-1 rounded-full p-1 ${className}`}
+      className={`inline-flex flex-wrap gap-1 rounded-full p-1 ${className}`}
       style={{ background: 'var(--c-surface)', border: '1px solid var(--c-hairline)' }}
     >
       {options.map((option, i) => {
