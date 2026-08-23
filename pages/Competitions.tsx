@@ -388,9 +388,9 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           COMPETITION GRID
       ════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-10">
         {filteredCompetitions.length === 0 ? (
-          <div className="text-center py-24 text-ink-muted">
+          <div className="text-center py-14 text-ink-muted">
               <p className="text-lg font-medium mb-1">No events found</p>
             <p className="text-sm">Try adjusting your filters or search term.</p>
           </div>
@@ -507,7 +507,7 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
-      <section ref={teamsSectionRef} className="relative py-24 border-t border-space-500/30 overflow-hidden">
+      <section ref={teamsSectionRef} className="relative py-14 border-t border-space-500/30 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
 
@@ -519,7 +519,7 @@ const Competitions: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-14"
+            className="mb-10"
           >
             <div className="section-label inline-flex mb-4">TSA TEAMS Program</div>
             <div className="flex flex-wrap items-end gap-4 mb-5">
@@ -564,7 +564,7 @@ const Competitions: React.FC = () => {
             </h3>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             {TEAMS_COMPONENTS.map((comp, i) => {
               const Icon = comp.icon;
               return (

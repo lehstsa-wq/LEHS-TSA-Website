@@ -25,7 +25,7 @@ const Officers: React.FC = () => {
       <SEO title="Officers" description="Meet the Little Elm TSA leadership team, dedicated students driving our chapter forward." />
 
       {/* Hero */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -42,7 +42,7 @@ const Officers: React.FC = () => {
 
       {/* Featured exec strip */}
       {executive.length > 0 && (
-        <section className="py-16 bg-space-950/60 border-y border-space-500/30">
+        <section className="py-10 bg-space-950/60 border-y border-space-500/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="section-label inline-flex mb-8">Executive Board</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -68,7 +68,7 @@ const Officers: React.FC = () => {
       )}
 
       {/* All officers with filter */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Filter */}
         <div className="flex items-center gap-2 mb-10 flex-wrap">
           <SegmentedToggle
@@ -80,7 +80,7 @@ const Officers: React.FC = () => {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-20 text-ink-muted">
+          <div className="text-center py-12 text-ink-muted">
             <Users size={40} className="mx-auto mb-4 opacity-30" />
             <p>No officers in this category yet.</p>
           </div>

@@ -146,7 +146,7 @@ export const StageScene: React.FC<StageSceneProps> = ({
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {header}
-          <div className="mt-14 space-y-12">
+          <div className="mt-10 space-y-10">
             {stages.map(s => (
               <div key={s.num} className="grid gap-6 md:grid-cols-2 md:items-center">
                 <ol>{stageRow(s, true)}</ol>
@@ -162,18 +162,18 @@ export const StageScene: React.FC<StageSceneProps> = ({
   return (
     <section className={className}>
       {/* The track's extra height is the distance the pinned panel scrubs through. */}
-      <div ref={trackRef} style={{ height: `${100 + stages.length * 55}vh` }}>
+      <div ref={trackRef} style={{ height: `${100 + stages.length * 42}vh` }}>
         <div className="sticky top-16 flex min-h-[calc(100vh-4rem)] items-center">
-          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {header}
 
-            <div className="mt-12 grid gap-8 md:grid-cols-2 md:items-center">
+            <div className="mt-8 grid gap-8 md:grid-cols-2 md:items-center">
               <div>
                 <ol className="space-y-3">
                   {stages.map((s, i) => stageRow(s, i === active))}
                 </ol>
 
-                <div className="mt-8 flex gap-1.5" aria-hidden="true">
+                <div className="mt-6 flex gap-1.5" aria-hidden="true">
                   {stages.map((s, i) => (
                     <span
                       key={s.num}

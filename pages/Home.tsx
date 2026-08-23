@@ -177,7 +177,7 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           HERO
       ═══════════════════════════════════════════════════ */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[78vh] flex items-center overflow-hidden">
         {/* Chapter photo backdrop, dimmed so the headline keeps its contrast */}
         <img
           src="/assets/photos/hero-chapter.jpg"
@@ -189,14 +189,14 @@ const Home: React.FC = () => {
         <div aria-hidden="true" className="hero-scrim absolute inset-0" />
         <DiamondField variant="hero" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full text-center">
           {/* Announcement */}
           {nextEvent && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-8"
+              className="mb-6"
             >
               <AnnouncementPill
                 label="Next Event"
@@ -225,7 +225,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="section-dek mx-auto mb-8"
+            className="section-dek mx-auto mb-7"
           >
             Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
             develop real-world skills, and build the future alongside your peers.
@@ -252,7 +252,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-wrap gap-10 mt-10 justify-center"
+            className="flex flex-wrap gap-10 mt-8 justify-center"
           >
             {[
               { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
@@ -273,7 +273,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.7 }}
-            className="grid grid-cols-2 gap-3 mt-10 max-w-lg mx-auto text-left"
+            className="grid grid-cols-2 gap-3 mt-8 max-w-lg mx-auto text-left"
           >
             {[
               {
@@ -319,7 +319,7 @@ const Home: React.FC = () => {
           <SectionHeader
             eyebrow="Watch"
             title="See the chapter in action"
-            className="mb-12"
+            className="mb-6"
           />
           <Reveal>
             <VideoEmbed
@@ -333,11 +333,11 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           FEATURES BENTO GRID
       ═══════════════════════════════════════════════════ */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SectionHeader
           eyebrow="What We Do"
           title="Compete. Innovate. Lead."
-          className="mb-16"
+          className="mb-10"
         />
 
         <TabRail items={WHAT_WE_DO} />
@@ -346,7 +346,7 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           STATS SECTION
       ═══════════════════════════════════════════════════ */}
-      <section className="py-20 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
+      <section className="py-12 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
         <DiamondField variant="band" />
@@ -375,8 +375,8 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           NEWS + EVENTS PREVIEW
       ═══════════════════════════════════════════════════ */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="space-y-20">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="space-y-14">
 
           {/* Latest News */}
           <div>
@@ -496,7 +496,7 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           FINAL CTA
       ═══════════════════════════════════════════════════ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

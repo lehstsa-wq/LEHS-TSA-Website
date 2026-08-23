@@ -130,7 +130,7 @@ const Join: React.FC = () => {
       <SEO title="Join" description="Join Little Elm High School TSA. Compete, lead, and grow with the most exciting STEM student org in Texas." />
 
       {/* ── Hero ── */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -146,11 +146,11 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── Benefits ── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SectionHeader
           eyebrow="Why Join?"
           title="Everything membership unlocks"
-          className="mb-16"
+          className="mb-10"
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {BENEFITS.map((b, i) => {
@@ -167,13 +167,13 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── How to Join ── */}
-      <section className="py-20 bg-space-950/60 border-y border-space-500/30">
+      <section className="py-12 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Process"
             title="4 steps to join"
             dek="Complete all four steps and you're officially a LEHS TSA member."
-            className="mb-14"
+            className="mb-10"
           />
 
           <div className="space-y-4">
@@ -200,12 +200,12 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── Action Links ── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <SectionHeader
           eyebrow="Start Here"
           title="Complete all four links below"
           dek="Click each card to open the link in a new tab. Do them in order."
-          className="mb-14"
+          className="mb-10"
         />
 
         <div className="grid sm:grid-cols-2 gap-4">
@@ -251,12 +251,12 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="py-20 bg-space-950/60 border-t border-space-500/30">
+      <section className="py-12 bg-space-950/60 border-t border-space-500/30">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="FAQ"
             title="Common questions"
-            className="mb-16"
+            className="mb-10"
           />
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
@@ -269,7 +269,7 @@ const Join: React.FC = () => {
       </section>
 
       {/* ── Final CTA ── */}
-      <section className="py-24 px-4 text-center">
+      <section className="py-14 px-4 text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="max-w-lg mx-auto">
           <h2 className="text-3xl font-bold text-ink mb-4">Ready to compete?</h2>
           <p className="text-ink-dim mb-8">Join LEHS TSA today and start building the skills, network, and achievements that define a tech career.</p>
