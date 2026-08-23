@@ -1085,7 +1085,8 @@ Co-Authored-By: RuFlo <ruv@ruv.net>"
   the hero text; centre the hero and move the mini-cards (`:218`) into a row below
   the CTAs; convert the stats row (`:186`) to `StatCard`; delete the local
   `Counter` (`:24`) and `MarqueeRow` (`:92`) definitions, importing `StatCard` and
-  `LogoMarquee` instead. **`ArtCanvas.tsx` stays on disk — do not delete it.**
+  `LogoMarquee` instead. **Remove the `ArtCanvas` import and usage, but do not
+  delete `components/art/ArtCanvas.tsx` in this task — Task 18 deletes it.**
 - **Task 10 (About)** — 6 headers. Convert the stats grid (`:110`) to `StatCard`.
   Keep the milestone timeline (`:191`) structurally as-is; retune its cards only.
 - **Task 11 (Events)** — 1 header. Convert the All/Upcoming/Past filter (`:59`) to
