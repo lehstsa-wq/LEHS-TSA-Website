@@ -24,8 +24,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const QUICK_LINKS = [
   { name: 'TSA National',              url: 'https://tsaweb.org/',                                              desc: 'Official TSA website with rulebooks, forms, and competition info' },
-  { name: 'Texas TSA',                 url: 'https://www.texastsa.org/',                                       desc: 'Texas state chapter portal — schedules, results, registration' },
-  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2026–2027 competition guidelines' },
+  { name: 'Texas TSA',                 url: 'https://www.texastsa.org/',                                       desc: 'Texas state chapter portal: schedules, results, registration' },
+  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2026 to 2027 competition guidelines' },
   { name: 'Khan Academy (STEM)',        url: 'https://www.khanacademy.org/',                                    desc: 'Free prep material for STEM competitions and events' },
   { name: 'Code.org',                  url: 'https://code.org/',                                               desc: 'Programming tutorials for coding competition prep' },
   { name: 'Figma (free for students)', url: 'https://www.figma.com/education/',                                desc: 'Free design tool for Graphic Design, Promotional Design events' },
@@ -55,7 +55,7 @@ const Resources: React.FC = () => {
       <SEO title="Resources" description="Competition guides, study materials, and helpful links for LEHS TSA members." />
 
       {/* Hero */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -63,7 +63,7 @@ const Resources: React.FC = () => {
               as="h1"
               eyebrow="Resources"
               title="Competition Resources"
-              dek="Study guides, competition rulebooks, design tools, and helpful links — everything you need to walk into any TSA event prepared and confident."
+              dek="Study guides, competition rulebooks, design tools, and helpful links, everything you need to walk into any TSA event prepared and confident."
             />
           </motion.div>
         </div>
@@ -71,7 +71,7 @@ const Resources: React.FC = () => {
       </section>
 
       {/* Quick links */}
-      <section className="py-16 bg-space-950/60 border-y border-space-500/30">
+      <section className="py-10 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label inline-flex mb-6">Quick Links</div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -91,7 +91,7 @@ const Resources: React.FC = () => {
       </section>
 
       {/* Chapter resources */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div>
             <div className="section-label inline-flex mb-2">Chapter Library</div>
@@ -164,7 +164,7 @@ const Resources: React.FC = () => {
 
         {/* Main grid */}
         {filtered.length === 0 && totalVisible === 0 ? (
-          <div className="text-center py-20 text-ink-muted">
+          <div className="text-center py-12 text-ink-muted">
             <BookOpen size={40} className="mx-auto mb-4 opacity-30" />
             <p>No resources found{search ? ` for "${search}"` : ''}.</p>
             {resources.length === 0 && <p className="text-sm mt-2">Resources will appear here once added by an officer.</p>}

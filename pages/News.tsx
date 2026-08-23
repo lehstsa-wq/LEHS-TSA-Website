@@ -39,7 +39,7 @@ const News: React.FC = () => {
       <SEO title="News" description="LEHS TSA announcements, updates, and chapter news." />
 
       {/* Hero */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -47,7 +47,7 @@ const News: React.FC = () => {
               as="h1"
               eyebrow="Updates"
               title="Chapter News"
-              dek="Announcements, deadlines, competition news, and chapter updates — all in one place."
+              dek="Announcements, deadlines, competition news, and chapter updates, all in one place."
             />
           </motion.div>
         </div>
@@ -72,9 +72,9 @@ const News: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {allFiltered.length === 0 ? (
-          <div className="text-center py-20 text-ink-muted">
+          <div className="text-center py-12 text-ink-muted">
               <p>No announcements found{search ? ` for "${search}"` : ''}.</p>
           </div>
         ) : (

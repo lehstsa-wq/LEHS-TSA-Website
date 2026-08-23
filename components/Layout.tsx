@@ -666,7 +666,7 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="divider mb-8" />
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-[12px] text-ink-muted">
-          <p>© 2026–2027 Little Elm High School TSA. All rights reserved.</p>
+          <p>© 2026 to 2027 Little Elm High School TSA. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy" className="hover:text-ink transition-colors">
               Privacy Policy

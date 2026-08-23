@@ -40,8 +40,15 @@ async function startServer() {
         connectSrc: isDev
           ? ["'self'", "ws://localhost:*", "http://localhost:*"]
           : ["'self'"],
-        scriptSrc: ["'self'", "'module'"],
+        // Vite's dev HTML injects an inline <script type="module"> preamble,
+        // which needs 'unsafe-inline'. Production serves only hashed external
+        // files, so it stays locked to 'self'. ("'module'" was never a valid
+        // CSP source expression and did nothing.)
+        scriptSrc: isDev ? ["'self'", "'unsafe-inline'"] : ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
+        // Vimeo player for the chapter video. frame-src otherwise falls back
+        // to default-src 'self' and the embed is blocked.
+        frameSrc: ["'self'", "https://player.vimeo.com"],
       },
     },
   }));

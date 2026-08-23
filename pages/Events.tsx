@@ -36,7 +36,7 @@ const Events: React.FC = () => {
       <SEO title="Events" description="LEHS TSA upcoming events, competitions, and meetings. Stay on schedule." />
 
       {/* Hero */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -74,9 +74,9 @@ const Events: React.FC = () => {
       </div>
 
       {/* Events List */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {renderEvents.length === 0 ? (
-          <div className="text-center py-20 text-ink-muted">
+          <div className="text-center py-12 text-ink-muted">
               <p>No events found for the current filters.</p>
           </div>
         ) : (

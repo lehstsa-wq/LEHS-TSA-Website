@@ -8,7 +8,9 @@ import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import {
   SectionHeader, Reveal, StatCard, Counter, LogoMarquee, DiamondField,
+  StageScene, TabRail, StoryTrack, AnnouncementPill, VideoEmbed,
 } from '../components/sections';
+import type { Stage, TabItem } from '../components/sections';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
@@ -17,46 +19,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   Social: 'badge-green',
   Fundraiser: 'badge-purple',
 };
-
-/* ─────────────────────────────────────────────────────────────
-   BENTO GRID CARD
-───────────────────────────────────────────────────────────── */
-interface BentoCardProps {
-  title: string;
-  body: string;
-  accent: string;
-  link: string;
-  className?: string;
-  large?: boolean;
-}
-
-const BentoCard: React.FC<BentoCardProps> = ({ title, body, accent, link, className = '', large }) => (
-  <motion.div
-    whileHover={{ y: -4 }}
-    transition={{ duration: 0.25, ease: 'easeOut' }}
-    className={`group relative rounded-2xl border border-space-500/60 overflow-hidden transition-all duration-300
-      hover:border-opacity-80 cursor-pointer bg-space-800/40 h-full ${className}`}
-    style={{ boxShadow: 'var(--shadow-card)' }}
-  >
-    {/* Gradient hover overlay */}
-    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-      style={{ background: `radial-gradient(ellipse at top left, ${accent}18, transparent 60%)` }}
-    />
-    {/* Shine */}
-    <div className="absolute inset-0 bg-card-shine opacity-0 group-hover:opacity-100 transition-opacity" />
-
-    <div className={`relative ${large ? 'p-8' : 'p-6'}`}>
-      <h3 className={`font-bold text-ink mb-2 ${large ? 'text-xl' : 'text-base'}`}>{title}</h3>
-      <p className={`text-ink-dim leading-relaxed ${large ? 'text-base' : 'text-sm'}`}>{body}</p>
-
-      <Link to={link}
-        className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-1 group-hover:translate-x-0"
-        style={{ color: accent }}>
-        Learn more <ArrowRight size={14} />
-      </Link>
-    </div>
-  </motion.div>
-);
 
 /* ─────────────────────────────────────────────────────────────
    MARQUEE
@@ -71,6 +33,132 @@ const COMPETITIONS = [
 /* ─────────────────────────────────────────────────────────────
    HOME PAGE
 ───────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   HOW IT WORKS: stages for the scroll scene
+───────────────────────────────────────────────────────────── */
+const HOW_IT_WORKS: Stage[] = [
+  {
+    num: '01',
+    title: 'Apply',
+    body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
+    accent: '#005DAA',
+    image: '/assets/photos/step-apply.jpg',
+    imageAlt: 'Illuminated TSA marquee letters at a chapter event',
+  },
+  {
+    num: '02',
+    title: 'Pick Events',
+    body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
+    accent: '#EC881D',
+    image: '/assets/photos/step-pick.jpg',
+    imageAlt: 'A member choosing and preparing a glider for competition',
+  },
+  {
+    num: '03',
+    title: 'Compete & Win',
+    body: 'Train, collaborate, and compete at regional, state, and national conferences.',
+    accent: '#574E8F',
+    image: '/assets/photos/step-win.jpg',
+    imageAlt: 'Chapter members holding a competition trophy',
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────
+   WHAT WE DO: tab rail
+───────────────────────────────────────────────────────────── */
+const WHAT_WE_DO: TabItem[] = [
+  {
+    label: 'Compete in 30+ Events',
+    image: '/assets/photos/compete.jpg',
+    imageAlt: 'Chapter members in TSA blazers holding their competition dragster',
+    accent: '#005DAA',
+    description: 'From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Compete in 30+ Events</h3>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#005DAA' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
+    label: 'Code & Build',
+    image: '/assets/photos/build.jpg',
+    imageAlt: 'Members building and testing structures at a competition table',
+    accent: '#574E8F',
+    description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Code & Build</h3>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#574E8F' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
+    label: 'Lead & Grow',
+    image: '/assets/photos/lead.jpg',
+    imageAlt: 'A chapter member presenting on stage at the state conference',
+    accent: '#EC881D',
+    description: 'Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Lead & Grow</h3>
+        <Link to="/officers" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EE2624' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
+    label: 'Connect Nationally',
+    image: '/assets/photos/connect.jpg',
+    imageAlt: 'A member holding a collector pin map at the national conference',
+    accent: '#EE2624',
+    description: 'Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Connect Nationally</h3>
+        <Link to="/events" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#86BB50' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
+    label: 'Design & Create',
+    image: '/assets/photos/design.jpg',
+    imageAlt: 'Two members working on an architectural scale model',
+    accent: '#86BB50',
+    description: 'Graphic design, video game design, architectural modeling, fashion design. TSA rewards every kind of creative talent.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Design & Create</h3>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EC881D' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
+    label: 'Study & Prepare',
+    image: '/assets/photos/study.jpg',
+    imageAlt: 'Members preparing their gliders together before an event',
+    accent: '#4E8AC9',
+    description: 'Access competition guides, past results, and expert prep materials, everything you need to walk into any event confident.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Study & Prepare</h3>
+        <Link to="/resources" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#4E8AC9' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+];
+
 const Home: React.FC = () => {
   const { announcements, eventsList, nextEvent } = useData();
   const latestNews = announcements.slice(0, 3);
@@ -83,16 +171,42 @@ const Home: React.FC = () => {
     <div className="overflow-x-hidden">
       <SEO
         title="Home"
-        description="Little Elm High School TSA — Compete. Innovate. Lead. Join Texas's most driven TSA chapter."
+        description="Little Elm High School TSA. Compete. Innovate. Lead. Join Texas's most driven TSA chapter."
       />
 
       {/* ═══════════════════════════════════════════════════
           HERO
       ═══════════════════════════════════════════════════ */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[78vh] flex items-center overflow-hidden">
+        {/* Chapter photo backdrop, dimmed so the headline keeps its contrast */}
+        <img
+          src="/assets/photos/hero-chapter.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+        />
+        <div aria-hidden="true" className="hero-scrim absolute inset-0" />
         <DiamondField variant="hero" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full text-center">
+          {/* Announcement */}
+          {nextEvent && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6"
+            >
+              <AnnouncementPill
+                label="Next Event"
+                text={`${nextEvent.title} · ${new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`}
+                href="/events"
+                cta="See schedule"
+              />
+            </motion.div>
+          )}
+
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -111,7 +225,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="section-dek mx-auto mb-8"
+            className="section-dek mx-auto mb-7"
           >
             Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
             develop real-world skills, and build the future alongside your peers.
@@ -138,7 +252,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-wrap gap-10 mt-10 justify-center"
+            className="flex flex-wrap gap-10 mt-8 justify-center"
           >
             {[
               { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
@@ -159,7 +273,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.7 }}
-            className="grid grid-cols-2 gap-3 mt-10 max-w-lg mx-auto text-left"
+            className="grid grid-cols-2 gap-3 mt-8 max-w-lg mx-auto text-left"
           >
             {[
               {
@@ -169,7 +283,7 @@ const Home: React.FC = () => {
                   ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
                   : undefined,
               },
-              { label: 'Chapter Status', value: 'Active — TX' },
+              { label: 'Chapter Status', value: 'Active, TX' },
             ].map((item, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
@@ -195,109 +309,44 @@ const Home: React.FC = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════
+          CHAPTER VIDEO
+      ═══════════════════════════════════════════════════ */}
+      <section
+        className="px-4 sm:px-6 lg:px-8"
+        style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <SectionHeader
+            eyebrow="Watch"
+            title="See the chapter in action"
+            className="mb-6"
+          />
+          <Reveal>
+            <VideoEmbed
+              src="https://player.vimeo.com/video/986072709?h=49a2c22ff7"
+              title="Little Elm TSA chapter video"
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
           FEATURES BENTO GRID
       ═══════════════════════════════════════════════════ */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SectionHeader
           eyebrow="What We Do"
           title="Compete. Innovate. Lead."
-          className="mb-16"
+          className="mb-10"
         />
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-2 h-full"
-          >
-            <BentoCard
-              title="Compete in 30+ Events"
-              body="From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines."
-              accent="#005DAA"
-              link="/competitions"
-              large
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <BentoCard
-              title="Code & Build"
-              body="Sharpen your software skills with coding competitions, hackathons, and collaborative build nights."
-              accent="#574E8F"
-              link="/competitions"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-          >
-            <BentoCard
-              title="Lead & Grow"
-              body="Run for officer positions, organize events, and develop the leadership skills that colleges and employers value."
-              accent="#EE2624"
-              link="/officers"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <BentoCard
-              title="Connect Nationally"
-              body="Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country."
-              accent="#86BB50"
-              link="/events"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-          >
-            <BentoCard
-              title="Design & Create"
-              body="Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent."
-              accent="#EC881D"
-              link="/competitions"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <BentoCard
-              title="Study & Prepare"
-              body="Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident."
-              accent="#4E8AC9"
-              link="/resources"
-            />
-          </motion.div>
-        </div>
+        <TabRail items={WHAT_WE_DO} />
       </section>
 
       {/* ═══════════════════════════════════════════════════
           STATS SECTION
       ═══════════════════════════════════════════════════ */}
-      <section className="py-20 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
+      <section className="py-12 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
         <DiamondField variant="band" />
@@ -326,8 +375,8 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           NEWS + EVENTS PREVIEW
       ═══════════════════════════════════════════════════ */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16">
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="space-y-14">
 
           {/* Latest News */}
           <div>
@@ -342,7 +391,7 @@ const Home: React.FC = () => {
               </Link>
             </div>
 
-            <div className="space-y-3">
+            <StoryTrack label="Latest news">
               {latestNews.length > 0 ? latestNews.map((item, i) => (
                 <motion.div
                   key={item.id}
@@ -350,7 +399,7 @@ const Home: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
-                  className="group relative card hover:border-electric-300/40 overflow-hidden"
+                  className="group relative card h-full hover:border-electric-300/40 overflow-hidden"
                 >
                   <div className="highlight-bar opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="flex items-start gap-3">
@@ -369,10 +418,10 @@ const Home: React.FC = () => {
                 </motion.div>
               )) : (
                 <div className="card text-center py-10 text-ink-muted text-sm">
-                  No announcements yet — check back soon!
+                  No announcements yet, check back soon!
                 </div>
               )}
-            </div>
+            </StoryTrack>
           </div>
 
           {/* Upcoming Events */}
@@ -436,63 +485,18 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           HOW IT WORKS
       ═══════════════════════════════════════════════════ */}
-      <section className="py-24 bg-space-950/60 border-y border-space-500/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="Membership"
-            title="Get started in 3 steps"
-            className="mb-16"
-          />
+      <StageScene
+        className="bg-space-950/60 border-y border-space-500/30"
+        eyebrow="Membership"
+        title="Get started in 3 steps"
+        stages={HOW_IT_WORKS}
+      />
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                num: '01',
-                title: 'Apply',
-                body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
-                color: '#005DAA',
-              },
-              {
-                num: '02',
-                title: 'Pick Events',
-                body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
-                color: '#EC881D',
-              },
-              {
-                num: '03',
-                title: 'Compete & Win',
-                body: 'Train, collaborate, and compete at regional, state, and national conferences.',
-                color: '#574E8F',
-              },
-            ].map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="relative text-center"
-              >
-                {/* Connector line */}
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-8 left-[calc(50%+44px)] w-[calc(100%-44px)] h-px bg-gradient-to-r from-space-500/50 to-transparent" />
-                )}
-                <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                  style={{ background: `${step.color}15`, border: `1px solid ${step.color}30` }}>
-                  <span className="text-xl font-black" style={{ color: step.color }}>{step.num}</span>
-                </div>
-                <h3 className="font-bold text-lg text-ink mb-3">{step.title}</h3>
-                <p className="text-sm text-ink-dim leading-relaxed max-w-xs mx-auto">{step.body}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ═══════════════════════════════════════════════════
           FINAL CTA
       ═══════════════════════════════════════════════════ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -506,7 +510,7 @@ const Home: React.FC = () => {
               Your future in tech starts here.
             </h3>
             <p className="text-ink-dim text-base">
-              Applications open for 2026–2027. Get started in 3 steps.
+              Applications open for 2026 to 2027. Get started in 3 steps.
             </p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
