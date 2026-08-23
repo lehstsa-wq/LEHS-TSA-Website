@@ -16,12 +16,10 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Events from './pages/Events';
 import Officers from './pages/Officers';
-import Projects from './pages/Projects';
 import Competitions from './pages/Competitions';
 import Resources from './pages/Resources';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
-import Gallery from './pages/Gallery';
 import News from './pages/News';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -77,9 +75,7 @@ const App: React.FC = () => {
                   <Route path="/about" element={<About />} />
                   <Route path="/events" element={<Events />} />
                   <Route path="/officers" element={<Officers />} />
-                  <Route path="/projects" element={<Projects />} />
                   <Route path="/competitions" element={<Competitions />} />
-                  <Route path="/gallery" element={<Gallery />} />
                   <Route path="/news" element={<News />} />
                   <Route path="/resources" element={<Resources />} />
                   <Route path="/join" element={<Join />} />

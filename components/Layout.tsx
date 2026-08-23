@@ -4,7 +4,7 @@ import {
   Menu, X, Instagram, Twitter, MapPin, Mail,
   LogIn, LayoutDashboard, LogOut, ChevronDown,
   Search, Users, Calendar, BookOpen,
-  Newspaper, Image, Cpu, ExternalLink, ArrowRight,
+  Newspaper, Cpu, ExternalLink, ArrowRight,
   Command, Home, Info, Phone, Sun, Moon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -33,8 +33,6 @@ const NAV_GROUPS = [
       { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' },
       { name: 'Opportunities',  path: '/opportunities',  icon: BookOpen, desc: 'Scholarships, programs & more' },
       { name: 'Events',         path: '/events',         icon: Calendar, desc: 'Meetings & calendar' },
-      { name: 'Projects',       path: '/projects',       icon: Cpu,      desc: 'Chapter project showcase' },
-      { name: 'Gallery',        path: '/gallery',        icon: Image,    desc: 'Photos & memories' },
     ]
   },
   {
@@ -518,12 +516,10 @@ export const Footer: React.FC = () => {
       { name: 'About',   path: '/about' },
       { name: 'Officers', path: '/officers' },
       { name: 'News',    path: '/news' },
-      { name: 'Gallery', path: '/gallery' },
     ],
     'Compete': [
       { name: 'Competitions', path: '/competitions' },
       { name: 'Events',       path: '/events' },
-      { name: 'Projects',     path: '/projects' },
     ],
     'Resources': [
       { name: 'Study Guides', path: '/resources' },
