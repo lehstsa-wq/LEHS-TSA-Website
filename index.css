@@ -55,8 +55,8 @@
   --glow-purple: 0 0 24px rgba(87, 78, 143, 0.32),  0 0 64px rgba(87, 78, 143, 0.10);
 
   /* Shadows — override per mode */
-  --shadow-card:       0 4px 24px rgba(0, 0, 0, 0.22);
-  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.28);
+  --shadow-card:       0 20px 50px rgba(0, 93, 170, 0.10);
+  --shadow-card-hover: 0 24px 60px rgba(0, 93, 170, 0.16);
   --shadow-elevated:   0 24px 80px rgba(0, 0, 0, 0.55);
 
   /* TSA typography */
@@ -76,6 +76,15 @@
   --login-card-bg:     rgba(16, 32, 53, 0.60);
   --login-input-bg:    rgba(4, 8, 15, 0.60);
   --login-input-border: rgba(26, 48, 80, 0.80);
+
+  /* ── Layout rhythm (public page restyle) ─────────────────── */
+  --section-py:   clamp(4rem, 8vw, 7.5rem);
+  --measure-dek:  58ch;
+  --card-radius:  1.25rem;
+  --card-pad:     3rem;
+  --stat-radius:  0.375rem;
+  --stat-pad:     2rem;
+  --c-hairline:   rgba(78, 138, 201, 0.16);
 }
 
 /* ============================================================
@@ -399,6 +408,53 @@ html.light {
     color: var(--c-text-dim);
   }
 
+  /* ── PUBLIC PAGE HEADERS (restyle) ───────────────────────── */
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
+  }
+
+  .section-h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--c-text);
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--c-blue-bright);
+    margin-bottom: 1rem;
+  }
+
+  .section-eyebrow__flank {
+    font-size: 0.5em;
+    opacity: 0.7;
+    line-height: 1;
+  }
+
+  .section-dek {
+    font-family: var(--font-body);
+    font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+    line-height: 1.36;
+    color: var(--c-text-dim);
+    max-width: var(--measure-dek);
+    margin-top: 1rem;
+  }
+
   /* ── DIVIDERS ────────────────────────────────────────────── */
   .divider {
     height: 1px;
@@ -483,6 +539,12 @@ html.light {
 /* ============================================================
    LIGHT MODE COMPONENT OVERRIDES
    ============================================================ */
+
+html.light {
+  --c-hairline: rgba(0, 0, 0, 0.08);
+}
+
+html.light .section-eyebrow { color: var(--c-blue); }
 
 html.light body {
   background-color: #FFFFFF;
@@ -889,39 +951,26 @@ html.light footer input[type="email"]   {
 /* Link hover */
 html.light footer .hover\:text-ink:hover         { color: #1a2533 !important; }
 html.light footer .hover\:text-electric-500:hover { color: #005DAA !important; }
-/* ── GLOBAL: any element with TSA-blue inline bg → white text ──
-   Covers navbar logo, check-in QR icon, footer logo, stat card icons,
-   and anything else using style={{ background/backgroundColor: '#005DAA' }}
+/* ── BRAND MARK: logo tiles and icon chips that sit on a solid brand colour.
+   These must stay white in BOTH themes. Marked with a class rather than an
+   inline-style attribute selector — React writes inline styles through the
+   CSSOM, so the reflected style attribute reads `rgb(0, 93, 170)` and any
+   [style*="#005DAA"] selector silently never matches.
+   Covers: navbar logo, mobile drawer logo, footer logo, login mark,
+   dashboard check-in QR chip, member-card chip, dashboard avatar.
    ──────────────────────────────────────────────────────────────────────── */
-html.light [style*="background: #005DAA"],
-html.light [style*="background:#005DAA"],
-html.light [style*="background-color: #005DAA"],
-html.light [style*="background-color:#005DAA"] { color: #ffffff !important; }
+.brand-mark,
+.brand-mark svg { color: #ffffff; }
 
-html.light [style*="background: #005DAA"] .text-white,
-html.light [style*="background:#005DAA"] .text-white,
-html.light [style*="background-color: #005DAA"] .text-white,
-html.light [style*="background-color:#005DAA"] .text-white { color: #ffffff !important; }
-
-html.light [style*="background: #005DAA"] svg,
-html.light [style*="background:#005DAA"] svg,
-html.light [style*="background-color: #005DAA"] svg,
-html.light [style*="background-color:#005DAA"] svg { color: #ffffff !important; }
-
-/* Also handle any element whose text-white class appears alongside a TSA-blue inline bg */
-html.light [style*="background: #005DAA"].text-white,
-html.light [style*="background:#005DAA"].text-white,
-html.light [style*="background-color: #005DAA"].text-white,
-html.light [style*="background-color:#005DAA"].text-white { color: #ffffff !important; }
+html.light .brand-mark,
+html.light .brand-mark svg,
+html.light .brand-mark .text-white,
+html.light .brand-mark [class*="text-white"] { color: #ffffff !important; }
 
 /* ── MEMBER CARD (Dashboard): always-dark gradient ── */
 html.light .member-card,
 html.light .member-card .text-white,
 html.light .member-card [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
-
-/* ── COUNTDOWN: always-dark inline background ── */
-html.light [style*="linear-gradient(135deg, #1e3a5f"] .text-white,
-html.light [style*="linear-gradient(135deg, #1e3a5f"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
 
 /* ── Solid blue/red bg elements: keep text white ── */
 /* Navbar Dashboard button, any bg-electric-500/600 element */

@@ -8,7 +8,6 @@ const pages = [
   '/competitions',
   '/officers',
   '/join',
-  '/gallery',
   '/updates',
   '/resources'
 ];

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import {
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf,
+} from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import {
   User as UserIcon, Shield, Hash, GraduationCap, LogOut,
   Save, X, Phone, Star, Edit2, CheckCircle,
-  Mail, Calendar, Activity, BookOpen, Tag, Palette, Info,
+  Mail, Calendar, Activity, BookOpen, Tag, Palette, Info, Camera,
 } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { ImageUpload } from '../components/ImageUpload';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -41,15 +44,6 @@ const gradeLabel = (grade?: string) => {
   const suffix = n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th';
   return `${n}${suffix} Grade`;
 };
-
-const avatarColorFromUrl = (url?: string): string => {
-  if (!url) return '6A9BCC';
-  const m = url.match(/background=([A-Fa-f0-9]{6})/);
-  return m ? m[1] : '6A9BCC';
-};
-
-const buildAvatarUrl = (name: string, color: string) =>
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${color}&color=fff&size=128`;
 
 // ─── Shared UI ───────────────────────────────────────────────────────────────
 
@@ -125,13 +119,15 @@ const IdentitySection: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [name, setName] = useState(user?.name ?? '');
-  const [color, setColor] = useState(avatarColorFromUrl(user?.avatar));
+  const [color, setColor] = useState(avatarColorOf(user));
+  const [photo, setPhoto] = useState<string | undefined>(avatarPhotoOf(user));
 
   if (!user) return null;
 
   const reset = () => {
     setName(user.name);
-    setColor(avatarColorFromUrl(user.avatar));
+    setColor(avatarColorOf(user));
+    setPhoto(avatarPhotoOf(user));
     setEditing(false);
   };
 
@@ -139,8 +135,13 @@ const IdentitySection: React.FC = () => {
     if (!name.trim()) return;
     setSaving(true);
     try {
-      const newAvatar = buildAvatarUrl(name.trim(), color);
-      await updateProfile({ name: name.trim(), avatar: newAvatar, avatarColor: color });
+      // A photo, when present, *is* the avatar; otherwise fall back to the
+      // generated initials tile in the chosen colour.
+      await updateProfile({
+        name: name.trim(),
+        avatar: photo || buildAvatarUrl(name.trim(), color),
+        avatarColor: color,
+      });
       setEditing(false);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -151,26 +152,24 @@ const IdentitySection: React.FC = () => {
     }
   };
 
-  const previewAvatar = buildAvatarUrl(name || user.name, color);
+  const previewAvatar = photo || buildAvatarUrl(name || user.name, color);
 
   return (
     <div className={card}>
       <SectionHeader
-        title="Identity" subtitle="Display name and avatar"
+        title="Identity" subtitle="Display name, photo, and avatar colour"
         icon={UserIcon} color="#6a9bcc"
         editing={editing} saving={saving} saved={saved}
         onEdit={() => setEditing(true)} onSave={save} onCancel={reset}
       />
-      <div className="px-6 py-5 flex items-center gap-6">
-        <div className="shrink-0">
+      <div className="px-6 py-5 space-y-5">
+        <div className="flex items-center gap-6">
           <img
             src={previewAvatar}
             alt={name || user.name}
-            className="w-20 h-20 rounded-2xl shadow-md"
+            className="w-20 h-20 rounded-2xl object-cover shrink-0"
           />
-        </div>
-        <div className="flex-1 space-y-4">
-          <div>
+          <div className="flex-1 min-w-0">
             <label className={labelCls}><UserIcon size={12} /> Display Name</label>
             {editing ? (
               <input
@@ -184,13 +183,29 @@ const IdentitySection: React.FC = () => {
               <p className="text-ink font-semibold">{user.name}</p>
             )}
           </div>
-          {editing && (
+        </div>
+
+        {editing && (
+          <>
             <div>
-              <label className={labelCls}><Palette size={12} /> Avatar Color</label>
+              <label className={labelCls}><Camera size={12} /> Profile Photo</label>
+              <ImageUpload
+                value={photo}
+                onChange={setPhoto}
+                shape="circle"
+                size={72}
+                placeholder={<span className="text-2xl font-black">{(name || user.name).charAt(0)}</span>}
+                onError={msg => showAlert('Photo', msg)}
+              />
+            </div>
+
+            <div>
+              <label className={labelCls}><Palette size={12} /> Avatar Colour</label>
               <div className="flex flex-wrap gap-2 mt-1">
                 {AVATAR_COLORS.map(c => (
                   <button
                     key={c.hex}
+                    type="button"
                     onClick={() => setColor(c.hex)}
                     title={c.label}
                     className={`w-8 h-8 rounded-lg transition-all border-2 ${
@@ -202,9 +217,14 @@ const IdentitySection: React.FC = () => {
                   />
                 ))}
               </div>
+              <p className="text-[11px] text-ink-muted mt-2">
+                {photo
+                  ? 'Your photo is shown instead of the colour tile. Remove the photo to use the colour.'
+                  : 'Used for your initials tile across the portal.'}
+              </p>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

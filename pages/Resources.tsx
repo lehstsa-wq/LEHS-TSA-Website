@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { Gear } from '../components/art/LineArt';
+import { SectionHeader, DiamondField } from '../components/sections';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   competition: BookOpen,
@@ -56,18 +56,15 @@ const Resources: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <Gear className="sr-art sr-float" size="min(22vw, 15rem)"
-          style={{ top: '6%', right: '5%', color: 'var(--sr-amber)', opacity: 0.5 }} />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4">Resources</div>
-            <h1 className="section-title text-5xl lg:text-6xl mb-6">Competition Resources</h1>
-            <p className="section-body max-w-2xl">
-              Study guides, competition rulebooks, design tools, and helpful links — everything you need to
-              walk into any TSA event prepared and confident.
-            </p>
+            <SectionHeader
+              as="h1"
+              eyebrow="Resources"
+              title="Competition Resources"
+              dek="Study guides, competition rulebooks, design tools, and helpful links — everything you need to walk into any TSA event prepared and confident."
+            />
           </motion.div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />

@@ -13,6 +13,7 @@ import { useToast } from '../context/ToastContext';
 import { COMPETITIONS } from '../data/competitions';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { DiamondField, SegmentedToggle } from '../components/sections';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -74,6 +75,20 @@ const TEAMS_COMPONENTS = [
   },
 ];
 
+type FilterType = 'all' | 'nqe' | 'ute';
+
+const TYPE_ID_TO_LABEL: Record<FilterType, string> = {
+  all: 'All Events',
+  nqe: 'NQE',
+  ute: 'UTE',
+};
+
+const TYPE_LABELS = Object.values(TYPE_ID_TO_LABEL);
+
+const TYPE_LABEL_TO_ID = Object.fromEntries(
+  Object.entries(TYPE_ID_TO_LABEL).map(([id, label]) => [label, id as FilterType]),
+) as Record<string, FilterType>;
+
 const Competitions: React.FC = () => {
   const { user } = useAuth();
   const { submitInterest, competitionLinks, competitionInterests, deleteInterest } = useData();
@@ -82,7 +97,7 @@ const Competitions: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
-  const [filterType, setFilterType] = useState<'all' | 'nqe' | 'ute'>('all');
+  const [filterType, setFilterType] = useState<FilterType>('all');
   const teamsSectionRef = useRef<HTMLElement>(null);
 
   const [skills, setSkills] = useState<string[]>([]);
@@ -176,33 +191,37 @@ const Competitions: React.FC = () => {
           HERO
       ════════════════════════════════════════ */}
       <section className="relative py-32 overflow-hidden">
-        <div className="sr-aurora" />
-        <div className="absolute inset-0 grid-bg opacity-25" />
+        <DiamondField variant="hero" />
 
         {/* Orbs */}
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
+            className="text-center"
           >
-            <div className="section-label inline-flex mb-5">2026–2027 Season</div>
+            <p className="section-eyebrow justify-center">
+              <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
+              2026–2027 Season
+              <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
+            </p>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-balance">
+            <h1 className="hero-title mb-6 text-balance">
               Compete.{' '}
               <span style={{ color: '#4E8AC9' }}>Build.</span>
               <br />
               <span style={{ color: '#EE2624' }}>Win.</span>
             </h1>
 
-            <p className="text-xl text-ink-dim leading-relaxed max-w-2xl mb-10">
+            <p className="section-dek mx-auto mb-10">
               40 official TSA events spanning engineering, coding, design, and leadership.
               Find your event, join a team, and make it to nationals.
             </p>
 
             {/* Quick-stat chips */}
-            <div className="flex flex-wrap gap-3 mb-10">
+            <div className="flex flex-wrap gap-3 mb-10 justify-center">
               {[
                 { val: '40', label: 'Total Events',  color: '#6a9bcc' },
                 { val: '8',  label: 'Categories',    color: '#d97757' },
@@ -278,25 +297,12 @@ const Competitions: React.FC = () => {
           {/* Row 1: Type filters + TEAMS button + Search */}
           <div className="flex flex-wrap gap-2 items-center">
             {/* Type pills: All / NQE / UTE */}
-            <div className="flex gap-1 shrink-0">
-              {([
-                { id: 'all', label: 'All Events' },
-                { id: 'nqe', label: 'NQE' },
-                { id: 'ute', label: 'UTE' },
-              ] as const).map(type => (
-                <button
-                  key={type.id}
-                  onClick={() => setFilterType(type.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
-                    filterType === type.id
-                      ? 'bg-electric-500 text-white border-transparent'
-                      : 'bg-space-700/50 text-ink-muted border-space-500/50 hover:text-ink'
-                  }`}
-                >
-                  {type.label}
-                </button>
-              ))}
-            </div>
+            <SegmentedToggle
+              className="shrink-0"
+              options={TYPE_LABELS}
+              value={TYPE_ID_TO_LABEL[filterType]}
+              onChange={label => setFilterType(TYPE_LABEL_TO_ID[label])}
+            />
 
             {/* Divider */}
             <div className="w-px h-5 bg-space-500/50 hidden sm:block" />
@@ -531,8 +537,8 @@ const Competitions: React.FC = () => {
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
               <div className="bg-space-800 border border-gold-500/30 rounded-2xl px-5 py-3">
-                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2025–2026 Theme</div>
-                <div className="text-sm font-black text-gold-300">Engineering the Past</div>
+                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026–2027 Theme</div>
+                <div className="text-sm font-black text-gold-300">Engineering for Good</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>

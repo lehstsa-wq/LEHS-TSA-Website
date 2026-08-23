@@ -174,7 +174,7 @@ interface SrHeroProps {
   index: string;
   chapter: string;
   ghost?: string;
-  /** extra artwork (imgs, <LineArt/>, <ArtCanvas/>) composited into the deep layer */
+  /** extra artwork (imgs, <LineArt/>) composited into the deep layer */
   art?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;

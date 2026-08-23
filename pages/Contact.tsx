@@ -3,7 +3,7 @@ import { Mail, MapPin, Instagram, Twitter, Send, ExternalLink, AlertCircle, Chec
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { Circuit } from '../components/art/LineArt';
+import { SectionHeader, DiamondField } from '../components/sections';
 
 const Contact: React.FC = () => {
   const { siteSettings, addProblemReport } = useData();
@@ -35,18 +35,15 @@ const Contact: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <Circuit className="sr-art sr-float" size="min(20vw, 14rem)"
-          style={{ top: '10%', right: '6%', color: 'var(--sr-magenta)', opacity: 0.5 }} />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4">Contact</div>
-            <h1 className="section-title text-5xl lg:text-6xl mb-6">Get in Touch</h1>
-            <p className="section-body max-w-xl">
-              Questions about membership, events, or competitions? We're here to help.
-              Reach out through the form or find us on social media.
-            </p>
+            <SectionHeader
+              as="h1"
+              eyebrow="Contact"
+              title="Get in Touch"
+              dek="Questions about membership, events, or competitions? We're here to help. Reach out through the form or find us on social media."
+            />
           </motion.div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />

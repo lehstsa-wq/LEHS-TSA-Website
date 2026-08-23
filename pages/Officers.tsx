@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { SectionHeader, DiamondField, SegmentedToggle } from '../components/sections';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Executive: 'badge-gold',
@@ -25,16 +26,15 @@ const Officers: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4">Leadership</div>
-            <h1 className="section-title text-5xl lg:text-6xl mb-6">Officer Team</h1>
-            <p className="section-body max-w-2xl">
-              Meet the students who keep LEHS TSA running — from organizing competitions to leading workshops
-              and representing the chapter at conferences.
-            </p>
+            <SectionHeader
+              as="h1"
+              eyebrow="Leadership"
+              title="Officer Team"
+              dek="Meet the students who keep LEHS TSA running — from organizing competitions to leading workshops and representing the chapter at conferences."
+            />
           </motion.div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
@@ -71,12 +71,11 @@ const Officers: React.FC = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Filter */}
         <div className="flex items-center gap-2 mb-10 flex-wrap">
-          {categories.map(c => (
-            <button key={c} onClick={() => setFilter(c as typeof filter)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${filter === c ? 'bg-electric-500 text-white' : 'bg-space-700/50 text-ink-muted hover:text-ink border border-space-500/50'}`}>
-              {c}
-            </button>
-          ))}
+          <SegmentedToggle
+            options={categories}
+            value={filter}
+            onChange={v => setFilter(v as typeof filter)}
+          />
           <span className="text-xs text-ink-muted ml-auto">{filtered.length} member{filtered.length !== 1 ? 's' : ''}</span>
         </div>
 

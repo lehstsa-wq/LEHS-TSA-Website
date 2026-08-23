@@ -4,9 +4,10 @@ import {
   Menu, X, Instagram, Twitter, MapPin, Mail,
   LogIn, LayoutDashboard, LogOut, ChevronDown,
   Search, Users, Calendar, BookOpen,
-  Newspaper, Image, Cpu, ExternalLink, ArrowRight,
+  Newspaper, Cpu, ExternalLink, ArrowRight,
   Command, Home, Info, Phone, Sun, Moon
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
@@ -16,7 +17,21 @@ import { MeasureRing, Constellation, Circuit } from './art/LineArt';
 /* ─────────────────────────────────────────────────────────────
    NAV LINK DEFINITIONS
 ───────────────────────────────────────────────────────────── */
-const NAV_GROUPS = [
+interface NavLink {
+  name: string;
+  path: string;
+  icon: LucideIcon;
+  desc: string;
+  /** Hide from nav and search for signed-out visitors; the route is auth-gated. */
+  authOnly?: boolean;
+}
+
+interface NavGroup {
+  label: string;
+  links: NavLink[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Chapter',
     links: [
@@ -30,11 +45,9 @@ const NAV_GROUPS = [
     label: 'Compete',
     links: [
       { name: 'Competitions',   path: '/competitions',   icon: Cpu,      desc: 'Explore TSA events' },
-      { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' },
-      { name: 'Opportunities',  path: '/opportunities',  icon: BookOpen, desc: 'Scholarships, programs & more' },
+      { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' , authOnly: true },
+      { name: 'Opportunities',  path: '/opportunities',  icon: BookOpen, desc: 'Scholarships, programs & more' , authOnly: true },
       { name: 'Events',         path: '/events',         icon: Calendar, desc: 'Meetings & calendar' },
-      { name: 'Projects',       path: '/projects',       icon: Cpu,      desc: 'Chapter project showcase' },
-      { name: 'Gallery',        path: '/gallery',        icon: Image,    desc: 'Photos & memories' },
     ]
   },
   {
@@ -134,9 +147,10 @@ export const Navbar: React.FC = () => {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
+  const visibleLinks = ALL_LINKS.filter(l => !l.authOnly || isAuthenticated);
   const filteredLinks = searchQuery
-    ? ALL_LINKS.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    : ALL_LINKS;
+    ? visibleLinks.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : visibleLinks;
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -154,8 +168,8 @@ export const Navbar: React.FC = () => {
 
             {/* ── Logo ── */}
             <Link to="/" className="flex items-center gap-3 group shrink-0">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: '#005DAA' }}>
-                <Cpu size={18} className="text-white" />
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: '#005DAA' }}>
+                <Cpu size={18} />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
                 <span className="font-bold text-sm text-ink tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
@@ -193,7 +207,7 @@ export const Navbar: React.FC = () => {
                         onMouseLeave={() => setActiveGroup(null)}
                         className="absolute top-full left-0 mt-2 w-64 glass rounded-2xl shadow-modal py-2 overflow-hidden"
                       >
-                        {group.links.map(link => {
+                        {group.links.filter(link => !link.authOnly || isAuthenticated).map(link => {
                           const Icon = link.icon;
                           return (
                             <Link
@@ -338,8 +352,8 @@ export const Navbar: React.FC = () => {
               {/* Mobile nav header */}
               <div className="flex items-center justify-between p-5 border-b border-space-500/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#005DAA' }}>
-                    <Cpu size={16} className="text-white" />
+                  <div className="brand-mark w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#005DAA' }}>
+                    <Cpu size={16} />
                   </div>
                   <span className="font-bold text-ink" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
                 </div>
@@ -356,7 +370,7 @@ export const Navbar: React.FC = () => {
                       {group.label}
                     </div>
                     <div className="space-y-1">
-                      {group.links.map(link => {
+                      {group.links.filter(link => !link.authOnly || isAuthenticated).map(link => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -518,12 +532,10 @@ export const Footer: React.FC = () => {
       { name: 'About',   path: '/about' },
       { name: 'Officers', path: '/officers' },
       { name: 'News',    path: '/news' },
-      { name: 'Gallery', path: '/gallery' },
     ],
     'Compete': [
       { name: 'Competitions', path: '/competitions' },
       { name: 'Events',       path: '/events' },
-      { name: 'Projects',     path: '/projects' },
     ],
     'Resources': [
       { name: 'Study Guides', path: '/resources' },
@@ -544,8 +556,8 @@ export const Footer: React.FC = () => {
           {/* Brand column (2 cols on lg) */}
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
-                <Cpu size={18} className="text-white" style={{ color: '#ffffff' }} />
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
+                <Cpu size={18} />
               </div>
               <div>
                 <div className="font-bold text-ink text-sm" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</div>

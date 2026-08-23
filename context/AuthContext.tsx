@@ -22,6 +22,29 @@ interface AuthContextType {
   isOfficer: boolean;
 }
 
+/* ── Avatar helpers ──────────────────────────────────────────────────────────
+   A member's avatar is either an uploaded photo (a data URL) or a generated
+   initials tile whose colour comes from `avatarColor`. Older accounts only ever
+   stored the generated URL, so the colour is recovered from it as a fallback. */
+
+export const DEFAULT_AVATAR_COLOR = '6A9BCC';
+
+export const buildAvatarUrl = (name: string, color: string) =>
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Member')}&background=${color}&color=fff&size=256`;
+
+/** True when the avatar is a generated initials tile rather than a real photo. */
+export const isGeneratedAvatar = (url?: string) => !url || url.includes('ui-avatars.com');
+
+export const avatarColorOf = (user?: Pick<User, 'avatar' | 'avatarColor'> | null): string => {
+  if (user?.avatarColor) return user.avatarColor.replace('#', '');
+  const match = user?.avatar?.match(/background=([A-Fa-f0-9]{6})/);
+  return match ? match[1] : DEFAULT_AVATAR_COLOR;
+};
+
+/** The uploaded photo, if the member has one. */
+export const avatarPhotoOf = (user?: Pick<User, 'avatar'> | null): string | undefined =>
+  isGeneratedAvatar(user?.avatar) ? undefined : user?.avatar;
+
 // Emails that automatically get Officer status (Fallback for legacy/admin accounts)
 const OFFICER_EMAILS = [
   'sai@saimail.com',
@@ -231,7 +254,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // 1. Verify Access Code exists and is unused
     const codeRef = doc(db, "access_codes", formattedCode);
-    const codeSnap = await getDoc(codeRef);
+    let codeSnap;
+    try {
+      codeSnap = await getDoc(codeRef);
+    } catch (e) {
+      console.error("Could not read access code:", e);
+      throw new Error("We couldn't verify that access code right now. Please try again or contact an officer.");
+    }
 
     if (!codeSnap.exists()) {
       throw new Error("Invalid Access Code. Please contact an officer.");
@@ -259,18 +288,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           grade,
           status: 'active',
           joinDate: new Date().toISOString().split('T')[0],
-          avatar: `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=3B6DF6&color=fff`
+          avatarColor: DEFAULT_AVATAR_COLOR,
+          avatar: buildAvatarUrl(name, DEFAULT_AVATAR_COLOR)
         };
 
-        // 4. Parallelize Firestore Operations
-        await Promise.all([
-          updateDoc(codeRef, {
+        // 4. Write the profile first — it is what gates access to the portal.
+        await setDoc(doc(db, "members", firebaseUser.uid), newUser);
+
+        // 5. Claim the code. A failure here must not strand the new account,
+        //    so log it and let an officer reconcile from the admin panel.
+        try {
+          await updateDoc(codeRef, {
             status: 'used',
             assignedTo: name,
             assignedUid: firebaseUser.uid
-          }),
-          setDoc(doc(db, "members", firebaseUser.uid), newUser)
-        ]);
+          });
+        } catch (claimError) {
+          console.error("Account created but access code could not be marked as used:", claimError);
+        }
 
         setUser(newUser);
     } catch (error: any) {
@@ -293,10 +328,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (data: Partial<User>) => {
     if (!user) return;
+    // Firestore rejects `undefined`, and merge:true tolerates a profile
+    // document that was never written (older accounts, recovery flows).
+    const clean = Object.fromEntries(
+      Object.entries(data).filter(([, v]) => v !== undefined)
+    ) as Partial<User>;
     try {
       const docRef = doc(db, "members", user.id);
-      await updateDoc(docRef, data);
-      setUser(prev => prev ? { ...prev, ...data } : null);
+      await setDoc(docRef, clean, { merge: true });
+      setUser(prev => prev ? { ...prev, ...clean } : null);
     } catch (error) {
       console.error("Error updating profile:", error);
       throw error;
