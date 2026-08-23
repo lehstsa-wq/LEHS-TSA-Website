@@ -20,7 +20,8 @@ const CONFIG = {
  * Decorative rotated-square lattice in TSA blue. Never conveys information.
  */
 export const DiamondField: React.FC<DiamondFieldProps> = ({ variant, className = '' }) => {
-  const patternId = useId();
+  // useId() embeds ':' which is invalid in CSS selectors — strip it so url(#id) is safe.
+  const patternId = `diamond-${useId().replace(/:/g, '')}`;
   const { size, opacity, stroke } = CONFIG[variant];
   const half = size / 2;
 
