@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useScroll, useMotionValueEvent, useReducedMotion } from 'motion/react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useReducedMotion } from 'motion/react';
 
 export interface Stage {
   /** Short ordinal shown beside the title, e.g. "01". */
@@ -38,15 +38,30 @@ export const StageScene: React.FC<StageSceneProps> = ({
   const [active, setActive] = useState(0);
   const prefersReduced = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: trackRef,
-    offset: ['start start', 'end end'],
-  });
-
-  useMotionValueEvent(scrollYProgress, 'change', p => {
-    const next = Math.min(stages.length - 1, Math.floor(p * stages.length));
+  // A passive scroll listener rather than an animation-frame-driven motion
+  // value: this stays correct when the tab is backgrounded (where rAF is
+  // throttled), and it is directly observable in tests.
+  const syncStage = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const scrubbable = rect.height - window.innerHeight;
+    if (scrubbable <= 0) return;
+    const progress = Math.min(1, Math.max(0, -rect.top / scrubbable));
+    const next = Math.min(stages.length - 1, Math.floor(progress * stages.length));
     setActive(prev => (prev === next ? prev : next));
-  });
+  }, [stages.length]);
+
+  useEffect(() => {
+    if (prefersReduced) return;
+    syncStage();
+    window.addEventListener('scroll', syncStage, { passive: true });
+    window.addEventListener('resize', syncStage);
+    return () => {
+      window.removeEventListener('scroll', syncStage);
+      window.removeEventListener('resize', syncStage);
+    };
+  }, [syncStage, prefersReduced]);
 
   const header = (
     <div className="text-center">
