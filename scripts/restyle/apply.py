@@ -5,7 +5,7 @@ import re, sys
 HERO_TRIO = re.compile(
     r'[ \t]*<div className="section-label inline-flex mb-4">(?P<eyebrow>[^<]+)</div>\n'
     r'[ \t]*<h1 className="section-title text-5xl lg:text-6xl mb-6">(?P<title>[^<]+)</h1>\n'
-    r'[ \t]*<p className="section-body max-w-2xl">\n'
+    r'[ \t]*<p className="section-body[^"]*">\n'
     r'(?P<dek>(?:[^\n]*\n)+?)'
     r'[ \t]*</p>\n'
 )
@@ -13,8 +13,15 @@ HERO_TRIO = re.compile(
 CENTERED_HEADER = re.compile(
     r'[ \t]*<motion\.div\n'
     r'(?:[ \t]*(?:initial|whileInView|viewport|transition)=\{[^\n]*\n)+'
-    r'[ \t]*className="text-center mb-16"\n'
+    r'[ \t]*className="text-center[^"]*"\n'
     r'[ \t]*>\n'
+    r'[ \t]*<div className="section-label inline-flex mb-4">(?P<eyebrow>[^<]+)</div>\n'
+    r'[ \t]*<h2 className="section-title(?P<h2cls>[^"]*)">(?P<title>[^<]+)</h2>\n'
+    r'[ \t]*</motion\.div>\n'
+)
+
+CENTERED_HEADER_INLINE = re.compile(
+    r'[ \t]*<motion\.div [^\n]*className="text-center[^"]*"[^\n]*>\n'
     r'[ \t]*<div className="section-label inline-flex mb-4">(?P<eyebrow>[^<]+)</div>\n'
     r'[ \t]*<h2 className="section-title(?P<h2cls>[^"]*)">(?P<title>[^<]+)</h2>\n'
     r'[ \t]*</motion\.div>\n'
@@ -61,6 +68,7 @@ def apply(path):
 
     src = HERO_TRIO.sub(hero_sub, src)
     src = CENTERED_HEADER.sub(centered_sub, src)
+    src = CENTERED_HEADER_INLINE.sub(centered_sub, src)
     src = DECOR.sub(decor_sub, src)
 
     open(path, 'w').write(src)

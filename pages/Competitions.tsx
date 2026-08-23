@@ -13,6 +13,7 @@ import { useToast } from '../context/ToastContext';
 import { COMPETITIONS } from '../data/competitions';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { DiamondField } from '../components/sections';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -176,8 +177,7 @@ const Competitions: React.FC = () => {
           HERO
       ════════════════════════════════════════ */}
       <section className="relative py-32 overflow-hidden">
-        <div className="sr-aurora" />
-        <div className="absolute inset-0 grid-bg opacity-25" />
+        <DiamondField variant="hero" />
 
         {/* Orbs */}
 

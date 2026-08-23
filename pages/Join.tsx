@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, FileCheck, CreditCard
 import { motion, AnimatePresence } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { SectionHeader, DiamondField } from '../components/sections';
 
 /* ─────────────────────────────────────────────────────────────
    BENEFITS
@@ -130,16 +131,15 @@ const Join: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="section-label inline-flex mb-4">Membership</div>
-            <h1 className="section-title text-5xl lg:text-6xl mb-6">Join Little Elm TSA</h1>
-            <p className="section-body max-w-2xl mx-auto">
-              Membership opens the door to 30+ competitive events, national conferences, leadership roles, and a community
-              of the most driven STEM students in Texas. Here's how to get in.
-            </p>
+            <SectionHeader
+              as="h1"
+              eyebrow="Membership"
+              title="Join Little Elm TSA"
+              dek="Membership opens the door to 30+ competitive events, national conferences, leadership roles, and a community of the most driven STEM students in Texas. Here's how to get in."
+            />
           </motion.div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
@@ -147,10 +147,11 @@ const Join: React.FC = () => {
 
       {/* ── Benefits ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-14">
-          <div className="section-label inline-flex mb-4">Why Join?</div>
-          <h2 className="section-title mb-4">Everything membership unlocks</h2>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Why Join?"
+          title="Everything membership unlocks"
+          className="mb-16"
+        />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {BENEFITS.map((b, i) => {
             return (
@@ -250,10 +251,11 @@ const Join: React.FC = () => {
       {/* ── FAQ ── */}
       <section className="py-20 bg-space-950/60 border-t border-space-500/30">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-12">
-            <div className="section-label inline-flex mb-4">FAQ</div>
-            <h2 className="section-title">Common questions</h2>
-          </motion.div>
+          <SectionHeader
+            eyebrow="FAQ"
+            title="Common questions"
+            className="mb-16"
+          />
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: i * 0.06 }}>
