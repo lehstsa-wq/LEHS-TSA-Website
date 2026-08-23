@@ -7,6 +7,7 @@ import {
   Newspaper, Cpu, ExternalLink, ArrowRight,
   Command, Home, Info, Phone, Sun, Moon
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
@@ -16,7 +17,21 @@ import { MeasureRing, Constellation, Circuit } from './art/LineArt';
 /* ─────────────────────────────────────────────────────────────
    NAV LINK DEFINITIONS
 ───────────────────────────────────────────────────────────── */
-const NAV_GROUPS = [
+interface NavLink {
+  name: string;
+  path: string;
+  icon: LucideIcon;
+  desc: string;
+  /** Hide from nav and search for signed-out visitors; the route is auth-gated. */
+  authOnly?: boolean;
+}
+
+interface NavGroup {
+  label: string;
+  links: NavLink[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Chapter',
     links: [
@@ -30,8 +45,8 @@ const NAV_GROUPS = [
     label: 'Compete',
     links: [
       { name: 'Competitions',   path: '/competitions',   icon: Cpu,      desc: 'Explore TSA events' },
-      { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' },
-      { name: 'Opportunities',  path: '/opportunities',  icon: BookOpen, desc: 'Scholarships, programs & more' },
+      { name: 'Teams',          path: '/teams',          icon: Users,    desc: 'Form & join competition teams' , authOnly: true },
+      { name: 'Opportunities',  path: '/opportunities',  icon: BookOpen, desc: 'Scholarships, programs & more' , authOnly: true },
       { name: 'Events',         path: '/events',         icon: Calendar, desc: 'Meetings & calendar' },
     ]
   },
@@ -132,9 +147,10 @@ export const Navbar: React.FC = () => {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
+  const visibleLinks = ALL_LINKS.filter(l => !l.authOnly || isAuthenticated);
   const filteredLinks = searchQuery
-    ? ALL_LINKS.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    : ALL_LINKS;
+    ? visibleLinks.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : visibleLinks;
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -191,7 +207,7 @@ export const Navbar: React.FC = () => {
                         onMouseLeave={() => setActiveGroup(null)}
                         className="absolute top-full left-0 mt-2 w-64 glass rounded-2xl shadow-modal py-2 overflow-hidden"
                       >
-                        {group.links.map(link => {
+                        {group.links.filter(link => !link.authOnly || isAuthenticated).map(link => {
                           const Icon = link.icon;
                           return (
                             <Link
@@ -354,7 +370,7 @@ export const Navbar: React.FC = () => {
                       {group.label}
                     </div>
                     <div className="space-y-1">
-                      {group.links.map(link => {
+                      {group.links.filter(link => !link.authOnly || isAuthenticated).map(link => {
                         const Icon = link.icon;
                         return (
                           <Link
