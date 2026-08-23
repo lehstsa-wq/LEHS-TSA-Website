@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { SectionHeader, DiamondField, StatCard, Reveal } from '../components/sections';
 
 /* ─────────────────────────────────────────────────────────────
    TIMELINE DATA
@@ -52,8 +53,7 @@ const About: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <DiamondField variant="hero" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -61,12 +61,12 @@ const About: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="section-label inline-flex mb-4">Our Chapter</div>
-            <h1 className="section-title text-5xl lg:text-6xl mb-6">About LEHS TSA</h1>
-            <p className="section-body max-w-2xl">
-              We're a student-run Technology Student Association chapter dedicated to
-              developing the next generation of tech leaders through competition, collaboration, and community.
-            </p>
+            <SectionHeader
+              as="h1"
+              eyebrow="Our Chapter"
+              title="About LEHS TSA"
+              dek="We're a student-run Technology Student Association chapter dedicated to developing the next generation of tech leaders through competition, collaboration, and community."
+            />
           </motion.div>
         </div>
 
@@ -110,22 +110,14 @@ const About: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: '50',  label: 'Active Members',      color: '#6a9bcc' },
-              { val: '20',  label: 'State Qualifiers',    color: '#d97757' },
-              { val: '14',  label: 'National Qualifiers', color: '#6a9bcc' },
-              { val: '5',    label: 'Years of Excellence', color: '#788c5d' },
+              { val: 50,  label: 'Active Members',      color: '#6a9bcc' },
+              { val: 20,  label: 'State Qualifiers',    color: '#d97757' },
+              { val: 14,  label: 'National Qualifiers', color: '#6a9bcc' },
+              { val: 5,   label: 'Years of Excellence', color: '#788c5d' },
             ].map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="card text-center group"
-              >
-                <div className="text-3xl font-black text-ink mb-1" style={{ color: s.color }}>{s.val}</div>
-                <div className="text-xs text-ink-muted">{s.label}</div>
-              </motion.div>
+              <Reveal key={i} delay={i * 80}>
+                <StatCard value={s.val} label={s.label} accent={s.color} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -134,16 +126,11 @@ const About: React.FC = () => {
       {/* ── Mission & Values ── */}
       <section className="py-20 bg-space-950/60 border-y border-space-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <div className="section-label inline-flex mb-4">What Drives Us</div>
-            <h2 className="section-title mb-4">Mission & Values</h2>
-          </motion.div>
+          <SectionHeader
+            eyebrow="What Drives Us"
+            title="Mission & Values"
+            className="mb-16"
+          />
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -181,16 +168,11 @@ const About: React.FC = () => {
 
       {/* ── Timeline ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <div className="section-label inline-flex mb-4">Our Story</div>
-          <h2 className="section-title">Chapter Milestones</h2>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Our Story"
+          title="Chapter Milestones"
+          className="mb-16"
+        />
 
         <div className="relative">
           {/* Center line */}
