@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 interface SegmentedToggleProps {
   options: readonly string[];
@@ -7,18 +7,46 @@ interface SegmentedToggleProps {
   className?: string;
 }
 
-/** Pill switch. Arrow keys move between options, matching radiogroup semantics. */
+/**
+ * Pill switch with radiogroup semantics: only the selected option is in the tab
+ * order, and arrow keys move both selection and focus.
+ *
+ * Focus must move with the selection. Without it the previously focused button
+ * keeps focus while dropping to tabIndex -1, and because the key handler closes
+ * over that button's index, every later arrow press recomputes from the same
+ * stale index — navigation advances one step and then sticks.
+ */
 export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
   options,
   value,
   onChange,
   className = '',
 }) => {
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    let next: number;
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        next = (index + 1) % options.length;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        next = (index - 1 + options.length) % options.length;
+        break;
+      case 'Home':
+        next = 0;
+        break;
+      case 'End':
+        next = options.length - 1;
+        break;
+      default:
+        return;
+    }
     e.preventDefault();
-    const offset = e.key === 'ArrowRight' ? 1 : -1;
-    onChange(options[(index + offset + options.length) % options.length]);
+    onChange(options[next]);
+    buttons.current[next]?.focus();
   };
 
   return (
@@ -32,6 +60,7 @@ export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
         return (
           <button
             key={option}
+            ref={el => { buttons.current[i] = el; }}
             type="button"
             role="radio"
             aria-checked={selected}
