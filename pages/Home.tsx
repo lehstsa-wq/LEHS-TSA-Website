@@ -110,7 +110,7 @@ const MarqueeRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
    HOME PAGE
 ───────────────────────────────────────────────────────────── */
 const Home: React.FC = () => {
-  const { announcements, eventsList, siteSettings } = useData();
+  const { announcements, eventsList, nextEvent } = useData();
   const latestNews = announcements.slice(0, 3);
   const upcomingEvents = eventsList
     .filter(e => e.status === 'Upcoming')
@@ -218,12 +218,19 @@ const Home: React.FC = () => {
               {/* Mini cards below the artifact */}
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {[
-                  { label: 'Next Event', value: siteSettings.nextEventTitle || 'State Conference' },
+                  {
+                    label: 'Next Event',
+                    value: nextEvent?.title ?? 'To be announced',
+                    sub: nextEvent
+                      ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                      : undefined,
+                  },
                   { label: 'Chapter Status', value: 'Active — TX' },
                 ].map((item, i) => (
                   <div key={i} className="glass-card rounded-xl p-4">
                     <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
-                    <div className="text-sm font-semibold text-ink">{item.value}</div>
+                    <div className="text-sm font-semibold text-ink truncate">{item.value}</div>
+                    {item.sub && <div className="text-[11px] text-ink-muted mt-0.5">{item.sub}</div>}
                   </div>
                 ))}
               </div>

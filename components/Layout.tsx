@@ -154,8 +154,8 @@ export const Navbar: React.FC = () => {
 
             {/* ── Logo ── */}
             <Link to="/" className="flex items-center gap-3 group shrink-0">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: '#005DAA' }}>
-                <Cpu size={18} className="text-white" />
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: '#005DAA' }}>
+                <Cpu size={18} />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
                 <span className="font-bold text-sm text-ink tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
@@ -338,8 +338,8 @@ export const Navbar: React.FC = () => {
               {/* Mobile nav header */}
               <div className="flex items-center justify-between p-5 border-b border-space-500/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#005DAA' }}>
-                    <Cpu size={16} className="text-white" />
+                  <div className="brand-mark w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#005DAA' }}>
+                    <Cpu size={16} />
                   </div>
                   <span className="font-bold text-ink" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
                 </div>
@@ -544,8 +544,8 @@ export const Footer: React.FC = () => {
           {/* Brand column (2 cols on lg) */}
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
-                <Cpu size={18} className="text-white" style={{ color: '#ffffff' }} />
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
+                <Cpu size={18} />
               </div>
               <div>
                 <div className="font-bold text-ink text-sm" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</div>

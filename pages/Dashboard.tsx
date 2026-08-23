@@ -5,7 +5,7 @@ import {
   BookOpen, ExternalLink, Users, QrCode, LogOut,
   Code, Cpu,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, avatarColorOf, avatarPhotoOf } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 
@@ -24,6 +24,7 @@ const Dashboard: React.FC = () => {
   const recentResources = resources.slice(0, 3);
   const myInterests = competitionInterests.filter(i => i.userId === user?.id);
   const firstName = user?.name?.split(' ')[0] ?? 'Member';
+  const photo = avatarPhotoOf(user);
 
   const UPDATE_DOT_COLORS: Record<string, string> = {
     Announcement: '#EE2624',
@@ -42,13 +43,13 @@ const Dashboard: React.FC = () => {
 
             {/* Avatar + name */}
             <div className="flex items-center gap-5">
-              <div className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center text-white text-3xl font-black flex-shrink-0 border-2 border-white/10 overflow-hidden"
+              <div className="brand-mark relative w-[72px] h-[72px] rounded-full flex items-center justify-center text-3xl font-black flex-shrink-0 border-2 border-white/10 overflow-hidden"
                 style={{
-                  background: 'linear-gradient(135deg, #005DAA, #4E8AC9)',
+                  background: `#${avatarColorOf(user)}`,
                   boxShadow: 'none',
                 }}>
-                {user?.avatar
-                  ? <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                {photo
+                  ? <img src={photo} alt="Avatar" className="w-full h-full object-cover" />
                   : firstName.charAt(0)}
               </div>
               <div>
@@ -102,7 +103,7 @@ const Dashboard: React.FC = () => {
             <Link to="/check-in"
               className="flex items-center gap-4 p-4 rounded-2xl border border-electric-300/30 transition-all group bg-electric-100 hover:bg-electric-200"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white"
+              <div className="brand-mark w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{ background: '#005DAA' }}>
                 <QrCode size={22} />
               </div>
@@ -238,7 +239,7 @@ const Dashboard: React.FC = () => {
                     </p>
                     <p className="text-base font-bold tracking-wide">LEHS Chapter</p>
                   </div>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.18)' }}>
                     <Cpu size={17} />
                   </div>

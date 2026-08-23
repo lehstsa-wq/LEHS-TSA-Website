@@ -4,7 +4,7 @@ import {
   Search, Users, Filter, GraduationCap, Shield,
   Phone, Mail, Tag, X, ChevronDown
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, avatarColorOf, avatarPhotoOf } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { Constellation } from '../components/art/LineArt';
@@ -33,6 +33,7 @@ const gradeLabel = (g?: string) => {
 const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, showContact }) => {
   const [expanded, setExpanded] = useState(false);
   const hasDetails = (member.skills?.length ?? 0) > 0 || (member.interests?.length ?? 0) > 0 || member.bio;
+  const photo = avatarPhotoOf(member);
 
   return (
     <motion.div
@@ -46,10 +47,13 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="shrink-0">
-          {member.avatar ? (
-            <img src={member.avatar} alt={member.name} className="w-14 h-14 rounded-2xl object-cover" />
+          {photo ? (
+            <img src={photo} alt={member.name} className="w-14 h-14 rounded-2xl object-cover" />
           ) : (
-            <div className="w-14 h-14 rounded-2xl bg-electric-500/20 flex items-center justify-center text-electric-400 text-xl font-bold">
+            <div
+              className="brand-mark w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold"
+              style={{ background: `#${avatarColorOf(member)}` }}
+            >
               {member.name.charAt(0)}
             </div>
           )}

@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { 
   collection, 
   doc, 
@@ -97,6 +97,38 @@ const MOCK_RESOURCES: ResourceLink[] = [
 
 const MOCK_REPORTS: ProblemReport[] = [];
 
+// Firestore rejects documents containing `undefined`; forms produce it freely.
+const stripUndefined = <T extends object>(obj: T): Partial<T> =>
+  Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
+
+/**
+ * Absolute timestamp for an event. `date` is YYYY-MM-DD and `time` is either
+ * "15:45" (from a time input) or "3:45 PM" (hand-entered legacy data).
+ */
+export const eventTimestamp = (event: Pick<Event, 'date' | 'time'>): number => {
+  const [y, m, d] = (event.date || '').split('-').map(Number);
+  if (!y || !m || !d) return NaN;
+  let hours = 0;
+  let minutes = 0;
+  const raw = (event.time || '').trim();
+  const match = raw.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+  if (match) {
+    hours = parseInt(match[1], 10);
+    minutes = match[2] ? parseInt(match[2], 10) : 0;
+    const meridiem = match[3]?.toLowerCase();
+    if (meridiem === 'pm' && hours < 12) hours += 12;
+    if (meridiem === 'am' && hours === 12) hours = 0;
+  }
+  return new Date(y, m - 1, d, hours, minutes).getTime();
+};
+
+/** The event the countdown and home page headline should point at. */
+export interface NextEvent {
+  title: string;
+  date: string; // ISO
+  source: 'manual' | 'calendar';
+}
+
 interface DataContextType {
   announcements: Announcement[];
   members: User[];
@@ -129,11 +161,15 @@ interface DataContextType {
   projectsList: Project[];
   galleryList: GalleryItem[];
   accessCodes: AccessCode[];
-  
+
+  /** Manual override from Settings when it's still in the future, else the next calendar event. */
+  nextEvent: NextEvent | null;
+
   addAnnouncement: (announcement: Omit<Announcement, 'id' | 'date' | 'author'>) => void;
   updateAnnouncement: (id: string, data: Partial<Announcement>) => void;
   deleteAnnouncement: (id: string) => void;
   
+  updateMember: (id: string, data: Partial<User>) => Promise<void>;
   updateMemberRole: (id: string, role: User['role']) => void;
   updateMemberStatus: (id: string, status: User['status']) => void;
   updateMemberRequirement: (id: string, field: 'duesPaid' | 'appCompleted' | 'remindJoined', value: boolean) => void;
@@ -419,6 +455,35 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const { user } = useAuth();
 
+  // The manual "Next Major Event" override wins only while it is still ahead of
+  // us; once it lapses (or was never set) we fall back to the soonest upcoming
+  // event on the calendar so the countdown never goes stale.
+  const nextEvent = useMemo<NextEvent | null>(() => {
+    const now = Date.now();
+
+    const manual = siteSettings.nextEventDate ? new Date(siteSettings.nextEventDate).getTime() : NaN;
+    if (!isNaN(manual) && manual > now) {
+      return {
+        title: siteSettings.nextEventTitle || 'Upcoming Event',
+        date: new Date(manual).toISOString(),
+        source: 'manual',
+      };
+    }
+
+    const soonest = eventsList
+      .filter(e => e.status !== 'Cancelled')
+      .map(e => ({ event: e, at: eventTimestamp(e) }))
+      .filter(x => !isNaN(x.at) && x.at > now)
+      .sort((a, b) => a.at - b.at)[0];
+
+    if (!soonest) return null;
+    return {
+      title: soonest.event.title,
+      date: new Date(soonest.at).toISOString(),
+      source: 'calendar',
+    };
+  }, [siteSettings.nextEventDate, siteSettings.nextEventTitle, eventsList]);
+
   /* --- ACTIONS --- */
 
   const addAnnouncement = async (newAnnouncement: Omit<Announcement, 'id' | 'date' | 'author'>) => {
@@ -453,6 +518,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {
         console.error("Error deleting announcement:", e);
     }
+  };
+
+  const updateMember = async (id: string, data: Partial<User>) => {
+      const clean = stripUndefined(data);
+      const previous = members.find(m => m.id === id);
+      setMembers(prev => prev.map(m => m.id === id ? { ...m, ...clean } : m));
+      try {
+          await setDoc(doc(db, "members", id), clean, { merge: true });
+      } catch (e) {
+          console.error("Error updating member:", e);
+          if (previous) setMembers(prev => prev.map(m => m.id === id ? previous : m));
+          throw e;
+      }
   };
 
   const updateMemberRole = async (id: string, role: User['role']) => {
@@ -623,18 +701,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newOfficer = { ...officer, id: Date.now().toString() };
       setOfficersList(prev => [...prev, newOfficer]);
       try {
-          await setDoc(doc(db, "officers", newOfficer.id), newOfficer);
+          await setDoc(doc(db, "officers", newOfficer.id), stripUndefined(newOfficer));
       } catch (e) {
           console.error("Error adding officer:", e);
+          setOfficersList(prev => prev.filter(o => o.id !== newOfficer.id));
+          throw e;
       }
   };
 
   const updateOfficer = async (id: string, data: Partial<Officer>) => {
+      const previous = officersList.find(o => o.id === id);
       setOfficersList(prev => prev.map(o => o.id === id ? { ...o, ...data } : o));
       try {
-          await setDoc(doc(db, "officers", id), data, { merge: true });
+          await setDoc(doc(db, "officers", id), stripUndefined(data), { merge: true });
       } catch (e) {
           console.error("Error updating officer:", e);
+          if (previous) setOfficersList(prev => prev.map(o => o.id === id ? previous : o));
+          throw e;
       }
   };
 
@@ -735,16 +818,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           assignedTo: assignedName || undefined 
       };
 
-      // Remove undefined fields before saving to Firestore
-      const firestoreData = Object.fromEntries(
-        Object.entries(newCode).filter(([_, v]) => v !== undefined)
-      );
+      // Show it immediately; the Firestore listener reconciles a moment later.
+      setAccessCodes(prev => [...prev, newCode]);
 
       try {
-          await setDoc(doc(db, "access_codes", code), firestoreData);
+          await setDoc(doc(db, "access_codes", code), stripUndefined(newCode));
       } catch (e) {
+          // Roll back rather than leaving a code on screen that was never saved.
           console.error("Error generating access code:", e);
-          setAccessCodes(prev => [...prev, newCode]);
+          setAccessCodes(prev => prev.filter(c => c.id !== code));
+          throw e;
       }
       return code;
   };
@@ -795,7 +878,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // 3. Firestore Operations
           await Promise.all([
               // Create new code
-              setDoc(doc(db, "access_codes", newCodeId), newCode),
+              setDoc(doc(db, "access_codes", newCodeId), stripUndefined(newCode)),
               // Update member
               setDoc(doc(db, "members", memberUid), { memberId: newCodeId }, { merge: true }),
               // Delete old code
@@ -958,9 +1041,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       competitionLinks, updateCompetitionLinks,
       competitionResults, addCompetitionResult, updateCompetitionResult, deleteCompetitionResult,
       meetings, addMeeting, updateMeeting, deleteMeeting, checkInMeeting,
-      officersList, eventsList, projectsList, galleryList, accessCodes,
+      officersList, eventsList, projectsList, galleryList, accessCodes, nextEvent,
       addAnnouncement, updateAnnouncement, deleteAnnouncement,
-      updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,
+      updateMember, updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,
       addResource, updateResource, deleteResource,
       addInternalDeadline, toggleDeadlineStatus,
       updateSiteSettings, submitInterest, deleteInterest,

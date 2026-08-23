@@ -69,7 +69,7 @@ const Login: React.FC = () => {
 
           {/* Logo + title */}
           <div className="text-center mb-7">
-            <div className="w-14 h-14 rounded-[14px] mx-auto mb-4 flex items-center justify-center text-white"
+            <div className="brand-mark w-14 h-14 rounded-[14px] mx-auto mb-4 flex items-center justify-center"
               style={{
                 background: '#005DAA',
                 boxShadow: 'none',

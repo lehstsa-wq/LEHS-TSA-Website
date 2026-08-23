@@ -14,9 +14,10 @@ import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import { useToast } from '../context/ToastContext';
-import { Officer, Announcement } from '../types';
+import { Officer, Announcement, User } from '../types';
 import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
+import { ImageUpload } from '../components/ImageUpload';
 
 type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
@@ -127,6 +128,40 @@ const AdminPanel: React.FC = () => {
     </div>
   );
 };
+
+/** Scrollable edit dialog shared by the leadership and member editors. */
+const EditorModal: React.FC<{
+    title: string;
+    saving?: boolean;
+    onCancel: () => void;
+    onSave: () => void;
+    children: React.ReactNode;
+}> = ({ title, saving, onCancel, onSave, children }) => (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4" onClick={onCancel}>
+        <div
+            className="bg-space-800 border border-space-500/30 rounded-2xl shadow-modal w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden"
+            onClick={e => e.stopPropagation()}
+        >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-space-500/30 shrink-0">
+                <h3 className="font-bold text-ink">{title}</h3>
+                <button onClick={onCancel} className="text-ink-muted hover:text-ink transition-colors"><X size={20} /></button>
+            </div>
+            <div className="px-6 py-5 overflow-y-auto">{children}</div>
+            <div className="px-6 py-4 border-t border-space-500/30 flex justify-end gap-3 bg-space-700/30 shrink-0">
+                <button onClick={onCancel} className="px-4 py-2 text-sm font-bold text-ink-muted hover:text-ink rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button
+                    onClick={onSave}
+                    disabled={saving}
+                    className={`${buttonClass} bg-electric-500 text-white hover:bg-electric-400 disabled:opacity-50`}
+                >
+                    <Save size={15} /> {saving ? 'Saving…' : 'Save Changes'}
+                </button>
+            </div>
+        </div>
+    </div>
+);
 
 /* --- TAB COMPONENTS --- */
 
@@ -266,16 +301,160 @@ const IssuesTab: React.FC = () => {
     );
 };
 
+const MEMBER_GRADES = ['9', '10', '11', '12', 'Faculty', 'Alumni'];
+
+/** Fields an officer can edit on someone else's member record. */
+const MemberEditor: React.FC<{
+    member: User;
+    canChangeRole: boolean;
+    onClose: () => void;
+}> = ({ member, canChangeRole, onClose }) => {
+    const { updateMember } = useData();
+    const { alert: showAlert } = useModal();
+    const [saving, setSaving] = useState(false);
+    const [draft, setDraft] = useState({
+        name: member.name ?? '',
+        email: member.email ?? '',
+        phone: member.phone ?? '',
+        grade: member.grade ?? '',
+        bio: member.bio ?? '',
+        role: member.role,
+        status: member.status ?? 'active',
+        duesPaid: !!member.duesPaid,
+        appCompleted: !!member.appCompleted,
+        remindJoined: !!member.remindJoined,
+    });
+
+    const set = (patch: Partial<typeof draft>) => setDraft(prev => ({ ...prev, ...patch }));
+
+    const save = async () => {
+        if (!draft.name.trim()) {
+            await showAlert('Missing name', 'A member needs a name.');
+            return;
+        }
+        setSaving(true);
+        try {
+            await updateMember(member.id, {
+                name: draft.name.trim(),
+                email: draft.email.trim(),
+                phone: draft.phone.trim(),
+                grade: draft.grade,
+                bio: draft.bio.trim(),
+                role: draft.role,
+                status: draft.status,
+                duesPaid: draft.duesPaid,
+                appCompleted: draft.appCompleted,
+                remindJoined: draft.remindJoined,
+            });
+            onClose();
+        } catch {
+            await showAlert('Error', 'Could not save those changes. Check your connection and try again.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <EditorModal title={`Edit ${member.name}`} saving={saving} onCancel={onClose} onSave={save}>
+            <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className={labelClass}>Name</label>
+                        <input value={draft.name} onChange={e => set({ name: e.target.value })} className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Email</label>
+                        <input value={draft.email} onChange={e => set({ email: e.target.value })} className={inputClass} />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Phone</label>
+                        <input value={draft.phone} onChange={e => set({ phone: e.target.value })} className={inputClass} placeholder="(555) 123-4567" />
+                    </div>
+                    <div>
+                        <label className={labelClass}>Grade</label>
+                        <select value={draft.grade} onChange={e => set({ grade: e.target.value })} className={inputClass}>
+                            <option value="">Not set</option>
+                            {MEMBER_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className={labelClass}>Role</label>
+                        <select
+                            value={draft.role}
+                            disabled={!canChangeRole}
+                            onChange={e => set({ role: e.target.value as User['role'] })}
+                            className={`${inputClass} disabled:opacity-60`}
+                        >
+                            <option value="member">Member</option>
+                            <option value="officer">Officer</option>
+                            <option value="advisor">Advisor</option>
+                        </select>
+                        {!canChangeRole && <p className="text-[11px] text-ink-muted mt-1">Only advisors can change roles.</p>}
+                    </div>
+                    <div>
+                        <label className={labelClass}>Status</label>
+                        <select value={draft.status} onChange={e => set({ status: e.target.value as User['status'] })} className={inputClass}>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label className={labelClass}>Bio</label>
+                    <textarea value={draft.bio} onChange={e => set({ bio: e.target.value })} className={`${inputClass} min-h-[80px]`} />
+                </div>
+
+                <div>
+                    <label className={labelClass}>Membership Requirements</label>
+                    <div className="flex flex-wrap gap-4 mt-1">
+                        {([
+                            ['duesPaid', 'Dues paid'],
+                            ['appCompleted', 'Application completed'],
+                            ['remindJoined', 'Joined Remind'],
+                        ] as const).map(([key, label]) => (
+                            <label key={key} className="flex items-center gap-2 text-sm text-ink-dim cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={draft[key]}
+                                    onChange={e => set({ [key]: e.target.checked } as Partial<typeof draft>)}
+                                    className="w-4 h-4 accent-current text-electric-500"
+                                />
+                                {label}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="text-xs text-ink-muted border-t border-space-500/30 pt-3">
+                    Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span> — change it from the Access Codes tab.
+                </div>
+            </div>
+        </EditorModal>
+    );
+};
+
 const MembersTab: React.FC = () => {
     const { user } = useAuth();
     const { members, accessCodes, generateAccessCode, deleteAccessCode, archiveAccessCode, updateMemberRole, deleteMember, regenerateMemberAccessCode } = useData();
     const { confirm, alert: showAlert } = useModal();
     const [activeSection, setActiveSection] = useState<'directory' | 'codes'>('directory');
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+    const [editingMember, setEditingMember] = useState<User | null>(null);
+
+    const canManage = user?.role === 'advisor' || user?.role === 'officer';
+    const isAdvisor = user?.role === 'advisor';
 
     const handleGenerate = async (role: 'member' | 'officer') => {
-        const code = await generateAccessCode(role);
-        setGeneratedCode(code);
+        try {
+            const code = await generateAccessCode(role);
+            setGeneratedCode(code);
+        } catch {
+            setGeneratedCode(null);
+            await showAlert('Code not saved', 'The access code could not be saved to the database, so it was discarded. Check your connection and permissions, then try again.');
+        }
     };
 
     const handleRegenerate = async (code: any) => {
@@ -331,26 +510,36 @@ const MembersTab: React.FC = () => {
                                             </span>
                                         </td>
                                         <td className="p-3 flex gap-2 items-center">
-                                            {user?.role === 'advisor' ? (
+                                            {canManage ? (
                                                 <>
-                                                    <select
-                                                        value={m.role}
-                                                        onChange={(e) => updateMemberRole(m.id, e.target.value as any)}
-                                                        className="bg-space-900 border border-space-500/50 rounded px-2 py-1 text-xs text-ink outline-none focus:border-electric-500 cursor-pointer"
+                                                    <button
+                                                        onClick={() => setEditingMember(m)}
+                                                        className="p-1.5 hover:bg-electric-500/10 text-electric-400 rounded transition-colors"
+                                                        title="Edit Details"
                                                     >
-                                                        <option value="member">Member</option>
-                                                        <option value="officer">Officer</option>
-                                                        <option value="advisor">Advisor</option>
-                                                    </select>
-                                                    
-                                                    {user.id !== m.id && (
-                                                        <button 
+                                                        <Edit2 size={14} />
+                                                    </button>
+
+                                                    {isAdvisor && (
+                                                        <select
+                                                            value={m.role}
+                                                            onChange={(e) => updateMemberRole(m.id, e.target.value as any)}
+                                                            className="bg-space-900 border border-space-500/50 rounded px-2 py-1 text-xs text-ink outline-none focus:border-electric-500 cursor-pointer"
+                                                        >
+                                                            <option value="member">Member</option>
+                                                            <option value="officer">Officer</option>
+                                                            <option value="advisor">Advisor</option>
+                                                        </select>
+                                                    )}
+
+                                                    {isAdvisor && user?.id !== m.id && (
+                                                        <button
                                                             onClick={async () => {
                                                                 if (await confirm('Delete Member', `Are you sure you want to delete ${m.name}? This action cannot be undone.`, true, 'Delete')) {
                                                                     deleteMember(m.id);
                                                                 }
-                                                            }} 
-                                                            className="p-1.5 hover:bg-gold-500/10 text-gold-500 rounded ml-2 transition-colors"
+                                                            }}
+                                                            className="p-1.5 hover:bg-gold-500/10 text-gold-500 rounded ml-1 transition-colors"
                                                             title="Remove Member"
                                                         >
                                                             <Trash2 size={14} />
@@ -521,6 +710,14 @@ const MembersTab: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {editingMember && (
+                <MemberEditor
+                    member={editingMember}
+                    canChangeRole={isAdvisor}
+                    onClose={() => setEditingMember(null)}
+                />
+            )}
         </div>
     );
 };
@@ -597,19 +794,119 @@ const UpdatesTab: React.FC = () => {
     );
 };
 
-const LeadershipTab: React.FC = () => {
-    const { officersList, addOfficer, deleteOfficer } = useData();
-    const { confirm } = useModal();
-    const [name, setName] = useState('');
-    const [role, setRole] = useState('');
-    const [email, setEmail] = useState('');
-    const [bio, setBio] = useState('');
-    const [category, setCategory] = useState<Officer['category']>('Executive');
+const GRADE_CHOICES = ['9th Grade', '10th Grade', '11th Grade', '12th Grade', 'Faculty', 'Alumni'];
 
-    const handleAdd = (e: React.FormEvent) => {
+type OfficerDraft = Omit<Officer, 'id'>;
+
+const blankOfficer = (order: number): OfficerDraft => ({
+    name: '', role: '', grade: '12th Grade', category: 'Executive',
+    bio: '', email: '', instagram: '', imageUrl: '', order,
+});
+
+/** Shared field set for adding and editing a leadership member. */
+const OfficerFields: React.FC<{
+    draft: OfficerDraft;
+    onChange: (patch: Partial<OfficerDraft>) => void;
+    onPhotoError: (msg: string) => void;
+}> = ({ draft, onChange, onPhotoError }) => (
+    <div className="space-y-4">
+        <div>
+            <label className={labelClass}>Photo</label>
+            <ImageUpload
+                value={draft.imageUrl || undefined}
+                onChange={v => onChange({ imageUrl: v ?? '' })}
+                placeholder={<span className="text-2xl font-black">{draft.name.charAt(0) || '?'}</span>}
+                onError={onPhotoError}
+            />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label className={labelClass}>Name</label>
+                <input value={draft.name} onChange={e => onChange({ name: e.target.value })} className={inputClass} placeholder="Jane Doe" required />
+            </div>
+            <div>
+                <label className={labelClass}>Role</label>
+                <input value={draft.role} onChange={e => onChange({ role: e.target.value })} className={inputClass} placeholder="President" required />
+            </div>
+            <div>
+                <label className={labelClass}>Grade</label>
+                <select value={draft.grade} onChange={e => onChange({ grade: e.target.value })} className={inputClass}>
+                    {GRADE_CHOICES.map(g => <option key={g}>{g}</option>)}
+                </select>
+            </div>
+            <div>
+                <label className={labelClass}>Category</label>
+                <select value={draft.category} onChange={e => onChange({ category: e.target.value as Officer['category'] })} className={inputClass}>
+                    <option>Executive</option>
+                    <option>Committee</option>
+                    <option>Advisor</option>
+                </select>
+            </div>
+            <div>
+                <label className={labelClass}>Email</label>
+                <input value={draft.email ?? ''} onChange={e => onChange({ email: e.target.value })} className={inputClass} placeholder="jane@lehs.tsa" />
+            </div>
+            <div>
+                <label className={labelClass}>Instagram URL</label>
+                <input value={draft.instagram ?? ''} onChange={e => onChange({ instagram: e.target.value })} className={inputClass} placeholder="https://instagram.com/..." />
+            </div>
+            <div>
+                <label className={labelClass}>Display Order</label>
+                <input
+                    type="number"
+                    value={draft.order}
+                    onChange={e => onChange({ order: parseInt(e.target.value, 10) || 0 })}
+                    className={inputClass}
+                />
+            </div>
+        </div>
+        <div>
+            <label className={labelClass}>Biography</label>
+            <textarea value={draft.bio} onChange={e => onChange({ bio: e.target.value })} className={`${inputClass} min-h-[80px]`} placeholder="A short bio..." />
+        </div>
+    </div>
+);
+
+const LeadershipTab: React.FC = () => {
+    const { officersList, addOfficer, updateOfficer, deleteOfficer } = useData();
+    const { confirm, alert: showAlert } = useModal();
+    const [draft, setDraft] = useState<OfficerDraft>(blankOfficer(1));
+    const [editing, setEditing] = useState<Officer | null>(null);
+    const [editDraft, setEditDraft] = useState<OfficerDraft | null>(null);
+    const [saving, setSaving] = useState(false);
+
+    const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
-        addOfficer({ name, role, grade: '12th Grade', category, bio, email, order: officersList.length + 1 });
-        setName(''); setRole(''); setEmail(''); setBio('');
+        if (!draft.name.trim() || !draft.role.trim()) return;
+        setSaving(true);
+        try {
+            await addOfficer({ ...draft, order: draft.order || officersList.length + 1 });
+            setDraft(blankOfficer(officersList.length + 2));
+        } catch {
+            await showAlert('Error', 'Could not add that leadership member. Check your connection and try again.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const openEdit = (officer: Officer) => {
+        const { id: _id, ...rest } = officer;
+        setEditing(officer);
+        setEditDraft({ instagram: '', imageUrl: '', email: '', ...rest });
+    };
+
+    const saveEdit = async () => {
+        if (!editing || !editDraft) return;
+        setSaving(true);
+        try {
+            await updateOfficer(editing.id, editDraft);
+            setEditing(null);
+            setEditDraft(null);
+        } catch {
+            await showAlert('Error', 'Could not save those changes. Check your connection and try again.');
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (
@@ -617,33 +914,14 @@ const LeadershipTab: React.FC = () => {
             <div className={cardClass}>
                 <h3 className="font-bold text-ink mb-4">Add Leadership Member</h3>
                 <form onSubmit={handleAdd} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className={labelClass}>Name</label>
-                            <input value={name} onChange={e => setName(e.target.value)} className={inputClass} placeholder="Jane Doe" required />
-                        </div>
-                        <div>
-                            <label className={labelClass}>Role</label>
-                            <input value={role} onChange={e => setRole(e.target.value)} className={inputClass} placeholder="President" required />
-                        </div>
-                        <div>
-                            <label className={labelClass}>Email</label>
-                            <input value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="jane@lehs.tsa" />
-                        </div>
-                    </div>
-                    <div>
-                        <label className={labelClass}>Biography</label>
-                        <textarea value={bio} onChange={e => setBio(e.target.value)} className={`${inputClass} min-h-[80px]`} placeholder="A short bio..." />
-                    </div>
-                    <div>
-                        <label className={labelClass}>Category</label>
-                        <select value={category} onChange={e => setCategory(e.target.value as any)} className={inputClass}>
-                            <option>Executive</option>
-                            <option>Committee</option>
-                            <option>Advisor</option>
-                        </select>
-                    </div>
-                    <button type="submit" className={`${buttonClass} bg-electric-500 text-white w-full`}>Add Member</button>
+                    <OfficerFields
+                        draft={draft}
+                        onChange={patch => setDraft(prev => ({ ...prev, ...patch }))}
+                        onPhotoError={msg => showAlert('Photo', msg)}
+                    />
+                    <button type="submit" disabled={saving} className={`${buttonClass} bg-electric-500 text-white w-full disabled:opacity-50`}>
+                        <Plus size={16} /> {saving ? 'Saving…' : 'Add Member'}
+                    </button>
                 </form>
             </div>
 
@@ -653,31 +931,61 @@ const LeadershipTab: React.FC = () => {
                     <table className="w-full text-sm text-left">
                         <thead className="bg-space-700/40 text-ink-muted">
                             <tr>
-                                <th className="p-3 rounded-tl-lg">Name</th>
+                                <th className="p-3 rounded-tl-lg">Member</th>
                                 <th className="p-3">Role</th>
                                 <th className="p-3">Category</th>
-                                <th className="p-3 rounded-tr-lg text-right">Action</th>
+                                <th className="p-3 rounded-tr-lg text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-space-500/20">
                             {officersList.map(o => (
                                 <tr key={o.id} className="group hover:bg-space-700/40">
-                                    <td className="p-3 font-bold text-ink">{o.name}</td>
+                                    <td className="p-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-9 h-9 rounded-lg overflow-hidden bg-space-700 flex items-center justify-center text-xs font-bold text-ink-muted shrink-0">
+                                                {o.imageUrl
+                                                    ? <img src={o.imageUrl} alt="" className="w-full h-full object-cover" />
+                                                    : o.name.charAt(0)}
+                                            </div>
+                                            <span className="font-bold text-ink">{o.name}</span>
+                                        </div>
+                                    </td>
                                     <td className="p-3 text-ink-dim">{o.role}</td>
                                     <td className="p-3"><span className="text-[10px] bg-space-600/60 px-2 py-1 rounded uppercase font-bold text-ink-muted">{o.category}</span></td>
-                                    <td className="p-3 text-right">
+                                    <td className="p-3 text-right whitespace-nowrap">
+                                        <button onClick={() => openEdit(o)} className="text-ink-muted hover:text-electric-400 transition-colors mr-3" title="Edit">
+                                            <Edit2 size={16} />
+                                        </button>
                                         <button onClick={async () => {
-                                            if (await confirm('Remove Officer', 'Remove this officer?', true, 'Remove')) {
+                                            if (await confirm('Remove Officer', `Remove ${o.name} from the leadership team?`, true, 'Remove')) {
                                                 deleteOfficer(o.id);
                                             }
-                                        }} className="text-ink-muted hover:text-gold-500 transition-colors"><Trash2 size={16} /></button>
+                                        }} className="text-ink-muted hover:text-gold-500 transition-colors" title="Remove"><Trash2 size={16} /></button>
                                     </td>
                                 </tr>
                             ))}
+                            {officersList.length === 0 && (
+                                <tr><td colSpan={4} className="p-4 text-center text-ink-muted">No leadership members yet.</td></tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {editing && editDraft && (
+                <EditorModal
+                    title={`Edit ${editing.name || 'Leadership Member'}`}
+                    saving={saving}
+                    onCancel={() => { setEditing(null); setEditDraft(null); }}
+                    onSave={saveEdit}
+                >
+                    <OfficerFields
+                        draft={editDraft}
+                        onChange={patch => setEditDraft(prev => prev ? { ...prev, ...patch } : prev)}
+                        onPhotoError={msg => showAlert('Photo', msg)}
+                    />
+                </EditorModal>
+            )}
         </div>
     );
 };
@@ -1087,7 +1395,7 @@ const ALL_COMP_ITEMS: CompItem[] = [
         title: 'TEAMS',
         subtitle: 'Tests of Engineering Aptitude, Mathematics & Science',
         category: 'teams',
-        description: 'Teams of 2–4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2025–2026 theme: "Engineering the Past".',
+        description: 'Teams of 2–4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2026–2027 theme: "Engineering for Good".',
     },
     ...COMPETITIONS.map(c => ({
         id: c.id,
@@ -2006,8 +2314,17 @@ const ResourcesTab: React.FC = () => {
     );
 }
 
+/** ISO string → the local "YYYY-MM-DDTHH:mm" a datetime-local input expects. */
+const toLocalDateTimeInput = (iso: string): string => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
 const SettingsTab: React.FC = () => {
-    const { siteSettings, updateSiteSettings } = useData();
+    const { siteSettings, updateSiteSettings, nextEvent } = useData();
     const [remind, setRemind] = useState(siteSettings.remindLink);
     const [jotform, setJotform] = useState(siteSettings.jotformLink);
     const [district, setDistrict] = useState(siteSettings.districtAppLink);
@@ -2043,15 +2360,42 @@ const SettingsTab: React.FC = () => {
                     </div>
                     <div>
                         <label className={labelClass}>Date & Time</label>
-                        <input 
-                            type="datetime-local" 
-                            value={eventDate ? new Date(eventDate).toISOString().slice(0, 16) : ''} 
-                            onChange={e => setEventDate(new Date(e.target.value).toISOString())} 
-                            className={inputClass} 
+                        <input
+                            type="datetime-local"
+                            value={toLocalDateTimeInput(eventDate)}
+                            onChange={e => setEventDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                            className={inputClass}
                         />
                     </div>
                 </div>
-                <p className="text-xs text-ink-muted mt-2">This event will be displayed on the home page countdown timer.</p>
+                <div className="flex flex-wrap items-center gap-3 mt-3">
+                    <button
+                        type="button"
+                        onClick={() => { setEventTitle(''); setEventDate(''); }}
+                        className="text-xs font-bold text-electric-400 hover:text-electric-300 transition-colors"
+                    >
+                        Clear override
+                    </button>
+                    <p className="text-xs text-ink-muted">
+                        Optional. Leave blank (or let the date pass) and the countdown automatically uses the
+                        next event on the calendar.
+                    </p>
+                </div>
+                <div className="mt-3 p-3 rounded-lg bg-space-700/40 border border-space-500/30 text-xs">
+                    {nextEvent ? (
+                        <>
+                            <span className="text-ink-muted uppercase tracking-wider font-bold text-[10px]">Currently showing</span>
+                            <p className="text-ink font-bold mt-1">{nextEvent.title}</p>
+                            <p className="text-ink-muted mt-0.5">
+                                {new Date(nextEvent.date).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}
+                                {' · '}
+                                {nextEvent.source === 'manual' ? 'from this override' : 'from the events calendar'}
+                            </p>
+                        </>
+                    ) : (
+                        <p className="text-ink-muted">No upcoming event — the countdown is hidden. Add an event or set an override above.</p>
+                    )}
+                </div>
             </div>
 
             <div className={cardClass}>

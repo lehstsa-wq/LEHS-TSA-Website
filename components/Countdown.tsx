@@ -4,10 +4,13 @@ import { useData } from '../context/DataContext';
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
+/* This panel keeps its dark gradient in both themes, so its text is coloured
+   inline rather than with `text-white` utilities — light mode rewrites those
+   utilities to dark ink, which would make the countdown unreadable here. */
+
 export const Countdown: React.FC = () => {
-  const { siteSettings } = useData();
-  const targetDate = siteSettings.nextEventDate ? new Date(siteSettings.nextEventDate).getTime() : 0;
-  const eventTitle = siteSettings.nextEventTitle || 'Upcoming Event';
+  const { nextEvent } = useData();
+  const targetDate = nextEvent ? new Date(nextEvent.date).getTime() : 0;
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -28,7 +31,7 @@ export const Countdown: React.FC = () => {
     return () => clearInterval(id);
   }, [targetDate]);
 
-  if (!siteSettings.nextEventDate) return null;
+  if (!nextEvent) return null;
 
   const TimeBox = ({ val, label }: { val: number; label: string }) => (
     <div className="flex flex-col items-center gap-2">
@@ -36,16 +39,16 @@ export const Countdown: React.FC = () => {
         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}>
         {/* Shine */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)' }} />
-        <span className="relative font-mono font-black text-3xl sm:text-4xl text-white tabular-nums">
+        <span className="relative font-mono font-black text-3xl sm:text-4xl tabular-nums" style={{ color: '#ffffff' }}>
           {String(val).padStart(2, '0')}
         </span>
       </div>
-      <span className="text-[11px] font-bold uppercase tracking-widest text-white/60">{label}</span>
+      <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.60)' }}>{label}</span>
     </div>
   );
 
   return (
-    <div className="relative py-20 px-4 overflow-hidden">
+    <div className="countdown-panel relative py-20 px-4 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e3a5f, #07111e 40%, #2d1f4f)' }} />
       <div className="absolute inset-0 grid-bg opacity-20" />
@@ -60,7 +63,7 @@ export const Countdown: React.FC = () => {
             Next Major Event
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-10 text-balance">{eventTitle}</h2>
+          <h2 className="text-4xl md:text-5xl font-black mb-10 text-balance" style={{ color: '#ffffff' }}>{nextEvent.title}</h2>
 
           <div className="flex justify-center gap-6 sm:gap-10 mb-8">
             <TimeBox val={timeLeft.days}    label="Days" />
@@ -69,7 +72,7 @@ export const Countdown: React.FC = () => {
             <TimeBox val={timeLeft.seconds} label="Sec" />
           </div>
 
-          <p className="flex items-center justify-center gap-2 text-sm text-white/60">
+          <p className="flex items-center justify-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.60)' }}>
             {new Date(targetDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </motion.div>

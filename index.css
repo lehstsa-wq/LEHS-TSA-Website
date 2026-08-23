@@ -889,39 +889,26 @@ html.light footer input[type="email"]   {
 /* Link hover */
 html.light footer .hover\:text-ink:hover         { color: #1a2533 !important; }
 html.light footer .hover\:text-electric-500:hover { color: #005DAA !important; }
-/* ── GLOBAL: any element with TSA-blue inline bg → white text ──
-   Covers navbar logo, check-in QR icon, footer logo, stat card icons,
-   and anything else using style={{ background/backgroundColor: '#005DAA' }}
+/* ── BRAND MARK: logo tiles and icon chips that sit on a solid brand colour.
+   These must stay white in BOTH themes. Marked with a class rather than an
+   inline-style attribute selector — React writes inline styles through the
+   CSSOM, so the reflected style attribute reads `rgb(0, 93, 170)` and any
+   [style*="#005DAA"] selector silently never matches.
+   Covers: navbar logo, mobile drawer logo, footer logo, login mark,
+   dashboard check-in QR chip, member-card chip, dashboard avatar.
    ──────────────────────────────────────────────────────────────────────── */
-html.light [style*="background: #005DAA"],
-html.light [style*="background:#005DAA"],
-html.light [style*="background-color: #005DAA"],
-html.light [style*="background-color:#005DAA"] { color: #ffffff !important; }
+.brand-mark,
+.brand-mark svg { color: #ffffff; }
 
-html.light [style*="background: #005DAA"] .text-white,
-html.light [style*="background:#005DAA"] .text-white,
-html.light [style*="background-color: #005DAA"] .text-white,
-html.light [style*="background-color:#005DAA"] .text-white { color: #ffffff !important; }
-
-html.light [style*="background: #005DAA"] svg,
-html.light [style*="background:#005DAA"] svg,
-html.light [style*="background-color: #005DAA"] svg,
-html.light [style*="background-color:#005DAA"] svg { color: #ffffff !important; }
-
-/* Also handle any element whose text-white class appears alongside a TSA-blue inline bg */
-html.light [style*="background: #005DAA"].text-white,
-html.light [style*="background:#005DAA"].text-white,
-html.light [style*="background-color: #005DAA"].text-white,
-html.light [style*="background-color:#005DAA"].text-white { color: #ffffff !important; }
+html.light .brand-mark,
+html.light .brand-mark svg,
+html.light .brand-mark .text-white,
+html.light .brand-mark [class*="text-white"] { color: #ffffff !important; }
 
 /* ── MEMBER CARD (Dashboard): always-dark gradient ── */
 html.light .member-card,
 html.light .member-card .text-white,
 html.light .member-card [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
-
-/* ── COUNTDOWN: always-dark inline background ── */
-html.light [style*="linear-gradient(135deg, #1e3a5f"] .text-white,
-html.light [style*="linear-gradient(135deg, #1e3a5f"] [class*="text-white"] { color: rgba(255,255,255,0.90) !important; }
 
 /* ── Solid blue/red bg elements: keep text white ── */
 /* Navbar Dashboard button, any bg-electric-500/600 element */

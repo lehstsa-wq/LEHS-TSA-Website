@@ -531,8 +531,8 @@ const Competitions: React.FC = () => {
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
               <div className="bg-space-800 border border-gold-500/30 rounded-2xl px-5 py-3">
-                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2025–2026 Theme</div>
-                <div className="text-sm font-black text-gold-300">Engineering the Past</div>
+                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026–2027 Theme</div>
+                <div className="text-sm font-black text-gold-300">Engineering for Good</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>

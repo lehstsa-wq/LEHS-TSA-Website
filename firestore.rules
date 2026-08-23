@@ -2,9 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: check if the caller is an authenticated officer or advisor
+    // Helper: check if the caller is an authenticated officer or advisor.
+    // The exists() guard matters during signup — the member document does not
+    // exist yet, and get() on a missing document aborts rule evaluation.
     function isOfficer() {
       return request.auth != null &&
+        exists(/databases/$(database)/documents/members/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role in ['officer', 'advisor'];
     }
 
@@ -69,14 +72,27 @@ service cloud.firestore {
       allow read: if isSignedIn();
       // Users can update their own profile; officers can update anyone
       allow update: if isOfficer() || (isSignedIn() && request.auth.uid == userId);
-      allow create: if isSignedIn();
+      allow create: if isOfficer() || (isSignedIn() && request.auth.uid == userId);
       allow delete: if isOfficer();
     }
 
-    // ── Access codes (officer-only) ─────────────────────────────────────────
+    // ── Access codes ────────────────────────────────────────────────────────
+    // Signup has to validate a code *before* an account exists, so a single-doc
+    // read by exact code is public; listing every code stays officer-only.
     match /access_codes/{id} {
-      allow read: if isOfficer();
-      allow write: if isOfficer();
+      allow get: if true;
+      allow list: if isOfficer();
+      allow create, delete: if isOfficer();
+      // Officers manage codes freely. A brand-new account may claim one unused
+      // code for itself, and may only touch the three claim fields.
+      allow update: if isOfficer() || (
+        isSignedIn() &&
+        resource.data.status == 'unused' &&
+        request.resource.data.diff(resource.data)
+          .affectedKeys().hasOnly(['status', 'assignedTo', 'assignedUid']) &&
+        request.resource.data.status == 'used' &&
+        request.resource.data.assignedUid == request.auth.uid
+      );
     }
 
     // ── Competition interests (any member can submit) ───────────────────────
