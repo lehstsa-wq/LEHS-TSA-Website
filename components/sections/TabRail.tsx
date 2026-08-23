@@ -3,7 +3,13 @@ import React, { useId, useRef, useState } from 'react';
 export interface TabItem {
   label: string;
   description: string;
-  /** Rendered in the panel when this tab is active. */
+  /** Illustration shown in the panel for this tab. */
+  image: string;
+  /** Alt text for that illustration. */
+  imageAlt: string;
+  /** Accent colour for the panel's top rule and link. */
+  accent: string;
+  /** Rendered beneath the illustration when this tab is active. */
   panel: React.ReactNode;
 }
 
@@ -94,15 +100,31 @@ export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {
           aria-labelledby={`${baseId}-tab-${i}`}
           hidden={i !== active}
           tabIndex={0}
+          className="relative overflow-hidden"
           style={{
             borderRadius: 'var(--card-radius)',
             border: '1px solid var(--c-hairline)',
             background: 'var(--c-card)',
             boxShadow: 'var(--shadow-card)',
-            padding: 'var(--card-pad)',
           }}
         >
-          {item.panel}
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-1"
+            style={{ background: item.accent }}
+          />
+          <div
+            className="flex items-center justify-center"
+            style={{ background: '#FFFFFF', aspectRatio: '16 / 10' }}
+          >
+            <img
+              src={item.image}
+              alt={item.imageAlt}
+              className="h-full w-full object-contain p-8 sm:p-12"
+              decoding="async"
+            />
+          </div>
+          <div style={{ padding: 'var(--card-pad)' }}>{item.panel}</div>
         </div>
       ))}
     </div>

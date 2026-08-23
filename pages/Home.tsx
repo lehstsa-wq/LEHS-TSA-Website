@@ -42,18 +42,24 @@ const HOW_IT_WORKS: Stage[] = [
     title: 'Apply',
     body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
     accent: '#005DAA',
+    image: '/assets/illustrations/step-apply.png',
+    imageAlt: 'Hand filling in a membership form on a tablet',
   },
   {
     num: '02',
     title: 'Pick Events',
     body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
     accent: '#EC881D',
+    image: '/assets/illustrations/step-pick.png',
+    imageAlt: 'Screen showing a search, a calendar and messages',
   },
   {
     num: '03',
     title: 'Compete & Win',
     body: 'Train, collaborate, and compete at regional, state, and national conferences.',
     accent: '#574E8F',
+    image: '/assets/illustrations/step-compete.png',
+    imageAlt: 'TSA dragster racing car',
   },
 ];
 
@@ -63,12 +69,13 @@ const HOW_IT_WORKS: Stage[] = [
 const WHAT_WE_DO: TabItem[] = [
   {
     label: 'Compete in 30+ Events',
+    image: '/assets/illustrations/compete.png',
+    imageAlt: 'Engineers collaborating around gears and a target',
+    accent: '#005DAA',
     description: 'From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#005DAA' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Compete in 30+ Events</h3>
-        <p className="text-base leading-relaxed text-ink-dim">From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.</p>
         <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#005DAA' }}>
           Learn more <ArrowRight size={14} />
         </Link>
@@ -77,12 +84,13 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Code & Build',
+    image: '/assets/illustrations/code.png',
+    imageAlt: 'Code editor showing HTML, CSS and PHP',
+    accent: '#574E8F',
     description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#574E8F' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Code & Build</h3>
-        <p className="text-base leading-relaxed text-ink-dim">Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.</p>
         <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#574E8F' }}>
           Learn more <ArrowRight size={14} />
         </Link>
@@ -91,12 +99,13 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Lead & Grow',
+    image: '/assets/illustrations/lead.png',
+    imageAlt: 'Student speaking at a podium',
+    accent: '#EC881D',
     description: 'Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#EE2624' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Lead & Grow</h3>
-        <p className="text-base leading-relaxed text-ink-dim">Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.</p>
         <Link to="/officers" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EE2624' }}>
           Learn more <ArrowRight size={14} />
         </Link>
@@ -105,12 +114,13 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Connect Nationally',
+    image: '/assets/illustrations/connect.png',
+    imageAlt: 'Globe with a location pin',
+    accent: '#EE2624',
     description: 'Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#86BB50' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Connect Nationally</h3>
-        <p className="text-base leading-relaxed text-ink-dim">Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country.</p>
         <Link to="/events" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#86BB50' }}>
           Learn more <ArrowRight size={14} />
         </Link>
@@ -119,12 +129,13 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Design & Create',
+    image: '/assets/illustrations/design.png',
+    imageAlt: 'Lightbulb and pencil with design tools',
+    accent: '#86BB50',
     description: 'Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#EC881D' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Design & Create</h3>
-        <p className="text-base leading-relaxed text-ink-dim">Graphic design, video game design, architectural modeling, fashion design — TSA rewards every kind of creative talent.</p>
         <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EC881D' }}>
           Learn more <ArrowRight size={14} />
         </Link>
@@ -133,12 +144,13 @@ const WHAT_WE_DO: TabItem[] = [
   },
   {
     label: 'Study & Prepare',
+    image: '/assets/illustrations/study.png',
+    imageAlt: 'Study desk with a laptop, books and notes',
+    accent: '#4E8AC9',
     description: 'Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident.',
     panel: (
       <div>
-        <span className="block h-1 w-12 rounded-full mb-5" style={{ background: '#4E8AC9' }} />
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Study & Prepare</h3>
-        <p className="text-base leading-relaxed text-ink-dim">Access competition guides, past results, and expert prep materials — everything you need to walk into any event confident.</p>
         <Link to="/resources" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#4E8AC9' }}>
           Learn more <ArrowRight size={14} />
         </Link>

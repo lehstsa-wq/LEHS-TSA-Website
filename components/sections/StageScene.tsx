@@ -8,6 +8,10 @@ export interface Stage {
   body: string;
   /** CSS colour used for the active accent. */
   accent: string;
+  /** Illustration shown in the panel while this stage is active. */
+  image: string;
+  /** Alt text for that illustration. */
+  imageAlt: string;
 }
 
 interface StageSceneProps {
@@ -19,13 +23,14 @@ interface StageSceneProps {
 }
 
 /**
- * A scroll-driven scene: the header and stage list pin to the viewport while the
- * page scrolls through a tall track, advancing one stage at a time.
+ * Scroll-driven scene: the steps sit beside an illustration panel, and both pin
+ * to the viewport while the page scrolls through a tall track, advancing one
+ * step at a time.
  *
- * Uses CSS `position: sticky` plus scroll progress — it never intercepts wheel
- * or touch events, so scrolling stays entirely under the reader's control.
- * Under prefers-reduced-motion the whole thing collapses to a plain static list
- * with every stage shown at full prominence.
+ * Progress comes from a passive scroll listener reading getBoundingClientRect,
+ * so nothing intercepts wheel or touch input — scrolling stays entirely under
+ * the reader's control. Under prefers-reduced-motion the scene collapses to a
+ * plain stacked list with every step and its illustration shown at once.
  */
 export const StageScene: React.FC<StageSceneProps> = ({
   eyebrow,
@@ -38,9 +43,6 @@ export const StageScene: React.FC<StageSceneProps> = ({
   const [active, setActive] = useState(0);
   const prefersReduced = useReducedMotion();
 
-  // A passive scroll listener rather than an animation-frame-driven motion
-  // value: this stays correct when the tab is backgrounded (where rAF is
-  // throttled), and it is directly observable in tests.
   const syncStage = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
@@ -75,16 +77,50 @@ export const StageScene: React.FC<StageSceneProps> = ({
     </div>
   );
 
+  /** The illustration box. Every image is mounted and cross-faded so switching
+   *  stages never shows a blank frame while a new file loads. */
+  const visual = (current: Stage) => (
+    <div
+      className="relative overflow-hidden w-full"
+      style={{
+        borderRadius: 'var(--card-radius)',
+        border: '1px solid var(--c-hairline)',
+        background: '#FFFFFF',
+        boxShadow: 'var(--shadow-card)',
+        aspectRatio: '4 / 3',
+      }}
+    >
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-1 z-10"
+        style={{ background: current.accent }}
+      />
+      {stages.map(s => {
+        const shown = s.num === current.num;
+        return (
+          <img
+            key={s.num}
+            src={s.image}
+            alt={shown ? s.imageAlt : ''}
+            aria-hidden={shown ? undefined : true}
+            className="absolute inset-0 h-full w-full object-contain p-8 sm:p-12 transition-opacity duration-500"
+            style={{ opacity: shown ? 1 : 0 }}
+            decoding="async"
+          />
+        );
+      })}
+    </div>
+  );
+
   const stageRow = (stage: Stage, isActive: boolean) => (
     <li
       key={stage.num}
       aria-current={isActive ? 'step' : undefined}
-      className="flex items-start gap-5 transition-all duration-500"
+      className="flex items-start gap-4 transition-all duration-500"
       style={{
-        opacity: isActive ? 1 : 0.35,
-        transform: isActive ? 'translateX(0)' : 'translateX(-6px)',
+        opacity: isActive ? 1 : 0.4,
         borderRadius: 'var(--card-radius)',
-        padding: '1.25rem 1.5rem',
+        padding: '1rem 1.25rem',
         background: isActive ? 'var(--c-card)' : 'transparent',
         border: `1px solid ${isActive ? stage.accent + '55' : 'transparent'}`,
       }}
@@ -104,12 +140,20 @@ export const StageScene: React.FC<StageSceneProps> = ({
 
   if (prefersReduced) {
     return (
-      <section className={className} style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        className={className}
+        style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {header}
-          <ol className="mt-12 space-y-3">
-            {stages.map(s => stageRow(s, true))}
-          </ol>
+          <div className="mt-14 space-y-12">
+            {stages.map(s => (
+              <div key={s.num} className="grid gap-6 md:grid-cols-2 md:items-center">
+                <ol>{stageRow(s, true)}</ol>
+                {visual(s)}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     );
@@ -117,27 +161,33 @@ export const StageScene: React.FC<StageSceneProps> = ({
 
   return (
     <section className={className}>
-      {/* Tall track: its height is what the pinned panel scrubs through. */}
-      <div ref={trackRef} style={{ height: `${stages.length * 70}vh` }}>
+      {/* The track's extra height is the distance the pinned panel scrubs through. */}
+      <div ref={trackRef} style={{ height: `${100 + stages.length * 55}vh` }}>
         <div className="sticky top-16 flex min-h-[calc(100vh-4rem)] items-center">
-          <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
             {header}
 
-            <ol className="mt-12 space-y-3">
-              {stages.map((s, i) => stageRow(s, i === active))}
-            </ol>
+            <div className="mt-12 grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <ol className="space-y-3">
+                  {stages.map((s, i) => stageRow(s, i === active))}
+                </ol>
 
-            <div className="mt-8 flex justify-center gap-1.5" aria-hidden="true">
-              {stages.map((s, i) => (
-                <span
-                  key={s.num}
-                  className="h-1 rounded-full transition-all duration-500"
-                  style={{
-                    width: i === active ? '2rem' : '0.75rem',
-                    background: i === active ? s.accent : 'var(--c-hairline)',
-                  }}
-                />
-              ))}
+                <div className="mt-8 flex gap-1.5" aria-hidden="true">
+                  {stages.map((s, i) => (
+                    <span
+                      key={s.num}
+                      className="h-1 rounded-full transition-all duration-500"
+                      style={{
+                        width: i === active ? '2rem' : '0.75rem',
+                        background: i === active ? s.accent : 'var(--c-hairline)',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {visual(stages[active])}
             </div>
           </div>
         </div>
