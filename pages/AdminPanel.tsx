@@ -171,8 +171,8 @@ const OverviewTab: React.FC = () => {
     const activeMembers = members.filter(m => m.status === 'active').length;
     const openIssues = problemReports.filter(r => r.status === 'Open').length;
     const recentInterests = [...competitionInterests]
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-        .slice(0, 5);
+.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+.slice(0, 5);
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -429,7 +429,7 @@ const MemberEditor: React.FC<{
                 </div>
 
                 <div className="text-xs text-ink-muted border-t border-space-500/30 pt-3">
-                    Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span> — change it from the Access Codes tab.
+                    Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span>, change it from the Access Codes tab.
                 </div>
             </div>
         </EditorModal>
@@ -1195,7 +1195,7 @@ const InterestsTab: React.FC = () => {
     const exportCSV = () => {
         const rows = [
             ['Member', 'Competition', 'Skills', 'Team Members', 'Notes', 'Date Submitted'],
-            ...filtered.map(i => [
+...filtered.map(i => [
                 i.userName,
                 i.competitionName,
                 i.skills.join('; '),
@@ -1342,7 +1342,7 @@ const InterestsTab: React.FC = () => {
                                                     : <span className="italic">None listed</span>
                                                 }
                                             </td>
-                                            <td className="px-4 py-3 italic text-xs max-w-xs truncate">{interest.notes || '—'}</td>
+                                            <td className="px-4 py-3 italic text-xs max-w-xs truncate">{interest.notes || 'N/A'}</td>
                                             <td className="px-4 py-3 text-xs whitespace-nowrap">{new Date(interest.timestamp).toLocaleDateString()}</td>
                                             <td className="px-4 py-3">
                                                 <button onClick={() => handleDelete(interest)} className="p-1.5 rounded-lg text-ink-muted hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
@@ -1395,9 +1395,9 @@ const ALL_COMP_ITEMS: CompItem[] = [
         title: 'TEAMS',
         subtitle: 'Tests of Engineering Aptitude, Mathematics & Science',
         category: 'teams',
-        description: 'Teams of 2–4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2026–2027 theme: "Engineering for Good".',
+        description: 'Teams of 2 to 4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2026 to 2027 theme: "Engineering for Good".',
     },
-    ...COMPETITIONS.map(c => ({
+...COMPETITIONS.map(c => ({
         id: c.id,
         title: c.title,
         subtitle: '',
@@ -1666,7 +1666,7 @@ const CompetitionsTab: React.FC = () => {
                                                 autoFocus
                                                 value={editName}
                                                 onChange={e => setEditName(e.target.value)}
-                                                placeholder='Label  (e.g. "2026–2027 Rulebook")'
+                                                placeholder='Label  (e.g. "2026 to 2027 Rulebook")'
                                                 className={inputClass}
                                             />
                                             <input
@@ -1744,7 +1744,7 @@ const CompetitionsTab: React.FC = () => {
                                     autoFocus
                                     value={addName}
                                     onChange={e => setAddName(e.target.value)}
-                                    placeholder='Label  (e.g. "2026–2027 Rulebook")'
+                                    placeholder='Label  (e.g. "2026 to 2027 Rulebook")'
                                     className={inputClass}
                                 />
                                 <input
@@ -1825,7 +1825,7 @@ const AttendanceTab: React.FC = () => {
         const attendees = meeting.attendees.map(uid => ({ uid, member: memberMap[uid] }));
         const rows = [
             ['Meeting', 'Date', 'Time', 'Location', 'Name', 'Email', 'Grade', 'Member ID'],
-            ...attendees.map(({ uid, member: m }) => [
+...attendees.map(({ uid, member: m }) => [
                 meeting.title,
                 meeting.date,
                 meeting.time ?? '',
@@ -1894,7 +1894,7 @@ const AttendanceTab: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ meeting: meeting.title, date: meeting.date, time: meeting.time, location: meeting.location, type: meeting.type, attendees }),
             });
-            setSyncMsg({ id: meeting.id, ok: true, text: 'Synced — check your Sheet.' });
+            setSyncMsg({ id: meeting.id, ok: true, text: 'Synced, check your Sheet.' });
         } catch {
             setSyncMsg({ id: meeting.id, ok: false, text: 'Sync failed. Check the webhook URL.' });
         } finally {
@@ -1938,7 +1938,7 @@ const AttendanceTab: React.FC = () => {
 function doPost(e) {
   const data = JSON.parse(e.postData.contents);
   const sheet = SpreadsheetApp.getActiveSpreadsheet()
-    .getSheetByName('Attendance') ||
+.getSheetByName('Attendance') ||
     SpreadsheetApp.getActiveSpreadsheet().insertSheet('Attendance');
   if (sheet.getLastRow() === 0)
     sheet.appendRow(['Meeting','Date','Time','Location','Type','Name','Email','Grade','Member ID']);
@@ -1995,7 +1995,7 @@ function doPost(e) {
                     <div>
                         <label className={labelClass}>Check-in PIN</label>
                         <div className="flex gap-2">
-                            <input value={form.pin} onChange={e => setForm(f => ({ ...f, pin: e.target.value.replace(/\D/g, '').slice(0, 6) }))} placeholder="4–6 digits" className={`${inputClass} font-mono tracking-widest`} maxLength={6} />
+                            <input value={form.pin} onChange={e => setForm(f => ({ ...f, pin: e.target.value.replace(/\D/g, '').slice(0, 6) }))} placeholder="4 to 6 digits" className={`${inputClass} font-mono tracking-widest`} maxLength={6} />
                             <button onClick={generatePin} className="px-3 py-2 rounded-lg bg-space-700/60 text-ink-dim text-xs font-bold hover:bg-space-600/60 transition-colors shrink-0">Generate</button>
                         </div>
                     </div>
@@ -2024,7 +2024,7 @@ function doPost(e) {
                                         </div>
                                         <div>
                                             <p className="font-bold text-ink text-sm">{m.title}</p>
-                                            <p className="text-xs text-ink-muted">{m.date}{m.time ? ` — ${m.time}` : ''}{m.location ? ` — ${m.location}` : ''}</p>
+                                            <p className="text-xs text-ink-muted">{m.date}{m.time ? `, ${m.time}` : ''}{m.location ? `, ${m.location}` : ''}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
@@ -2082,9 +2082,9 @@ function doPost(e) {
                                                         {attendeeMems.map((mem, i) => (
                                                             <tr key={i} className="text-ink-dim">
                                                                 <td className="py-1.5 pr-4 font-medium">{mem?.name ?? m.attendees[i]}</td>
-                                                                <td className="py-1.5 pr-4 text-ink-muted hidden sm:table-cell">{mem?.email ?? '—'}</td>
-                                                                <td className="py-1.5 pr-4 text-ink-muted hidden sm:table-cell">{mem?.grade ?? '—'}</td>
-                                                                <td className="py-1.5 font-mono text-ink-muted">{mem?.memberId ?? '—'}</td>
+                                                                <td className="py-1.5 pr-4 text-ink-muted hidden sm:table-cell">{mem?.email ?? 'N/A'}</td>
+                                                                <td className="py-1.5 pr-4 text-ink-muted hidden sm:table-cell">{mem?.grade ?? 'N/A'}</td>
+                                                                <td className="py-1.5 font-mono text-ink-muted">{mem?.memberId ?? 'N/A'}</td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
@@ -2158,7 +2158,7 @@ const ResultsTab: React.FC = () => {
         <div className="space-y-6 animate-fade-in">
             <div>
                 <h2 className="text-2xl font-bold text-ink">Competition Results</h2>
-                <p className="text-sm text-ink-muted mt-1">Track placements at regionals, state, and nationals — displayed on the public site.</p>
+                <p className="text-sm text-ink-muted mt-1">Track placements at regionals, state, and nationals, displayed on the public site.</p>
             </div>
 
             {/* Add form */}
@@ -2393,7 +2393,7 @@ const SettingsTab: React.FC = () => {
                             </p>
                         </>
                     ) : (
-                        <p className="text-ink-muted">No upcoming event — the countdown is hidden. Add an event or set an override above.</p>
+                        <p className="text-ink-muted">No upcoming event, the countdown is hidden. Add an event or set an override above.</p>
                     )}
                 </div>
             </div>
@@ -2501,8 +2501,8 @@ const OpportunitiesTab: React.FC = () => {
         const payload = {
             title: form.title, organization: form.organization, description: form.description,
             type: form.type, featured: form.featured,
-            ...(form.deadline && { deadline: form.deadline }),
-            ...(form.link && { link: form.link }),
+...(form.deadline && { deadline: form.deadline }),
+...(form.link && { link: form.link }),
             tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         };
         if (editId) {
@@ -2519,7 +2519,7 @@ const OpportunitiesTab: React.FC = () => {
             <div className="flex justify-between items-center">
                 <div>
                     <h2 className="text-2xl font-bold text-ink">Opportunities</h2>
-                    <p className="text-sm text-ink-muted">{opportunities.length} posted — visible to all members.</p>
+                    <p className="text-sm text-ink-muted">{opportunities.length} posted, visible to all members.</p>
                 </div>
             </div>
 
@@ -2589,7 +2589,7 @@ const OpportunitiesTab: React.FC = () => {
                                 {opp.featured && <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-gold-500/10 text-gold-400">Featured</span>}
                                 {opp.deadline && <span className="text-[10px] text-ink-muted">Due {new Date(opp.deadline).toLocaleDateString()}</span>}
                             </div>
-                            <p className="text-sm text-ink-muted truncate">{opp.organization} — {opp.description}</p>
+                            <p className="text-sm text-ink-muted truncate">{opp.organization}, {opp.description}</p>
                         </div>
                         <div className="flex gap-1.5 shrink-0">
                             <button onClick={() => startEdit(opp)} className="p-2 rounded-lg text-ink-muted hover:text-electric-400 hover:bg-electric-500/10 transition-colors"><Edit2 size={15} /></button>

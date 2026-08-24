@@ -73,7 +73,7 @@ const MemberCard: React.FC<{ member: User; showContact: boolean }> = ({ member, 
             )}
           </div>
 
-          {/* Contact — officers only */}
+          {/* Contact, officers only */}
           {showContact && (member.phone || member.email) && (
             <div className="flex flex-wrap gap-3 mt-2">
               {member.email && (
@@ -192,7 +192,7 @@ const MemberDirectory: React.FC = () => {
 
   return (
     <div>
-      <SEO title="Member Directory" description="Browse the Little Elm TSA member directory — find teammates and connect with chapter members." />
+      <SEO title="Member Directory" description="Browse the Little Elm TSA member directory, find teammates and connect with chapter members." />
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">

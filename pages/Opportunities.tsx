@@ -236,7 +236,7 @@ const Opportunities: React.FC = () => {
               Your Next <span className="text-electric-500">Big Break</span>
             </h1>
             <p className="text-xl text-ink-dim max-w-2xl leading-relaxed mb-8">
-              Scholarships, internships, summer programs, and competitions — curated by your officers, updated regularly.
+              Scholarships, internships, summer programs, and competitions, curated by your officers, updated regularly.
             </p>
 
             {/* Stat chips */}
@@ -273,7 +273,7 @@ const Opportunities: React.FC = () => {
             className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-gold-100 border border-gold-200/30 text-gold-500 mb-8 text-sm font-semibold"
           >
             <Clock size={16} className="shrink-0" />
-            {urgentCount} opportunit{urgentCount === 1 ? 'y closes' : 'ies close'} within 7 days — don't miss out!
+            {urgentCount} opportunit{urgentCount === 1 ? 'y closes' : 'ies close'} within 7 days, don't miss out!
             <button onClick={() => setActiveType('All')} className="ml-auto text-xs font-bold underline underline-offset-2">View all</button>
           </motion.div>
         )}
@@ -331,7 +331,7 @@ const Opportunities: React.FC = () => {
             <h3 className="font-bold text-ink mb-1">No opportunities found</h3>
             <p className="text-sm text-ink-dim">
               {opportunities.length === 0
-                ? 'Check back soon — officers post new opportunities regularly.'
+                ? 'Check back soon, officers post new opportunities regularly.'
                 : 'Try adjusting your search or filters.'}
             </p>
           </div>

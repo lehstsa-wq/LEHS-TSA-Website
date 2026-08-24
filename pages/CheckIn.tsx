@@ -139,7 +139,7 @@ const CheckIn: React.FC = () => {
                     maxLength={6}
                     value={pin}
                     onChange={e => setPin(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Enter 4–6 digit PIN"
+                    placeholder="Enter 4 to 6 digit PIN"
                     className="w-full bg-space-700/60 border border-space-500/50 rounded-xl px-4 py-3 text-2xl font-mono font-bold text-ink text-center tracking-[0.4em] placeholder-ink-muted focus:ring-2 focus:ring-electric-500/30 focus:border-electric-500 outline-none transition-all"
                   />
                   <p className="text-[11px] text-ink-muted mt-2 text-center">

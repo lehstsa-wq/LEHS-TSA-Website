@@ -315,7 +315,7 @@ const PersonalSection: React.FC = () => {
             <textarea
               value={bio}
               onChange={e => setBio(e.target.value)}
-              placeholder="A short bio about you — interests, goals, favorite competition…"
+              placeholder="A short bio about you, interests, goals, favorite competition…"
               rows={3}
               className={`${inputCls} resize-none`}
             />
@@ -528,7 +528,7 @@ const AccountInfoSection: React.FC = () => {
         </div>
         <div>
           <h3 className="font-bold text-ink text-sm">Account Information</h3>
-          <p className="text-xs text-ink-muted mt-0.5">Managed by chapter officers — contact an officer to change</p>
+          <p className="text-xs text-ink-muted mt-0.5">Managed by chapter officers, contact an officer to change</p>
         </div>
       </div>
       <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -153,7 +153,7 @@ const Interests: React.FC = () => {
           {/* ── Community Cards ── */}
           <div>
             <h2 className="text-sm font-bold text-ink-muted uppercase tracking-wider mb-4">
-              Community — {filteredCommunity.length} member{filteredCommunity.length !== 1 ? 's' : ''}
+              Community, {filteredCommunity.length} member{filteredCommunity.length !== 1 ? 's' : ''}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredCommunity.length > 0 ? (

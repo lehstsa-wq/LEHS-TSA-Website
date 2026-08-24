@@ -33,7 +33,7 @@ const CreateTeamForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [saving, setSaving] = useState(false);
 
   const allComps = [
-    ...COMPETITIONS.map(c => ({ id: c.id, title: c.title })),
+...COMPETITIONS.map(c => ({ id: c.id, title: c.title })),
     { id: 'teams', title: 'TEAMS' },
   ].sort((a, b) => a.title.localeCompare(b.title));
 
@@ -396,7 +396,7 @@ const Teams: React.FC = () => {
   const uniqueComps = ['All', ...Array.from(new Set(teams.map(t => t.competitionName))).sort()];
 
   const communityTeams = teams.filter(t => {
-    if (user && t.memberIds.includes(user.id)) return false; // exclude mine — shown above
+    if (user && t.memberIds.includes(user.id)) return false; // exclude mine, shown above
     const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) ||
                           t.competitionName.toLowerCase().includes(search.toLowerCase()) ||
                           t.leaderName.toLowerCase().includes(search.toLowerCase());
@@ -521,7 +521,7 @@ const Teams: React.FC = () => {
         {/* Team Grid */}
         <div className="mb-4">
           <p className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-4">
-            {user && myTeams.length > 0 ? 'Other Teams' : 'All Teams'} — {communityTeams.length} result{communityTeams.length !== 1 ? 's' : ''}
+            {user && myTeams.length > 0 ? 'Other Teams' : 'All Teams'}, {communityTeams.length} result{communityTeams.length !== 1 ? 's' : ''}
           </p>
           {communityTeams.length === 0 ? (
             <div className="text-center py-16 border border-dashed border-space-500/30 rounded-2xl">

@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
                 backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
                 backgroundSize: '18px 18px',
               }} />
-              {/* Red radial glow — top right corner */}
+              {/* Red radial glow, top right corner */}
               <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none" style={{
                 background: 'radial-gradient(circle at top right, rgba(238,38,36,0.22), transparent 70%)',
               }} />
@@ -262,14 +262,14 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-[9px] text-white/40 font-mono uppercase tracking-widest mb-0.5">Grade</p>
-                    <p className="text-base font-bold">{user?.grade ?? '—'}</p>
+                    <p className="text-base font-bold">{user?.grade ?? 'N/A'}</p>
                   </div>
                 </div>
 
                 {/* Footer strip */}
                 <div className="mt-5 pt-4 flex items-center justify-between"
                   style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}>
-                  <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2026–2027 Season</span>
+                  <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2026 to 2027 Season</span>
                   <span className="flex items-center gap-1.5 text-[9px] text-white/55">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#86BB50' }} />
                     Active
