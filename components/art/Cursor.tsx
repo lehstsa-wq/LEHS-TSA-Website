@@ -136,4 +136,3 @@ export const Cursor: React.FC = () => {
 /* ═══════════════════════════════════════════════════════════════════════
    GRAIN: animated film-grain overlay (fixed, above content, below modals)
    ═══════════════════════════════════════════════════════════════════════ */
-export const Grain: React.FC = () => <div className="sr-grain" aria-hidden />;

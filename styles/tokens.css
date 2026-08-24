@@ -118,7 +118,6 @@ html.light .sr-cursor-scope {
   --sr-ink-ghost:   rgba(20, 20, 26, 0.40);
   --sr-ghost-stroke: rgba(20, 20, 26, 0.09);
 }
-html.light .sr-grain { filter: invert(1); opacity: 0.07; }
 
 /* ── AURORA: localized chromatic field behind art clusters. Deliberately
    tight and placed, never a full-page wash: that's the anti-slop rule. ── */
@@ -413,27 +412,6 @@ html.light .art-backdrop .sr-art { opacity: 0.2; }
 }
 .sr-cursor-ring[data-state="labeled"] .sr-cursor-label { opacity: 1; }
 
-/* ── FILM GRAIN ─────────────────────────────────────────────────────── */
-.sr-grain {
-  position: fixed;
-  inset: -100px;
-  z-index: 70;                /* above chrome (50), below modal (80) */
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: sr-grain-shift 0.9s steps(6) infinite;
-}
-@keyframes sr-grain-shift {
-  0%   { transform: translate(0, 0); }
-  20%  { transform: translate(-28px, 14px); }
-  40%  { transform: translate(16px, -30px); }
-  60%  { transform: translate(-12px, -18px); }
-  80%  { transform: translate(30px, 22px); }
-  100% { transform: translate(0, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sr-grain { animation: none; }
-}
 
 /* ── VELOCITY SKEW (applied by the engine to [data-skew] display type) ─ */
 .sr-skew { will-change: transform; }

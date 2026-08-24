@@ -11,7 +11,7 @@ import { ModalProvider } from './context/ModalContext';
 import { BackToTop } from './components/BackToTop';
 import { initAnalytics, trackPageView } from './lib/analytics';
 import { StickyMobileCTA } from './components/StickyMobileCTA';
-import { Cursor, Grain } from './components/art/Cursor';
+import { Cursor } from './components/art/Cursor';
 
 // Pages
 import Home from './pages/Home';
@@ -84,7 +84,6 @@ const App: React.FC = () => {
               <Router>
                 <ScrollToTop />
                 <RouteTracker />
-                <Grain />
                 <Cursor />
                 <Layout>
                   <Suspense fallback={<RouteFallback />}>
