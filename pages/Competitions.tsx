@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  AlertTriangle, Search,
+  AlertTriangle, Search, Sparkles,
   ChevronRight, CheckCircle,
   Briefcase, PenTool, Cpu, Hammer, Zap, Plane, Layers, X,
   Users, Clock, FileText, Download, MapPin, Filter, UserCheck
@@ -216,14 +216,14 @@ const Competitions: React.FC = () => {
             </h1>
 
             <p className="section-dek mx-auto mb-7">
-              40 official TSA events spanning engineering, coding, design, and leadership.
+              42 official TSA events spanning engineering, coding, design, and leadership.
               Find your event, join a team, and make it to nationals.
             </p>
 
             {/* Quick-stat chips */}
             <div className="flex flex-wrap gap-3 mb-7 justify-center">
               {[
-                { val: '40', label: 'Total Events',  color: '#6a9bcc' },
+                { val: '42', label: 'Total Events',  color: '#6a9bcc' },
                 { val: '8',  label: 'Categories',    color: '#d97757' },
                 { val: '1',  label: 'per Chapter',   color: '#d97757' },
                 { val: 'TX', label: 'UTE Events Available', color: '#6a9bcc' },
@@ -723,6 +723,39 @@ const Competitions: React.FC = () => {
 
               {/* Body */}
               <div className="p-8">
+                {/* 2026-2027 theme or problem, where the event has one */}
+                {'theme' in selectedEvent.details && selectedEvent.details.theme && (
+                  <div
+                    className="mb-6 rounded-xl p-5"
+                    style={{
+                      background: 'var(--c-card)',
+                      border: '1px solid color-mix(in srgb, var(--c-amber) 34%, transparent)',
+                    }}
+                  >
+                    <h4 className="font-bold text-sm mb-2 flex items-center gap-2" style={{ color: 'var(--c-amber)' }}>
+                      <Sparkles size={14} /> 2026 to 2027 Theme
+                    </h4>
+                    <p className="text-sm text-ink leading-relaxed">{selectedEvent.details.theme}</p>
+                  </div>
+                )}
+
+                {/* Flagged when the event is absent from the current national events chart */}
+                {'verifyForSeason' in selectedEvent.details && selectedEvent.details.verifyForSeason && (
+                  <div
+                    className="mb-6 rounded-xl p-4 flex items-start gap-3"
+                    style={{
+                      background: 'var(--c-card)',
+                      border: '1px solid color-mix(in srgb, var(--c-red) 34%, transparent)',
+                    }}
+                  >
+                    <AlertTriangle size={15} className="mt-0.5 flex-shrink-0" style={{ color: 'var(--c-red)' }} />
+                    <p className="text-xs text-ink-dim leading-relaxed">
+                      This event does not appear on the current national high school events chart.
+                      Confirm with your advisor before planning for it.
+                    </p>
+                  </div>
+                )}
+
                 {/* Description */}
                 <p className="text-ink-dim text-base leading-relaxed mb-6 pb-8 border-b border-space-500/40">
                   {selectedEvent.details.fullDescription}
