@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -16,23 +16,26 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Events from './pages/Events';
 import Officers from './pages/Officers';
-import Competitions from './pages/Competitions';
 import Resources from './pages/Resources';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
 import News from './pages/News';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import StudentUpdates from './pages/StudentUpdates';
-import AdminPanel from './pages/AdminPanel';
-import Settings from './pages/Settings';
-import Interests from './pages/Interests';
-import MemberDirectory from './pages/MemberDirectory';
-import CheckIn from './pages/CheckIn';
-import Teams from './pages/Teams';
-import Opportunities from './pages/Opportunities';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+
+// Behind auth or heavy: split into their own chunks so the first paint does not
+// carry the admin console.
+const Competitions = lazy(() => import('./pages/Competitions'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const StudentUpdates = lazy(() => import('./pages/StudentUpdates'));
+const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Interests = lazy(() => import('./pages/Interests'));
+const MemberDirectory = lazy(() => import('./pages/MemberDirectory'));
+const CheckIn = lazy(() => import('./pages/CheckIn'));
+const Teams = lazy(() => import('./pages/Teams'));
+const Opportunities = lazy(() => import('./pages/Opportunities'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -56,6 +59,15 @@ const RouteTracker = () => {
   return null;
 };
 
+
+/** Shown while a lazily loaded route chunk is fetched. */
+const RouteFallback = () => (
+  <div className="min-h-[60vh] flex items-center justify-center" role="status" aria-live="polite">
+    <span className="sr-only">Loading page</span>
+    <span className="h-6 w-6 rounded-full border-2 border-current border-t-transparent animate-spin opacity-40" />
+  </div>
+);
+
 const App: React.FC = () => {
   return (
     <AuthProvider>
@@ -69,6 +81,7 @@ const App: React.FC = () => {
                 <Grain />
                 <Cursor />
                 <Layout>
+                  <Suspense fallback={<RouteFallback />}>
                   <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<Home />} />
@@ -153,6 +166,7 @@ const App: React.FC = () => {
                     }
                   />
                 </Routes>
+                  </Suspense>
               </Layout>
               <BackToTop />
             </Router>

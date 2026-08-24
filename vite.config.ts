@@ -25,6 +25,21 @@ export default defineConfig({
       '@': path.resolve(__dirname, './'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Firebase is the largest single dependency and it changes far less
+        // often than app code. Splitting it out means a deploy invalidates the
+        // app chunk while the SDK stays in the browser cache, which matters
+        // now that assets are served immutable.
+        manualChunks: {
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          motion: ['motion/react'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 700,
+  },
   server: {
     hmr: {
       host: 'localhost',

@@ -229,6 +229,10 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Read first: several subscriptions below are gated on whether anyone is
+  // signed in, because their collections are not publicly readable.
+  const { user } = useAuth();
+
   // State Initialization with Mock Data
   const [announcements, setAnnouncements] = useState<Announcement[]>(MOCK_ANNOUNCEMENTS);
   const [members, setMembers] = useState<User[]>([]);
@@ -311,23 +315,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // Sync Members from Firestore
+  // Sync Members from Firestore. Rules require a signed-in user, so subscribing
+  // while signed out only yields permission-denied and an idle connection.
   useEffect(() => {
+    if (!user) { setMembers([]); return; }
     const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
       const memberList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
       setMembers(memberList);
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
-  // Sync Problem Reports from Firestore
+  // Sync Problem Reports from Firestore (officer-only data).
   useEffect(() => {
+    if (!user) { setProblemReports([]); return; }
     const unsubscribe = onSnapshot(collection(db, "problem_reports"), (snapshot) => {
       const reports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ProblemReport));
       setProblemReports(reports);
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   // Sync Competition Interests from Firestore
   useEffect(() => {
@@ -453,7 +460,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
-  const { user } = useAuth();
 
   // The manual "Next Major Event" override wins only while it is still ahead of
   // us; once it lapses (or was never set) we fall back to the soonest upcoming
@@ -1035,8 +1041,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await deleteDoc(doc(db, "opportunities", id));
   };
 
-  return (
-    <DataContext.Provider value={{
+  // The provider sits above the whole app, so a fresh object literal here
+  // re-renders every consumer on any state change. Memoised so consumers only
+  // re-render when a value they actually use changes identity.
+  const contextValue = useMemo(() => ({
       announcements, members, resources, officerNotes, internalDeadlines, siteSettings, competitionInterests, problemReports,
       competitionLinks, updateCompetitionLinks,
       competitionResults, addCompetitionResult, updateCompetitionResult, deleteCompetitionResult,
@@ -1056,7 +1064,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscribe,
       teams, createTeam, joinTeam, leaveTeam, deleteTeam, updateTeamStatus,
       opportunities, addOpportunity, updateOpportunity, deleteOpportunity,
-    }}>
+  }), [
+    announcements, members, resources, officerNotes, internalDeadlines, siteSettings,
+    competitionInterests, problemReports, competitionLinks, competitionResults,
+    meetings, officersList, eventsList, projectsList, galleryList, accessCodes,
+    nextEvent, teams, opportunities,
+  ]);
+
+  return (
+    <DataContext.Provider value={contextValue}>
       {children}
     </DataContext.Provider>
   );
