@@ -5,7 +5,7 @@ import { useData } from '../context/DataContext';
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
 /* This panel keeps its dark gradient in both themes, so its text is coloured
-   inline rather than with `text-white` utilities — light mode rewrites those
+   inline rather than with `text-white` utilities: light mode rewrites those
    utilities to dark ink, which would make the countdown unreadable here. */
 
 export const Countdown: React.FC = () => {

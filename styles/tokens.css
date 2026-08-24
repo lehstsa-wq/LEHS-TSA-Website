@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   LEHS TSA — SHOWROOM DESIGN SYSTEM · PHASE 1 TOKENS
+   LEHS TSA: SHOWROOM DESIGN SYSTEM · PHASE 1 TOKENS
    ───────────────────────────────────────────────────────────────────────
    Paradigm (from wow-showroom.com/mouse-parallax):
-     · spatial black canvas — depth lives in motion, never in shadow/gradient
-     · two-register typography — huge literary display vs microscopic anchors
+     · spatial black canvas: depth lives in motion, never in shadow/gradient
+     · two-register typography: huge literary display vs microscopic anchors
      · TSA Pantone blue + red are the ONLY chroma on the void
    These tokens are ADDITIVE. They do not remove the existing --c-* theme
    tokens the rest of the site depends on; showroom surfaces opt in via the
@@ -22,10 +22,10 @@
   --sr-ink-dim:   rgba(255, 255, 255, 0.64);
   --sr-ink-ghost: rgba(255, 255, 255, 0.38);     /* micro-labels at rest       */
 
-  /* ── CHROMA — spectral studio palette (technology × art print) ──── */
+  /* ── CHROMA: spectral studio palette (technology × art print) ──── */
   --sr-blue:    #005daa;
   --sr-blue-hi: #3b9eff;                     /* electric                       */
-  --sr-red:     #e93d82;                     /* magenta — rules, indices       */
+  --sr-red:     #e93d82;                     /* magenta: rules, indices       */
   --sr-magenta: #e93d82;
   --sr-amber:   #ffb224;
   --sr-violet:  #8250ff;
@@ -44,17 +44,17 @@
   /* ── TYPE REGISTER 2 · MICRO (functional anchors) ────────────────── */
   --sr-font-body: "Source Sans 3", "Source Sans Pro", Arial, sans-serif;
   --sr-font-mono: "JetBrains Mono", monospace;   /* coordinates, indices       */
-  --sr-micro:    0.6875rem;                   /* 11px — nav, breadcrumb anchors */
-  --sr-micro-xs: 0.625rem;                    /* 10px — chapter №, HUD readouts */
+  --sr-micro:    0.6875rem;                   /* 11px: nav, breadcrumb anchors */
+  --sr-micro-xs: 0.625rem;                    /* 10px: chapter №, HUD readouts */
   --sr-micro-tracking: 0.22em;                /* always uppercase               */
   --sr-body:    1rem;
   --sr-body-lg: 1.1875rem;                    /* tier-B prose; max-width 34em   */
-  /* NOTE: the 1.5–2.5rem "card-heading" register is deliberately absent */
+  /* NOTE: the 1.5 to 2.5rem "card-heading" register is deliberately absent */
 
   /* ── SPATIAL SYSTEM (viewport-relative, no container grid) ────────── */
   --sr-stage-h:   100dvh;
   --sr-edge:      clamp(1.25rem, 4vw, 4rem);  /* HUD inset from viewport edge   */
-  --sr-stack-gap: clamp(3rem, 8vh, 5.5rem);   /* between sections — tight, no dead air */
+  --sr-stack-gap: clamp(3rem, 8vh, 5.5rem);   /* between sections: tight, no dead air */
   --sr-chapter-pad: clamp(3.5rem, 9vh, 6.5rem); /* vertical padding of non-hero chapters */
   --sr-radius:    0px;                         /* rounded SaaS cards abolished   */
   --sr-measure:   34em;
@@ -69,13 +69,13 @@
   --sr-z-toast: 90;
 
   /* ── MOTION CONSTANTS (consumed by the parallax engine) ──────────── */
-  /* Tier A — experiential (Home, About, Officers, Join, Competitions LP) */
+  /* Tier A: experiential (Home, About, Officers, Join, Competitions LP) */
   --px-perspective: 1100px;
   --px-amp-deep: 10; --px-amp-mid: 24; --px-amp-hud: 44;   /* px at |n| = 1     */
   --px-lambda-deep: 3; --px-lambda-mid: 5; --px-lambda-hud: 8;  /* s⁻¹          */
   --px-swivel-deg: 9;
 
-  /* Tier B — editorial semi-parallax (Dashboard, Admin, Teams, forms) */
+  /* Tier B: editorial semi-parallax (Dashboard, Admin, Teams, forms) */
   --px-b-amp-deep: 4; --px-b-amp-mid: 8; --px-b-amp-hud: 0;
   --px-b-lambda-deep: 2; --px-b-lambda-mid: 3.5;
   --px-b-swivel-deg: 1.5;
@@ -94,7 +94,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SHOWROOM SCOPE — everything below only applies inside a <ParallaxStage>,
+   SHOWROOM SCOPE: everything below only applies inside a <ParallaxStage>,
    which renders `.sr`. Keeps the paradigm from leaking into legacy pages.
    ═══════════════════════════════════════════════════════════════════════ */
 .sr {
@@ -106,7 +106,7 @@
   overflow: clip;
 }
 
-/* ── LIGHT MODE — warm paper studio; same system, inverted ink ──────── */
+/* ── LIGHT MODE: warm paper studio; same system, inverted ink ──────── */
 html.light .sr,
 html.light .sr-cursor-scope {
   --sr-void:        #faf7f1;                 /* warm paper                     */
@@ -120,7 +120,7 @@ html.light .sr-cursor-scope {
 }
 html.light .sr-grain { filter: invert(1); opacity: 0.07; }
 
-/* ── AURORA — localized chromatic field behind art clusters. Deliberately
+/* ── AURORA: localized chromatic field behind art clusters. Deliberately
    tight and placed, never a full-page wash: that's the anti-slop rule. ── */
 .sr-aurora {
   position: absolute;
@@ -142,7 +142,7 @@ html.light .sr-aurora { opacity: 0.07; }
 }
 @media (prefers-reduced-motion: reduce) { .sr-aurora { animation: none; } }
 
-/* ── ART BACKDROP — the artful canvas BEHIND all elements, site-wide.
+/* ── ART BACKDROP: the artful canvas BEHIND all elements, site-wide.
    A fixed layer under the content: aurora washes + faint line-art, so
    cards, buttons, and text sit on top of an art print in both themes. */
 .art-backdrop {
@@ -157,7 +157,7 @@ html.light .art-backdrop .sr-aurora { opacity: 0.3; }
 .art-backdrop .sr-art { opacity: 0.26; }
 html.light .art-backdrop .sr-art { opacity: 0.2; }
 
-/* ── SPECTRAL TEXT — gradient-filled display words ──────────────────── */
+/* ── SPECTRAL TEXT: gradient-filled display words ──────────────────── */
 .sr-grad-text {
   background: var(--sr-spectral);
   -webkit-background-clip: text;
@@ -166,7 +166,7 @@ html.light .art-backdrop .sr-art { opacity: 0.2; }
   -webkit-text-fill-color: transparent;
 }
 
-/* ── ENTRANCE RISE — hero elements assemble on mount, staggered ─────── */
+/* ── ENTRANCE RISE: hero elements assemble on mount, staggered ─────── */
 .sr-rise {
   opacity: 0;
   transform: translateY(26px);
@@ -181,7 +181,7 @@ html.light .art-backdrop .sr-art { opacity: 0.2; }
   .sr-rise { animation: none; opacity: 1; transform: none; filter: none; }
 }
 
-/* ── ART FLOAT — slow drift so artwork breathes without page movement ── */
+/* ── ART FLOAT: slow drift so artwork breathes without page movement ── */
 .sr-float { animation: sr-float 16s ease-in-out infinite; }
 .sr-float--late { animation-delay: -8s; }
 @keyframes sr-float {
@@ -259,7 +259,7 @@ html.light .art-backdrop .sr-art { opacity: 0.2; }
 .sr-hud__bl { bottom: var(--sr-edge); left: var(--sr-edge); }
 .sr-hud__br { bottom: var(--sr-edge); right: var(--sr-edge); }
 
-/* ── ACCENT RULE — the single red hairline permitted per viewport ───── */
+/* ── ACCENT RULE: the single red hairline permitted per viewport ───── */
 .sr-rule {
   display: inline-block;
   width: 3rem;
@@ -295,7 +295,7 @@ html.light .art-backdrop .sr-art { opacity: 0.2; }
 .sr-link .sr-link__arrow { transition: transform var(--sr-dur-ui) var(--sr-ease-out-expo); }
 .sr-link:hover .sr-link__arrow { transform: translateX(4px); }
 
-/* ── EDITORIAL ROW (Tier B — Obscure-derived hover, no cards) ───────── */
+/* ── EDITORIAL ROW (Tier B: Obscure-derived hover, no cards) ───────── */
 .sr-rows > * {
   transition: opacity var(--sr-dur-ui) ease, color var(--sr-dur-ui) ease;
 }

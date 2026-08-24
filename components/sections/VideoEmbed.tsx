@@ -3,7 +3,7 @@ import React from 'react';
 interface VideoEmbedProps {
   /** Vimeo player URL, including any ?h= privacy hash. */
   src: string;
-  /** Accessible title for the iframe — screen readers announce this. */
+  /** Accessible title for the iframe. Screen readers announce this. */
   title: string;
   className?: string;
 }

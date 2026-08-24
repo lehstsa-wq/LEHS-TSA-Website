@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CURSOR — crosshair dot + trailing ring, showroom-scoped
+   CURSOR: crosshair dot + trailing ring, showroom-scoped
    ───────────────────────────────────────────────────────────────────────
    Active only while the pointer is inside a `.sr` region (legacy pages and
    form fields keep the native cursor). The dot tracks instantly; the ring
    trails with the same exponential lerp the parallax engine uses. States:
 
-   · default        — 6px dot + 34px ring
-   · [data-cursor]  — ring expands and shows the label (e.g. "VIEW")
-   · pressed        — ring contracts
+   · default       : 6px dot + 34px ring
+   · [data-cursor] : ring expands and shows the label (e.g. "VIEW")
+   · pressed       : ring contracts
 
    Elements marked [data-magnetic] are pulled toward the pointer within
    ~80px and spring back on leave. Touch and reduced-motion: never mounts.
@@ -83,7 +83,7 @@ export const Cursor: React.FC = () => {
       if (!raf) raf = requestAnimationFrame(tick);
     };
 
-    /* scroll moves the page under a stationary pointer — re-check what's
+    /* scroll moves the page under a stationary pointer: re-check what's
        beneath it so the ring/label never go stale outside .sr regions */
     const onScroll = () => {
       if (x < 0) return;
@@ -134,6 +134,6 @@ export const Cursor: React.FC = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   GRAIN — animated film-grain overlay (fixed, above content, below modals)
+   GRAIN: animated film-grain overlay (fixed, above content, below modals)
    ═══════════════════════════════════════════════════════════════════════ */
 export const Grain: React.FC = () => <div className="sr-grain" aria-hidden />;

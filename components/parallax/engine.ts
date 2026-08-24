@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   PARALLAX ENGINE — single shared requestAnimationFrame loop
+   PARALLAX ENGINE: single shared requestAnimationFrame loop
    ───────────────────────────────────────────────────────────────────────
    One pointer, one loop, many layers. Each layer smooths the normalized
    cursor vector toward its own target with a frame-rate-independent lerp:
@@ -13,7 +13,7 @@
    The loop only runs while ≥1 layer is registered (layers register via
    IntersectionObserver, so off-screen stages cost nothing). When any form
    field gains focus anywhere, motion eases to rest so nothing drifts while
-   the user types. Touch / reduced-motion never register — they stay static.
+   the user types. Touch / reduced-motion never register: they stay static.
    ═══════════════════════════════════════════════════════════════════════ */
 
 export type Depth = 'deep' | 'mid' | 'hud' | 'content';

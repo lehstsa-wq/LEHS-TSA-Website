@@ -7,8 +7,8 @@ import { parallaxEngine, type Depth, type Effect, type Intensity } from './engin
 
 /* ═══════════════════════════════════════════════════════════════════════
    PARALLAX PRIMITIVES
-   <ParallaxStage>  — full-viewport chapter; owns perspective + intensity.
-   <ParallaxLayer>  — a depth plane that registers with the shared engine
+   <ParallaxStage> : full-viewport chapter; owns perspective + intensity.
+   <ParallaxLayer> : a depth plane that registers with the shared engine
                       while it is on-screen.
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -259,7 +259,7 @@ export const SrHero: React.FC<SrHeroProps> = ({ index, chapter, ghost, art, titl
   </ParallaxStage>
 );
 
-/* ── SHOWROOM PAGE (Tier B) — compact art header + static content shell.
+/* ── SHOWROOM PAGE (Tier B): compact art header + static content shell.
    For functional/editorial pages: same canvas, typography, aurora, and art
    language, but a short header instead of a 100dvh hero, and everything
    below stays pinned. */

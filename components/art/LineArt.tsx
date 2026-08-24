@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LINE ART — parametric blueprint illustrations, drawn by code
+   LINE ART: parametric blueprint illustrations, drawn by code
    ───────────────────────────────────────────────────────────────────────
    Every drawing is generated geometry (no traced assets): gears, measure
    rings, constellations, circuit traces, isometric solids. All strokes are
    1px `currentColor` on transparent, so each piece inherits ink/blue/red
    from its parent. Pass `draw` (default true) and the paths draw themselves
-   in when scrolled into view via stroke-dashoffset — the illustration IS
+   in when scrolled into view via stroke-dashoffset: the illustration IS
    the animation. Reduced-motion users see them pre-drawn (CSS gate).
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -81,7 +81,7 @@ const Svg: React.FC<ArtProps & { viewBox: string; children: React.ReactNode; lab
   );
 };
 
-/* ── GEAR — involute-ish spur gear, parametric teeth ────────────────── */
+/* ── GEAR: involute-ish spur gear, parametric teeth ────────────────── */
 export const Gear: React.FC<ArtProps & { teeth?: number }> = ({ teeth = 14, ...p }) => {
   const C = 100, ro = 82, rr = 66, rh = 22, rb = 34;
   const step = 360 / teeth;
@@ -115,7 +115,7 @@ export const Gear: React.FC<ArtProps & { teeth?: number }> = ({ teeth = 14, ...p
   );
 };
 
-/* ── MEASURE RING — instrument dial with graduated ticks ────────────── */
+/* ── MEASURE RING: instrument dial with graduated ticks ────────────── */
 export const MeasureRing: React.FC<ArtProps & { ticks?: number }> = ({ ticks = 72, ...p }) => {
   const C = 100, rO = 92, rI = 64;
   const tickEls = Array.from({ length: ticks }, (_, i) => {
@@ -137,7 +137,7 @@ export const MeasureRing: React.FC<ArtProps & { ticks?: number }> = ({ ticks = 7
   );
 };
 
-/* ── CONSTELLATION — star chart plotted from data points ────────────── */
+/* ── CONSTELLATION: star chart plotted from data points ────────────── */
 export const Constellation: React.FC<ArtProps & { points?: [number, number][] }> = ({
   points = [[20, 150], [55, 70], [105, 110], [140, 35], [175, 90], [150, 160]],
   ...p
@@ -155,7 +155,7 @@ export const Constellation: React.FC<ArtProps & { points?: [number, number][] }>
   </Svg>
 );
 
-/* ── CIRCUIT TRACE — manhattan-routed traces with pads ──────────────── */
+/* ── CIRCUIT TRACE: manhattan-routed traces with pads ──────────────── */
 export const Circuit: React.FC<ArtProps> = (p) => (
   <Svg viewBox="0 0 200 200" label="Circuit trace drawing" {...p}>
     <path d="M 10 40 H 70 V 90 H 120" />
@@ -174,7 +174,7 @@ export const Circuit: React.FC<ArtProps> = (p) => (
   </Svg>
 );
 
-/* ── ISO CUBE — exploded isometric solid with dimension marks ───────── */
+/* ── ISO CUBE: exploded isometric solid with dimension marks ───────── */
 export const IsoCube: React.FC<ArtProps> = (p) => {
   const s = 44;
   const iso = (x: number, y: number, z: number): [number, number] =>
@@ -200,7 +200,7 @@ export const IsoCube: React.FC<ArtProps> = (p) => {
   );
 };
 
-/* ── CROSSHAIR — registration mark ──────────────────────────────────── */
+/* ── CROSSHAIR: registration mark ──────────────────────────────────── */
 export const Crosshair: React.FC<ArtProps> = (p) => (
   <Svg viewBox="0 0 200 200" label="Registration crosshair" {...p}>
     <circle cx={100} cy={100} r={40} />
@@ -212,7 +212,7 @@ export const Crosshair: React.FC<ArtProps> = (p) => (
   </Svg>
 );
 
-/* ── ORBIT — atom/gyroscope ellipses ────────────────────────────────── */
+/* ── ORBIT: atom/gyroscope ellipses ────────────────────────────────── */
 export const Orbit: React.FC<ArtProps> = (p) => (
   <Svg viewBox="0 0 200 200" label="Orbital gyroscope drawing" {...p}>
     <ellipse cx={100} cy={100} rx={88} ry={30} />

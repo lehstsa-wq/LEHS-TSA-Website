@@ -5,7 +5,7 @@ interface SectionHeaderProps {
   eyebrow: string;
   title: string;
   dek?: string;
-  /** 'h1' for the page hero only — one per page. Defaults to 'h2'. */
+  /** 'h1' for the page hero only, one per page. Defaults to 'h2'. */
   as?: 'h1' | 'h2';
   align?: 'center' | 'left';
   className?: string;

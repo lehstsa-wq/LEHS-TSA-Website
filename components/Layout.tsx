@@ -80,7 +80,7 @@ export const Navbar: React.FC = () => {
   const { announcements } = useData();
   const { theme, toggleTheme } = useTheme();
 
-  // Unread announcement count — timestamp-based so mock/Firestore ID mismatches
+  // Unread announcement count, timestamp-based so mock/Firestore ID mismatches
   // never cause a permanent badge. Counts announcements dated after last clear.
   const unreadCount = (() => {
     if (!user || announcements.length === 0) return 0;
@@ -682,7 +682,7 @@ export const Footer: React.FC = () => {
 /* ─────────────────────────────────────────────────────────────
    LAYOUT WRAPPER
 ───────────────────────────────────────────────────────────── */
-/* ── ART BACKDROP — the canvas behind everything, both themes.
+/* ── ART BACKDROP: the canvas behind everything, both themes.
    Fixed under the content: two aurora washes + faint blueprint line-art.
    Content (main/footer) stacks above via z-index. */
 const ArtBackdrop: React.FC = () => (

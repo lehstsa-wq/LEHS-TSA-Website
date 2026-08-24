@@ -5,8 +5,8 @@ import { Upload, X, Link as LinkIcon, Image as ImageIcon, Loader2 } from 'lucide
  * Photo picker used by the admin Leadership editor and member Settings.
  *
  * Images are downscaled in-browser and stored as data URLs directly on the
- * Firestore document — the project has no Cloud Storage bucket wired up, and a
- * 512px JPEG lands around 30–60 KB, well inside the 1 MiB document limit.
+ * Firestore document: the project has no Cloud Storage bucket wired up, and a
+ * 512px JPEG lands around 30 to 60 KB, well inside the 1 MiB document limit.
  */
 
 const MAX_DIM = 512;

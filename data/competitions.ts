@@ -624,7 +624,7 @@ export const COMPETITIONS = [
     description: 'Miniature cars propelled by a pierced CO2 cartridge racing on a 60 ft track.',
     imageUrl: 'https://images.unsplash.com/photo-1532906619279-a7551079d571?auto=format&fit=crop&q=80&w=800',
     details: {
-      fullDescription: 'CO2 Research Racer cars are miniature cars propelled by a pierced CO2 cartridge racing on a ~60 ft (18 m) track — used to demonstrate mass, force, acceleration, aerodynamics. Cars are formed by shaping a single piece of wood or plastic into the body.',
+      fullDescription: 'CO2 Research Racer cars are miniature cars propelled by a pierced CO2 cartridge racing on a ~60 ft (18 m) track, used to demonstrate mass, force, acceleration, aerodynamics. Cars are formed by shaping a single piece of wood or plastic into the body.',
       eligibility: 'Individual entry.',
       procedure: 'Cars are raced on a track. Speed and design are evaluated.',
       careers: ['Aerodynamics Engineer', 'Automotive Technician', 'Physics Researcher'],
@@ -656,7 +656,7 @@ export const COMPETITIONS = [
     description: 'Teams collect meter data using a drone and transmit it back to headquarters.',
     imageUrl: 'https://images.unsplash.com/photo-1507582020474-9a35b7d455d9?auto=format&fit=crop&q=80&w=800',
     details: {
-      fullDescription: 'Texas TSA Power & Electric has new smart electrical meters that can be read wirelessly by a drone — teams collect meter data and transmit it back to headquarters as quickly as possible.',
+      fullDescription: 'Texas TSA Power & Electric has new smart electrical meters that can be read wirelessly by a drone. Teams collect meter data and transmit it back to headquarters as quickly as possible.',
       eligibility: 'Team of 2 to 3 students.',
       procedure: 'Fly drone to read meters and transmit data.',
       careers: ['Drone Pilot', 'Data Analyst', 'GIS Specialist'],

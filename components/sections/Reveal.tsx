@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 
 interface RevealProps {
@@ -24,6 +24,18 @@ export const Reveal: React.FC<RevealProps> = ({ delay = 0, className, children }
   const inView = useInView(ref, { once: true, margin: '-40px' });
   const prefersReduced = useReducedMotion();
 
+  // Safety net: if the observer has not fired shortly after mount, show the
+  // content anyway. Without this, anything the observer misses (a backgrounded
+  // tab, an environment where IntersectionObserver never fires) stays at
+  // opacity 0 forever and reads as a blank band on the page.
+  const [forced, setForced] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setForced(true), 600);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const show = inView || forced;
+
   if (prefersReduced) {
     return <div className={className}>{children}</div>;
   }
@@ -33,7 +45,7 @@ export const Reveal: React.FC<RevealProps> = ({ delay = 0, className, children }
       ref={ref}
       className={className}
       initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{ duration: 0.5, delay: delay / 1000, ease: [0.4, 0, 0.2, 1] }}
     >
       {children}

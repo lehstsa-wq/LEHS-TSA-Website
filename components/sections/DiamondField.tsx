@@ -2,9 +2,9 @@ import React, { useId } from 'react';
 
 interface DiamondFieldProps {
   /**
-   * hero   — full-bleed backdrop behind a page hero
-   * band   — subtle texture behind a content band
-   * corner — small accent cluster, e.g. a stat card corner
+   * hero:   full-bleed backdrop behind a page hero
+   * band:   subtle texture behind a content band
+   * corner: small accent cluster, e.g. a stat card corner
    */
   variant: 'hero' | 'band' | 'corner';
   className?: string;
@@ -25,7 +25,7 @@ const CONFIG = {
  * Decorative rotated-square lattice in TSA blue. Never conveys information.
  */
 export const DiamondField: React.FC<DiamondFieldProps> = ({ variant, className = '' }) => {
-  // useId() embeds ':' which is invalid in CSS selectors — strip it so url(#id) is safe.
+  // useId() embeds ':' which is invalid in CSS selectors, so strip it so url(#id) is safe.
   const patternId = `diamond-${useId().replace(/:/g, '')}`;
   const { size, opacity, stroke } = CONFIG[variant];
   const half = size / 2;

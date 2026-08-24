@@ -193,8 +193,8 @@ const Home: React.FC = () => {
           {/* Announcement */}
           {nextEvent && (
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 10 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.5 }}
               className="mb-6"
             >
@@ -211,7 +211,7 @@ const Home: React.FC = () => {
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.45, delay: 0.05 }}
             className="hero-title mb-6 text-balance"
           >
             Where{' '}
@@ -224,7 +224,7 @@ const Home: React.FC = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.45, delay: 0.12 }}
             className="section-dek mx-auto mb-7"
           >
             Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
@@ -235,7 +235,7 @@ const Home: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.45, delay: 0.19 }}
             className="flex flex-wrap gap-4 justify-center"
           >
             <Link to="/join" className="btn-primary text-base px-7 py-3.5 group">
@@ -249,9 +249,9 @@ const Home: React.FC = () => {
 
           {/* Stats row */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            initial={{ y: 10 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.45, delay: 0.26 }}
             className="flex flex-wrap gap-8 mt-8 justify-center"
           >
             {[
@@ -270,9 +270,9 @@ const Home: React.FC = () => {
 
           {/* Mini cards */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
+            initial={{ y: 14 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.45, delay: 0.33 }}
             className="grid grid-cols-2 gap-3 mt-8 max-w-lg mx-auto text-left"
           >
             {[

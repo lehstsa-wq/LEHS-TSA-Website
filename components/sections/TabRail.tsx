@@ -20,7 +20,7 @@ interface TabRailProps {
 
 /**
  * Vertical tab rail: each tab carries a bold label plus a description line, and
- * switches a panel alongside it. Full tablist semantics — arrow keys move
+ * switches a panel alongside it. Full tablist semantics: arrow keys move
  * selection and focus together, Home/End jump to the ends.
  */
 export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {

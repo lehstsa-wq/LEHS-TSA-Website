@@ -1,8 +1,8 @@
 /* ============================================================
    TSA BRAND FONTS
-   Source Sans Pro (body copy) — free via Google Fonts
-   Proxima Nova (headings/accents) — Adobe CC / Typekit
-   Franklin Gothic — fallback for non-Adobe environments
+   Source Sans Pro (body copy): free via Google Fonts
+   Proxima Nova (headings/accents): Adobe CC / Typekit
+   Franklin Gothic: fallback for non-Adobe environments
    ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -13,8 +13,8 @@
 /* ============================================================
    TSA BRAND DESIGN TOKENS
    Primary:
-     TSA Blue   #005DAA  — Pantone 286, C100 M66 Y0 K2
-     TSA Red    #EE2624  — Pantone 1795, C0 M94 Y100 K0
+     TSA Blue   #005DAA : Pantone 286, C100 M66 Y0 K2
+     TSA Red    #EE2624 : Pantone 1795, C0 M94 Y100 K0
      White      #FFFFFF
    Secondary (per TSA Brand Guide p.8):
      #86BB50  #4E8AC9  #D0539E  #EC881D  #574E8F  #FFC425
@@ -54,7 +54,7 @@
   --glow-amber:  0 0 24px rgba(236, 136, 29, 0.32), 0 0 64px rgba(236, 136, 29, 0.10);
   --glow-purple: 0 0 24px rgba(87, 78, 143, 0.32),  0 0 64px rgba(87, 78, 143, 0.10);
 
-  /* Shadows — override per mode */
+  /* Shadows: override per mode */
   --shadow-card:       0 20px 50px rgba(0, 93, 170, 0.10);
   --shadow-card-hover: 0 24px 60px rgba(0, 93, 170, 0.16);
   --shadow-elevated:   0 24px 80px rgba(0, 0, 0, 0.55);
@@ -119,7 +119,7 @@ html.light {
   --glow-amber:  none;
   --glow-purple: none;
 
-  /* Light mode shadows — subtle and clean */
+  /* Light mode shadows: subtle and clean */
   --shadow-card:       0 1px 2px rgba(13, 27, 46, 0.06), 0 4px 12px rgba(0, 93, 170, 0.08);
   --shadow-card-hover: 0 2px 4px rgba(13, 27, 46, 0.08), 0 8px 20px rgba(0, 93, 170, 0.12);
   --shadow-elevated:   0 6px 24px rgba(13, 27, 46, 0.12), 0 0 0 1px rgba(0, 93, 170, 0.12);
@@ -165,7 +165,7 @@ html.light {
     font-weight: 600;
   }
 
-  /* TSA: Source Sans Pro for body prose — full weight range supported */
+  /* TSA: Source Sans Pro for body prose: full weight range supported */
   p, blockquote, caption, figcaption, li {
     font-family: var(--font-body);
   }
@@ -189,7 +189,7 @@ html.light {
     color: var(--c-text);
   }
 
-  /* Scrollbar — TSA blue */
+  /* Scrollbar: TSA blue */
   ::-webkit-scrollbar         { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track   { background: transparent; }
   ::-webkit-scrollbar-thumb   {
@@ -292,7 +292,7 @@ html.light {
   }
 
   /* ── BUTTON VARIANTS ─────────────────────────────────────── */
-  /* Primary CTA — TSA Blue */
+  /* Primary CTA: TSA Blue */
   .btn-primary {
     @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 overflow-hidden;
     font-family: var(--font-heading);
@@ -307,7 +307,7 @@ html.light {
   }
   .btn-primary:active { transform: translateY(0); }
 
-  /* Secondary — outlined TSA Blue */
+  /* Secondary: outlined TSA Blue */
   .btn-secondary {
     @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200;
     font-family: var(--font-heading);
@@ -321,7 +321,7 @@ html.light {
     transform: translateY(-1px);
   }
 
-  /* Accent — TSA Red */
+  /* Accent: TSA Red */
   .btn-gold {
     @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200;
     font-family: var(--font-heading);
@@ -518,7 +518,7 @@ html.light {
     background-size: 60px 60px;
   }
 
-  /* ── HIGHLIGHT BAR — TSA Blue → Red ─────────────────────── */
+  /* ── HIGHLIGHT BAR: TSA Blue → Red ─────────────────────── */
   .highlight-bar {
     @apply absolute left-0 top-0 w-1 h-full rounded-l-full;
     background: linear-gradient(to bottom, #005DAA, #EE2624);
@@ -677,7 +677,7 @@ html.light .badge-amber {
   border: none;
 }
 
-/* Footer sits on a light surface in light mode — see the authoritative
+/* Footer sits on a light surface in light mode: see the authoritative
    footer block further down. Keep ink dark and accents high-contrast. */
 html.light footer .divider {
   background: linear-gradient(to right, transparent, rgba(0, 93, 170, 0.24), transparent);
@@ -763,7 +763,7 @@ html.light .shadow-card      { box-shadow: var(--shadow-card); }
 html.light .shadow-card-hover { box-shadow: var(--shadow-card-hover); }
 html.light .shadow-modal     { box-shadow: var(--shadow-elevated); }
 html.light .shadow-nav       { box-shadow: 0 1px 0 rgba(0, 93, 170, 0.12), 0 4px 16px rgba(50, 70, 89, 0.07); }
-/* Remove decorative glows — they look garish on white */
+/* Remove decorative glows: they look garish on white */
 html.light .shadow-glow-blue   { box-shadow: none; }
 html.light .shadow-glow-red    { box-shadow: none; }
 html.light .shadow-glow-gold   { box-shadow: none; }
@@ -911,7 +911,7 @@ html.light .text-gradient-gold { -webkit-text-fill-color: #D41F1D !important; co
 html.light .text-gradient-hero { -webkit-text-fill-color: #004A9E !important; color: #004A9E !important; }
 html.light .text-shimmer       { -webkit-text-fill-color: #5A6F7E !important; }
 
-/* ── Orbs: suppress on light background — they look like stains ── */
+/* ── Orbs: suppress on light background: they look like stains ── */
 html.light .orb { opacity: 0 !important; pointer-events: none; }
 
 /* ── Grid background: remove in light mode (AI tell) ── */
@@ -976,7 +976,7 @@ html.light footer .hover\:text-ink:hover         { color: #1a2533 !important; }
 html.light footer .hover\:text-electric-500:hover { color: #005DAA !important; }
 /* ── BRAND MARK: logo tiles and icon chips that sit on a solid brand colour.
    These must stay white in BOTH themes. Marked with a class rather than an
-   inline-style attribute selector — React writes inline styles through the
+   inline-style attribute selector: React writes inline styles through the
    CSSOM, so the reflected style attribute reads `rgb(0, 93, 170)` and any
    [style*="#005DAA"] selector silently never matches.
    Covers: navbar logo, mobile drawer logo, footer logo, login mark,
@@ -1021,7 +1021,7 @@ html.light .bg-gold-600 .text-white    { color: rgba(255,255,255,0.92) !importan
 
   .text-balance { text-wrap: balance; }
 
-  /* Gradient border — TSA Blue + Red */
+  /* Gradient border: TSA Blue + Red */
   .gradient-border { position: relative; }
   .gradient-border::before {
     content: '';

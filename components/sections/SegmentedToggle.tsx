@@ -14,7 +14,7 @@ interface SegmentedToggleProps {
  * Focus must move with the selection. Without it the previously focused button
  * keeps focus while dropping to tabIndex -1, and because the key handler closes
  * over that button's index, every later arrow press recomputes from the same
- * stale index — navigation advances one step and then sticks.
+ * stale index, so navigation advances one step and then sticks.
  */
 export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
   options,
