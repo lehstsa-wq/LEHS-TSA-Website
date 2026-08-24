@@ -4,7 +4,6 @@ export { SectionHeader } from './SectionHeader';
 export { DiamondField } from './DiamondField';
 export { StatCard, Counter } from './StatCard';
 export { SegmentedToggle } from './SegmentedToggle';
-export { LogoMarquee } from './LogoMarquee';
 export { StageScene } from './StageScene';
 export type { Stage } from './StageScene';
 export { TabRail } from './TabRail';

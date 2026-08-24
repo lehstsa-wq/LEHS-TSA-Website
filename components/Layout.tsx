@@ -160,7 +160,7 @@ export const Navbar: React.FC = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-space-900/90 backdrop-blur-xl border-b border-space-500/60 shadow-nav'
+            ? 'bg-space-900 border-b border-space-500/60 shadow-nav'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
@@ -339,7 +339,7 @@ export const Navbar: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-black/70 z-40 lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -437,7 +437,7 @@ export const Navbar: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-md"
+            className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 bg-black/75"
             onClick={() => setSearchOpen(false)}
           >
             <motion.div

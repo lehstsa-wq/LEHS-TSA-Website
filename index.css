@@ -103,15 +103,15 @@ html.light {
   --c-red-bright:   #B91815;
   --c-gold:         #D41F1D;
   --c-gold-bright:  #B91815;
-  --c-amber:        #C86700;
+  --c-amber:        #AC5900;   /* 4.55:1 worst case across white, surface and card */
   --c-amber-bright: #A85400;
   --c-purple:       #44355A;
-  --c-green:        #5A8F22;
+  --c-green:        #4E7C1D;   /* 4.51:1 worst case across white, surface and card */
 
   --c-text:         #0D1B2E;
   --c-text-dim:     #2D4563;
   --c-text-muted:   #5A6F7E;
-  --c-text-ghost:   rgba(45, 69, 99, 0.55);
+  --c-text-ghost:   #5C7080;   /* was 55% alpha at 2.90:1 on white */
 
   --glow-blue:   none;
   --glow-red:    none;
@@ -216,24 +216,22 @@ html.light {
 @layer components {
 
   /* ── GLASS MORPHISM ──────────────────────────────────────── */
+  /* Formerly glassmorphism. Now solid surfaces: a blurred, semi-transparent
+     backdrop means text contrast depends on whatever happens to be behind it,
+     which cannot be guaranteed. These are opaque so contrast is knowable. */
   .glass {
-    background: rgba(13, 26, 46, 0.82);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border: 1px solid rgba(78, 138, 201, 0.22);
+    background: #0D1A2E;
+    border: 1px solid var(--c-border);
   }
 
   .glass-light {
-    background: rgba(0, 93, 170, 0.06);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(78, 138, 201, 0.14);
+    background: #122238;
+    border: 1px solid var(--c-border-muted);
   }
 
   .glass-card {
-    background: rgba(13, 26, 46, 0.90);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(78, 138, 201, 0.22);
+    background: #0D1A2E;
+    border: 1px solid var(--c-border);
     box-shadow: var(--shadow-card);
   }
 
@@ -367,7 +365,9 @@ html.light {
   }
 
   .badge-gold {
-    background: #EE2624;
+    /* #EE2624 gave white text only 4.25:1; this clears 4.5:1 and is visually
+       indistinguishable from the brand red. */
+    background: #EB1412;
     color: #FFFFFF;
     border: none;
   }
@@ -379,14 +379,16 @@ html.light {
   }
 
   .badge-green {
+    /* Brand green kept; white text was 2.27:1, dark text is 7.61:1. */
     background: #86BB50;
-    color: #FFFFFF;
+    color: #0D1B2E;
     border: none;
   }
 
   .badge-amber {
+    /* Brand amber kept; white text was 2.59:1, dark text is 6.68:1. */
     background: #EC881D;
-    color: #FFFFFF;
+    color: #0D1B2E;
     border: none;
   }
 
@@ -609,15 +611,15 @@ html.light [class*="group-hover\:bg-electric-100"]   { background-color: rgba(0,
 html.light [class*="group-hover\:text-electric-500"] { color: #004A9E; }
 
 html.light .glass {
-  background: rgba(240, 244, 251, 0.90);
+  background: #F0F4FB;
   border-color: rgba(0, 93, 170, 0.15);
 }
 html.light .glass-light {
-  background: rgba(255, 255, 255, 0.92);
+  background: #FFFFFF;
   border-color: rgba(0, 93, 170, 0.12);
 }
 html.light .glass-card {
-  background: rgba(250, 251, 253, 0.95);
+  background: #FAFBFD;
   border-color: rgba(0, 93, 170, 0.15);
   box-shadow: 0 2px 8px rgba(13, 27, 46, 0.08);
 }
@@ -648,7 +650,7 @@ html.light .badge-blue {
   border: none;
 }
 html.light .badge-gold {
-  background: #EE2624;
+  background: #EB1412;
   color: #FFFFFF;
   border: none;
 }
@@ -659,12 +661,12 @@ html.light .badge-purple {
 }
 html.light .badge-green {
   background: #86BB50;
-  color: #FFFFFF;
+  color: #0D1B2E;
   border: none;
 }
 html.light .badge-amber {
   background: #EC881D;
-  color: #FFFFFF;
+  color: #0D1B2E;
   border: none;
 }
 

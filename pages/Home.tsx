@@ -8,7 +8,7 @@ import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { MILESTONES } from '../data/milestones';
 import {
-  SectionHeader, Reveal, StatCard, Counter, LogoMarquee, DiamondField,
+  SectionHeader, Reveal, StatCard, Counter, DiamondField,
   StageScene, TabRail, StoryTrack, AnnouncementPill, VideoEmbed,
 } from '../components/sections';
 import type { Stage, TabItem } from '../components/sections';
@@ -302,10 +302,41 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           COMPETITION MARQUEE
       ═══════════════════════════════════════════════════ */}
-      <section className="py-6 overflow-hidden border-y border-space-500/30 bg-space-950">
-        <div className="space-y-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <LogoMarquee items={COMPETITIONS} />
-          <LogoMarquee items={COMPETITIONS} reverse />
+      <section
+        className="border-y"
+        style={{
+          borderColor: 'var(--c-hairline)',
+          background: 'var(--c-surface)',
+          paddingTop: 'var(--section-py)',
+          paddingBottom: 'var(--section-py)',
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="section-eyebrow justify-center w-full mb-5">
+            <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
+            A Few of the Events
+            <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
+          </h2>
+          <ul className="flex flex-wrap justify-center gap-2.5">
+            {COMPETITIONS.map(name => (
+              <li
+                key={name}
+                className="text-sm font-medium px-4 py-2 rounded-full"
+                style={{
+                  background: 'var(--c-card)',
+                  border: '1px solid var(--c-amber)',
+                  color: 'var(--c-text)',
+                }}
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+          <p className="text-center mt-6">
+            <Link to="/competitions" className="inline-flex items-center gap-1.5 text-sm font-medium text-electric-500 hover:text-electric-400 transition-colors">
+              See all 42 competitions <ArrowRight size={14} />
+            </Link>
+          </p>
         </div>
       </section>
 
