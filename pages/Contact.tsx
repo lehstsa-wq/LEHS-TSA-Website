@@ -69,6 +69,14 @@ const Contact: React.FC = () => {
                     1600 Walker Lane<br />
                     Little Elm, TX 75068
                   </div>
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=Little+Elm+High+School%2C+1600+Walker+Lane%2C+Little+Elm%2C+TX+75068"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-electric-500 hover:text-electric-400 transition-colors"
+                  >
+                    Get directions <ExternalLink size={13} />
+                  </a>
                 </div>
               </div>
 
@@ -122,7 +130,10 @@ const Contact: React.FC = () => {
 
           {/* Right: form */}
           <div>
-            <h2 className="text-2xl font-bold text-ink mb-6">Send a Message</h2>
+            <h2 className="text-2xl font-bold text-ink mb-3">Send a Message</h2>
+            <p className="text-sm text-ink-dim mb-6">
+              An officer replies within two school days. Messages sent over a weekend or a break are answered on the next school day.
+            </p>
 
             {status === 'done' ? (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -190,6 +201,28 @@ const Contact: React.FC = () => {
                 </p>
               </form>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Find us */}
+      <section style={{ paddingBottom: 'var(--section-py)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="section-h2 text-2xl md:text-3xl mb-6 text-center">Find us</h2>
+          <div
+            className="overflow-hidden"
+            style={{ borderRadius: 'var(--card-radius)', border: '1px solid var(--c-hairline)' }}
+          >
+            <iframe
+              title="Map showing Little Elm High School"
+              src="https://www.google.com/maps?q=Little+Elm+High+School,+1600+Walker+Lane,+Little+Elm,+TX+75068&output=embed"
+              width="100%"
+              height="360"
+              style={{ border: 0, display: 'block' }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
         </div>
       </section>

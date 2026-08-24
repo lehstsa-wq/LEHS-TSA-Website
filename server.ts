@@ -38,13 +38,15 @@ async function startServer() {
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: isDev
-          ? ["'self'", "ws://localhost:*", "http://localhost:*"]
-          : ["'self'"],
+          ? ["'self'", "ws://localhost:*", "http://localhost:*", "https://www.google-analytics.com", "https://*.googleapis.com"]
+          : ["'self'", "https://www.google-analytics.com", "https://*.googleapis.com"],
         // Vite's dev HTML injects an inline <script type="module"> preamble,
         // which needs 'unsafe-inline'. Production serves only hashed external
         // files, so it stays locked to 'self'. ("'module'" was never a valid
         // CSP source expression and did nothing.)
-        scriptSrc: isDev ? ["'self'", "'unsafe-inline'"] : ["'self'"],
+        scriptSrc: isDev
+          ? ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"]
+          : ["'self'", "https://www.googletagmanager.com"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         // Vimeo player for the chapter video. frame-src otherwise falls back
         // to default-src 'self' and the embed is blocked.

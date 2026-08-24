@@ -9,6 +9,8 @@ import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import { ModalProvider } from './context/ModalContext';
 import { BackToTop } from './components/BackToTop';
+import { initAnalytics, trackPageView } from './lib/analytics';
+import { StickyMobileCTA } from './components/StickyMobileCTA';
 import { Cursor, Grain } from './components/art/Cursor';
 
 // Pages
@@ -36,6 +38,8 @@ const CheckIn = lazy(() => import('./pages/CheckIn'));
 const Teams = lazy(() => import('./pages/Teams'));
 const Opportunities = lazy(() => import('./pages/Opportunities'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const ThankYou = lazy(() => import('./pages/ThankYou'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -49,11 +53,13 @@ const ScrollToTop = () => {
 // Analytics Tracker Placeholder
 const RouteTracker = () => {
   const location = useLocation();
-  
+
+  useEffect(() => { initAnalytics(); }, []);
+
   useEffect(() => {
-    // This is where you would trigger Google Analytics or Plausible
-    // e.g., ga('send', 'pageview', location.pathname);
-    // console.log(`Page view: ${location.pathname}`);
+    // HashRouter navigations never trigger a document load, so each route
+    // change has to report its own page view.
+    trackPageView(location.pathname + location.hash, document.title);
   }, [location]);
 
   return null;
@@ -157,6 +163,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/thank-you" element={<ThankYou />} />
                   <Route
                     path="/teams"
                     element={
@@ -165,10 +172,13 @@ const App: React.FC = () => {
                       </ProtectedRoute>
                     }
                   />
+                  {/* Catch-all: keep last so every other route matches first */}
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                   </Suspense>
               </Layout>
               <BackToTop />
+              <StickyMobileCTA />
             </Router>
             </ModalProvider>
           </ToastProvider>

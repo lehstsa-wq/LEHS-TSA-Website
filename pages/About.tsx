@@ -4,37 +4,12 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
+import { MILESTONES as TIMELINE } from '../data/milestones';
 import { SectionHeader, DiamondField, StatCard, Reveal } from '../components/sections';
 
 /* ─────────────────────────────────────────────────────────────
    TIMELINE DATA
 ───────────────────────────────────────────────────────────── */
-const TIMELINE = [
-  {
-    year: '2022',
-    title: 'Chapter Founded',
-    body: 'Little Elm High School officially chartered its TSA chapter, welcoming its first 10 founding members.',
-    accent: '#6a9bcc',
-  },
-  {
-    year: '2023 to 2024',
-    title: 'First National Qualifier',
-    body: 'The chapter sent its first competitor to the National TSA Conference, a first in LEHS TSA history.',
-    accent: '#d97757',
-  },
-  {
-    year: '2024 to 2025',
-    title: 'State and Nationals',
-    body: 'Eight members advanced to the Texas State Conference and went on to compete at Nationals.',
-    accent: '#6a9bcc',
-  },
-  {
-    year: '2025 to 2026',
-    title: 'Grew Past 50 Members',
-    body: 'The chapter grew to over 50 members, becoming one of the largest STEM organizations at Little Elm High School.',
-    accent: '#788c5d',
-  },
-];
 
 /* ─────────────────────────────────────────────────────────────
    ABOUT PAGE

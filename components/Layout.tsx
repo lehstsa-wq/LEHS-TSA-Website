@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useTheme } from '../context/ThemeContext';
 import { MeasureRing, Constellation, Circuit } from './art/LineArt';
+import { Breadcrumbs } from './Breadcrumbs';
 
 /* ─────────────────────────────────────────────────────────────
    NAV LINK DEFINITIONS
@@ -709,6 +710,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: 'var(--c-bg)', color: 'var(--c-text)' }}>
       <ArtBackdrop />
       <Navbar />
+      <Breadcrumbs />
       <main className="flex-grow w-full relative z-[1]">{children}</main>
       <Footer />
     </div>

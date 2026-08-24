@@ -6,6 +6,7 @@ import {
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { MILESTONES } from '../data/milestones';
 import {
   SectionHeader, Reveal, StatCard, Counter, LogoMarquee, DiamondField,
   StageScene, TabRail, StoryTrack, AnnouncementPill, VideoEmbed,
@@ -485,6 +486,53 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           HOW IT WORKS
       ═══════════════════════════════════════════════════ */}
+      {/* ═══════════════════════════════════════════════════
+          CASE STUDIES
+      ═══════════════════════════════════════════════════ */}
+      <section
+        className="px-4 sm:px-6 lg:px-8"
+        style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <SectionHeader
+            eyebrow="Track Record"
+            title="What the chapter has done"
+            dek="Four years of results, from ten founding members to one of the largest STEM organizations at Little Elm High School."
+            className="mb-10"
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {MILESTONES.map((m, i) => (
+              <Reveal key={m.year} delay={i * 70}>
+                <article
+                  className="h-full"
+                  style={{
+                    borderRadius: 'var(--card-radius)',
+                    padding: 'var(--card-pad)',
+                    background: 'var(--c-card)',
+                    border: '1px solid var(--c-hairline)',
+                    boxShadow: 'var(--shadow-card)',
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="block h-1 w-10 rounded-full mb-4"
+                    style={{ background: m.accent }}
+                  />
+                  <p className="font-mono text-xs mb-2" style={{ color: m.accent }}>{m.year}</p>
+                  <h3 className="font-bold text-ink mb-2">{m.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-dim">{m.body}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link to="/about" className="inline-flex items-center gap-1.5 text-sm font-medium text-electric-500 hover:text-electric-400 transition-colors">
+              Read the full chapter story <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <StageScene
         className="bg-space-950/60 border-y border-space-500/30"
         eyebrow="Membership"
