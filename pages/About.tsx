@@ -4,8 +4,8 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
-import { MILESTONES as TIMELINE } from '../data/milestones';
-import { SectionHeader, DiamondField, StatCard, Reveal } from '../components/sections';
+import { MILESTONES as TIMELINE, CHAPTER_YEARS } from '../data/milestones';
+import { SectionHeader, StatCard, Reveal } from '../components/sections';
 
 /* ─────────────────────────────────────────────────────────────
    TIMELINE DATA
@@ -28,7 +28,6 @@ const About: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative py-6 overflow-hidden">
-        <DiamondField variant="hero" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -45,7 +44,6 @@ const About: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* ── What is TSA ── */}
@@ -57,15 +55,16 @@ const About: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="section-label inline-flex mb-4">What We Are</div>
+            <div className="section-label inline-flex mb-4">Who We Are</div>
             <h2 className="text-3xl lg:text-4xl font-bold text-ink mb-6">
-              The only student org devoted entirely to STEM.
+              The only student organization devoted entirely to STEM.
             </h2>
             <div className="space-y-5 text-ink-dim leading-relaxed text-base">
               <p>
-                The Technology Student Association (TSA) is the only student organization exclusively
-                devoted to students enrolled in STEM courses. With chapters in all 50 states and over
-                250,000 members, TSA is the gold standard for tech-focused student activity.
+                The Technology Student Association (TSA) is the only student organization devoted
+                entirely to science, technology, engineering, and math. You do not need to be enrolled
+                in a STEM course to join, every student is welcome. With chapters in all 50 states and
+                over 250,000 members, TSA is the gold standard for tech-focused student activity.
               </p>
               <p>
                 At Little Elm High School, our chapter fosters personal growth, leadership, and
@@ -88,7 +87,7 @@ const About: React.FC = () => {
               { val: 50,  label: 'Active Members',      color: '#6a9bcc' },
               { val: 20,  label: 'State Qualifiers',    color: '#d97757' },
               { val: 14,  label: 'National Qualifiers', color: '#6a9bcc' },
-              { val: 5,   label: 'Years of Excellence', color: '#788c5d' },
+              { val: CHAPTER_YEARS, label: 'Years of Excellence', color: '#788c5d' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 80}>
                 <StatCard value={s.val} label={s.label} accent={s.color} />

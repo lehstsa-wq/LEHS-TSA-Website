@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { Countdown } from '../components/Countdown';
-import { SectionHeader, DiamondField, SegmentedToggle } from '../components/sections';
+import { SectionHeader, SegmentedToggle } from '../components/sections';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Competition: 'badge-gold',
@@ -37,7 +37,6 @@ const Events: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-6 overflow-hidden">
-        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <SectionHeader
@@ -48,7 +47,6 @@ const Events: React.FC = () => {
             />
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* Countdown */}

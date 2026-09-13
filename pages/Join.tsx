@@ -4,13 +4,13 @@ import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, FileCheck, CreditCard
 import { motion, AnimatePresence } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader } from '../components/sections';
 
 /* ─────────────────────────────────────────────────────────────
    BENEFITS
 ───────────────────────────────────────────────────────────── */
 const BENEFITS = [
-  { title: 'Compete in 30+ Events',    body: 'From coding to design to engineering. Every skill has a competition.' },
+  { title: 'Compete in 30+ Events',    body: 'From coding to design to engineering, every skill has a competition.' },
   { title: 'Build Lifetime Connections', body: 'Network with like-minded STEM students from across Texas and the nation.' },
   { title: 'National Conferences',      body: 'Travel to state and national TSA conferences and compete on the biggest stage.' },
   { title: 'College-Ready Resume',      body: 'TSA membership and competition results make standout college application material.' },
@@ -127,11 +127,10 @@ const Join: React.FC = () => {
 
   return (
     <div>
-      <SEO title="Join" description="Join Little Elm High School TSA. Compete, lead, and grow with the most exciting STEM student org in Texas." />
+      <SEO title="Join" description="Join Little Elm High School TSA. Compete, lead, and grow with the most exciting STEM student organization in Texas." />
 
       {/* ── Hero ── */}
       <section className="relative py-6 overflow-hidden">
-        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <SectionHeader
@@ -142,7 +141,6 @@ const Join: React.FC = () => {
             />
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* ── Benefits ── */}
@@ -204,7 +202,7 @@ const Join: React.FC = () => {
         <SectionHeader
           eyebrow="Start Here"
           title="Complete all four links below"
-          dek="Click each card to open the link in a new tab. Do them in order."
+          dek="Click each card to open the link in a new tab. Please do them in order."
           className="mb-7"
         />
 

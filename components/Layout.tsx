@@ -12,7 +12,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useTheme } from '../context/ThemeContext';
-import { MeasureRing, Constellation, Circuit } from './art/LineArt';
 import { Breadcrumbs } from './Breadcrumbs';
 
 /* ─────────────────────────────────────────────────────────────
@@ -667,7 +666,7 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="divider mb-8" />
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-[12px] text-ink-muted">
-          <p>© 2026 to 2027 Little Elm High School TSA. All rights reserved.</p>
+          <p>© 2026-2027 Little Elm High School TSA. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy" className="hover:text-ink transition-colors">
               Privacy Policy
@@ -683,32 +682,9 @@ export const Footer: React.FC = () => {
 /* ─────────────────────────────────────────────────────────────
    LAYOUT WRAPPER
 ───────────────────────────────────────────────────────────── */
-/* ── ART BACKDROP: the canvas behind everything, both themes.
-   Fixed under the content: two aurora washes + faint blueprint line-art.
-   Content (main/footer) stacks above via z-index. */
-const ArtBackdrop: React.FC = () => (
-  <div className="art-backdrop" aria-hidden>
-    <div className="sr-aurora" style={{ inset: '-20% 30% 35% -15%' }} />
-    <div className="sr-aurora" style={{ inset: '40% -15% -20% 45%', animationDelay: '-14s' }} />
-    <MeasureRing
-      className="sr-art" draw={false} size="min(34vw, 26rem)"
-      style={{ bottom: '-9rem', left: '-7rem', color: 'var(--sr-amber)' }}
-    />
-    <Constellation
-      className="sr-art" draw={false} size="min(26vw, 19rem)"
-      style={{ top: '8%', right: '-4rem', color: 'var(--sr-violet)' }}
-    />
-    <Circuit
-      className="sr-art" draw={false} size="min(18vw, 13rem)"
-      style={{ top: '55%', left: '2%', color: 'var(--sr-teal)' }}
-    />
-  </div>
-);
-
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: 'var(--c-bg)', color: 'var(--c-text)' }}>
-      <ArtBackdrop />
       <Navbar />
       <Breadcrumbs />
       <main className="flex-grow w-full relative z-[1]">{children}</main>

@@ -8,10 +8,12 @@ import {
   Star, FileText, ExternalLink,
   Link as LinkIcon, Save, ChevronDown, ChevronUp,
   AlertOctagon, CheckCircle,
-  Cpu, Hammer, Layers, Plane, Zap, PenTool
+  Cpu, Hammer, Layers, Plane, Zap, PenTool, Palette
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { useAuth } from '../context/AuthContext';
+import {
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS,
+} from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import { useToast } from '../context/ToastContext';
 import { Officer, Announcement, User } from '../types';
@@ -312,6 +314,8 @@ const MemberEditor: React.FC<{
     const { updateMember } = useData();
     const { alert: showAlert } = useModal();
     const [saving, setSaving] = useState(false);
+    const [photo, setPhoto] = useState(avatarPhotoOf(member));
+    const [color, setColor] = useState(avatarColorOf(member));
     const [draft, setDraft] = useState({
         name: member.name ?? '',
         email: member.email ?? '',
@@ -336,6 +340,8 @@ const MemberEditor: React.FC<{
         try {
             await updateMember(member.id, {
                 name: draft.name.trim(),
+                avatar: photo || buildAvatarUrl(draft.name.trim(), color),
+                avatarColor: color,
                 email: draft.email.trim(),
                 phone: draft.phone.trim(),
                 grade: draft.grade,
@@ -357,6 +363,43 @@ const MemberEditor: React.FC<{
     return (
         <EditorModal title={`Edit ${member.name}`} saving={saving} onCancel={onClose} onSave={save}>
             <div className="space-y-4">
+                <div>
+                    <label className={labelClass}>Profile Photo</label>
+                    <ImageUpload
+                        value={photo}
+                        onChange={setPhoto}
+                        shape="circle"
+                        size={72}
+                        placeholder={<span className="text-2xl font-black">{draft.name.charAt(0) || '?'}</span>}
+                        onError={msg => showAlert('Photo', msg)}
+                    />
+                </div>
+
+                <div>
+                    <label className={labelClass}><Palette size={12} className="inline mr-1" /> Avatar Color</label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                        {AVATAR_COLORS.map(c => (
+                            <button
+                                key={c.hex}
+                                type="button"
+                                onClick={() => setColor(c.hex)}
+                                title={c.label}
+                                aria-label={c.label}
+                                aria-pressed={color === c.hex}
+                                className={`w-8 h-8 rounded-lg transition-all border-2 ${
+                                    color === c.hex ? 'border-ink scale-110 shadow-md' : 'border-transparent hover:scale-105'
+                                }`}
+                                style={{ background: `#${c.hex}` }}
+                            />
+                        ))}
+                    </div>
+                    <p className="text-[11px] text-ink-muted mt-2">
+                        {photo
+                            ? 'The photo is shown instead of the color tile. Remove it to use the color.'
+                            : 'Used for this member\u2019s initials tile across the portal.'}
+                    </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className={labelClass}>Name</label>
@@ -1395,7 +1438,7 @@ const ALL_COMP_ITEMS: CompItem[] = [
         title: 'TEAMS',
         subtitle: 'Tests of Engineering Aptitude, Mathematics & Science',
         category: 'teams',
-        description: 'Teams of 2 to 4 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2026 to 2027 theme: "Engineering for Good".',
+        description: 'Teams of 4 to 6 compete across Design/Build, Multiple Choice, Mathematical Modeling, and Essay. 2026-2027 theme: "Engineering a Smarter World".',
     },
 ...COMPETITIONS.map(c => ({
         id: c.id,
@@ -1666,7 +1709,7 @@ const CompetitionsTab: React.FC = () => {
                                                 autoFocus
                                                 value={editName}
                                                 onChange={e => setEditName(e.target.value)}
-                                                placeholder='Label  (e.g. "2026 to 2027 Rulebook")'
+                                                placeholder='Label  (e.g. "2026-2027 Rulebook")'
                                                 className={inputClass}
                                             />
                                             <input
@@ -1744,7 +1787,7 @@ const CompetitionsTab: React.FC = () => {
                                     autoFocus
                                     value={addName}
                                     onChange={e => setAddName(e.target.value)}
-                                    placeholder='Label  (e.g. "2026 to 2027 Rulebook")'
+                                    placeholder='Label  (e.g. "2026-2027 Rulebook")'
                                     className={inputClass}
                                 />
                                 <input

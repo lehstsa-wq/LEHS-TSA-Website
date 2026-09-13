@@ -832,17 +832,17 @@ export const COMPETITIONS = [
     id: 'interior-design',
     title: 'Interior Design',
     category: 'arch',
-    description: 'Participants develop colour sample and material design boards to plan a cohesive interior based on the annual challenge.',
+    description: 'Participants develop color sample and material design boards to plan a cohesive interior based on the annual challenge.',
     imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
     details: {
       theme: 'Tiny Living, Big Impact. Design an interior for a model home in a tiny home community for young adults, with the specified spaces and design considerations.',
-      fullDescription: 'Applying leadership and 21st century skills, participants develop a colour sample and material design board or boards, of the kind used by interior designers to plan an overall cohesive design, based on an annual challenge.',
+      fullDescription: 'Applying leadership and 21st century skills, participants develop a color sample and material design board or boards, of the kind used by interior designers to plan an overall cohesive design, based on an annual challenge.',
       eligibility: 'Three (3) teams of two (2) individuals per state; individual entries are permitted.',
-      procedure: 'Participants prepare and submit design boards showing colour samples, materials, and the reasoning behind a cohesive interior scheme.',
+      procedure: 'Participants prepare and submit design boards showing color samples, materials, and the reasoning behind a cohesive interior scheme.',
       careers: ['Interior Designer', 'Space Planner', 'Set Designer', 'Architectural Designer'],
       maxTeamSize: 2,
       timeLimit: 'Submission plus interview',
-      requirements: ['Design board(s)', 'Colour and material samples']
+      requirements: ['Design board(s)', 'Color and material samples']
     }
   },
   {
@@ -931,3 +931,16 @@ export const COMPETITIONS = [
     }
   },
 ];
+
+/* ── DERIVED COUNTS ───────────────────────────────────────────────────────
+   Every "N events" figure on the site reads from these, so the copy cannot
+   drift out of step with the list above the way hardcoded counts did. */
+
+/** A UTE event is Texas-only; the rest are national qualifying events. */
+export const isUTE = (comp: { id: string; title: string }) =>
+  comp.id.startsWith('ute-') || comp.title.includes('(UTE)');
+
+export const TOTAL_COMPETITIONS = COMPETITIONS.length;
+export const UTE_COMPETITIONS = COMPETITIONS.filter(isUTE).length;
+export const NQE_COMPETITIONS = TOTAL_COMPETITIONS - UTE_COMPETITIONS;
+export const COMPETITION_CATEGORIES = new Set(COMPETITIONS.map(c => c.category)).size;

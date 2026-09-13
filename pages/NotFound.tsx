@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Search, ArrowRight } from 'lucide-react';
 import { SEO } from '../components/SEO';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader } from '../components/sections';
+import { TOTAL_COMPETITIONS } from '../data/competitions';
 
 /** Popular destinations, so a wrong URL still leads somewhere useful. */
 const SUGGESTIONS = [
-  { to: '/competitions', label: 'Competitions', desc: 'All 42 TSA events and this season themes' },
+  { to: '/competitions', label: 'Competitions', desc: `All ${TOTAL_COMPETITIONS} TSA events and this season's themes` },
   { to: '/join',         label: 'Join the Chapter', desc: 'Membership steps and forms' },
   { to: '/events',       label: 'Events', desc: 'Meetings, competitions and deadlines' },
   { to: '/officers',     label: 'Officer Team', desc: 'Who runs the chapter' },
@@ -22,7 +23,6 @@ const NotFound: React.FC = () => (
     />
 
     <section className="relative overflow-hidden" style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}>
-      <DiamondField variant="hero" />
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <SectionHeader
           as="h1"

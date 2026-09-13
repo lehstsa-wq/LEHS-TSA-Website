@@ -269,7 +269,7 @@ const Dashboard: React.FC = () => {
                 {/* Footer strip */}
                 <div className="mt-5 pt-4 flex items-center justify-between"
                   style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}>
-                  <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2026 to 2027 Season</span>
+                  <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2026-2027 Season</span>
                   <span className="flex items-center gap-1.5 text-[9px] text-white/55">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#86BB50' }} />
                     Active

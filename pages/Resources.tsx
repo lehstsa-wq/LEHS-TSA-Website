@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader } from '../components/sections';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   competition: BookOpen,
@@ -25,7 +25,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 const QUICK_LINKS = [
   { name: 'TSA National',              url: 'https://tsaweb.org/',                                              desc: 'Official TSA website with rulebooks, forms, and competition info' },
   { name: 'Texas TSA',                 url: 'https://www.texastsa.org/',                                       desc: 'Texas state chapter portal: schedules, results, registration' },
-  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2026 to 2027 competition guidelines' },
+  { name: 'TSA Competition Rules',     url: 'https://tsaweb.org/competitions-programs/tsa-competitions',       desc: 'All official 2026-2027 competition guidelines' },
   { name: 'Khan Academy (STEM)',        url: 'https://www.khanacademy.org/',                                    desc: 'Free prep material for STEM competitions and events' },
   { name: 'Code.org',                  url: 'https://code.org/',                                               desc: 'Programming tutorials for coding competition prep' },
   { name: 'Figma (free for students)', url: 'https://www.figma.com/education/',                                desc: 'Free design tool for Graphic Design, Promotional Design events' },
@@ -56,7 +56,6 @@ const Resources: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-6 overflow-hidden">
-        <DiamondField variant="hero" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <SectionHeader
@@ -67,7 +66,6 @@ const Resources: React.FC = () => {
             />
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* Quick links */}

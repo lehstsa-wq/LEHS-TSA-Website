@@ -3,11 +3,11 @@ import React, { useId, useRef, useState } from 'react';
 export interface TabItem {
   label: string;
   description: string;
-  /** Illustration shown in the panel for this tab. */
+  /** Photo shown in the panel for this tab. */
   image: string;
-  /** Alt text for that illustration. */
+  /** Alt text for that photo. */
   imageAlt: string;
-  /** Accent colour for the panel's top rule and link. */
+  /** Accent color for the panel's top rule and link. */
   accent: string;
   /** Rendered beneath the illustration when this tab is active. */
   panel: React.ReactNode;
@@ -100,7 +100,7 @@ export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {
           aria-labelledby={`${baseId}-tab-${i}`}
           hidden={i !== active}
           tabIndex={0}
-          className="relative overflow-hidden"
+          className={`relative overflow-hidden ${i === active ? 'flex flex-col' : ''}`}
           style={{
             borderRadius: 'var(--card-radius)',
             border: '1px solid var(--c-hairline)',
@@ -110,21 +110,23 @@ export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {
         >
           <span
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1"
+            className="absolute inset-x-0 top-0 h-1 z-10"
             style={{ background: item.accent }}
           />
-          <div
-            className="flex items-center justify-center"
-            style={{ background: '#FFFFFF', aspectRatio: '16 / 10' }}
-          >
+          {/* The photo takes whatever height the tab column leaves over, so the
+              panel never ends in a band of empty card. Crop is biased upward:
+              these are photographs of people, and a centred crop on the taller
+              ones cut their faces off. */}
+          <div className="flex-1 overflow-hidden" style={{ minHeight: '18rem' }}>
             <img
               src={item.image}
               alt={item.imageAlt}
-              className="h-full w-full object-contain p-8 sm:p-12"
+              className="h-full w-full object-cover"
+              style={{ objectPosition: 'center 28%' }}
               decoding="async"
             />
           </div>
-          <div style={{ padding: 'var(--card-pad)' }}>{item.panel}</div>
+          <div className="shrink-0" style={{ padding: 'var(--card-pad)' }}>{item.panel}</div>
         </div>
       ))}
     </div>

@@ -6,9 +6,10 @@ import {
 import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { MILESTONES } from '../data/milestones';
+import { MILESTONES, CHAPTER_YEARS, CHAPTER_YEARS_WORD } from '../data/milestones';
+import { TOTAL_COMPETITIONS } from '../data/competitions';
 import {
-  SectionHeader, Reveal, StatCard, Counter, DiamondField,
+  SectionHeader, Reveal, StatCard, Counter,
   StageScene, TabRail, StoryTrack, AnnouncementPill, VideoEmbed,
 } from '../components/sections';
 import type { Stage, TabItem } from '../components/sections';
@@ -71,7 +72,7 @@ const WHAT_WE_DO: TabItem[] = [
   {
     label: 'Compete in 30+ Events',
     image: '/assets/photos/compete.jpg',
-    imageAlt: 'Chapter members in TSA blazers holding their competition dragster',
+    imageAlt: 'Four chapter members in TSA blazers posing together at a conference',
     accent: '#005DAA',
     description: 'From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.',
     panel: (
@@ -84,24 +85,9 @@ const WHAT_WE_DO: TabItem[] = [
     ),
   },
   {
-    label: 'Code & Build',
-    image: '/assets/photos/build.jpg',
-    imageAlt: 'Members building and testing structures at a competition table',
-    accent: '#574E8F',
-    description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
-    panel: (
-      <div>
-        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Code & Build</h3>
-        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#574E8F' }}>
-          Learn more <ArrowRight size={14} />
-        </Link>
-      </div>
-    ),
-  },
-  {
     label: 'Lead & Grow',
     image: '/assets/photos/lead.jpg',
-    imageAlt: 'A chapter member presenting on stage at the state conference',
+    imageAlt: 'A member reacting on stage as Photographic Technology finalists are announced',
     accent: '#EC881D',
     description: 'Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.',
     panel: (
@@ -129,9 +115,24 @@ const WHAT_WE_DO: TabItem[] = [
     ),
   },
   {
+    label: 'Code & Build',
+    image: '/assets/photos/build.jpg',
+    imageAlt: 'Members setting up their competition builds at the event tables',
+    accent: '#574E8F',
+    description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
+    panel: (
+      <div>
+        <h3 className="section-h2 text-2xl md:text-3xl mb-3">Code & Build</h3>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#574E8F' }}>
+          Learn more <ArrowRight size={14} />
+        </Link>
+      </div>
+    ),
+  },
+  {
     label: 'Design & Create',
     image: '/assets/photos/design.jpg',
-    imageAlt: 'Two members working on an architectural scale model',
+    imageAlt: 'Two members examining an architectural scale model',
     accent: '#86BB50',
     description: 'Graphic design, video game design, architectural modeling, fashion design. TSA rewards every kind of creative talent.',
     panel: (
@@ -146,7 +147,7 @@ const WHAT_WE_DO: TabItem[] = [
   {
     label: 'Study & Prepare',
     image: '/assets/photos/study.jpg',
-    imageAlt: 'Members preparing their gliders together before an event',
+    imageAlt: 'Members preparing a balsa glider together before an event',
     accent: '#4E8AC9',
     description: 'Access competition guides, past results, and expert prep materials, everything you need to walk into any event confident.',
     panel: (
@@ -188,7 +189,6 @@ const Home: React.FC = () => {
           fetchPriority="high"
         />
         <div aria-hidden="true" className="hero-scrim absolute inset-0" />
-        <DiamondField variant="hero" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-7 w-full text-center">
           {/* Announcement */}
@@ -228,7 +228,7 @@ const Home: React.FC = () => {
             transition={{ duration: 0.45, delay: 0.12 }}
             className="section-dek mx-auto mb-7"
           >
-            Join Little Elm's award-winning TSA chapter. Compete in 30+ STEM events,
+            Join Little Elm's award-winning TSA chapter! Compete in 30+ STEM events,
             develop real-world skills, and build the future alongside your peers.
           </motion.p>
 
@@ -258,7 +258,7 @@ const Home: React.FC = () => {
             {[
               { num: 50, suffix: '', label: 'MEMBERS',          color: 'text-electric-400' },
               { num: 20, suffix: '', label: 'STATE QUALIFIERS',  color: 'text-gold-400' },
-              { num: 14, suffix: '', label: "NAT'L QUALIFIERS",  color: 'text-amber-400' },
+              { num: 14, suffix: '', label: 'NATIONAL QUALIFIERS', color: 'text-amber-400' },
             ].map((s, i) => (
               <div key={i}>
                 <div className={`stat-value ${s.color}`}>
@@ -295,8 +295,6 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* ═══════════════════════════════════════════════════
@@ -314,7 +312,7 @@ const Home: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="section-eyebrow justify-center w-full mb-5">
             <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
-            A Few of the Events
+            Event Examples
             <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
           </h2>
           <ul className="flex flex-wrap justify-center gap-2.5">
@@ -334,7 +332,7 @@ const Home: React.FC = () => {
           </ul>
           <p className="text-center mt-6">
             <Link to="/competitions" className="inline-flex items-center gap-1.5 text-sm font-medium text-electric-500 hover:text-electric-400 transition-colors">
-              See all 42 competitions <ArrowRight size={14} />
+              See all {TOTAL_COMPETITIONS} competitions <ArrowRight size={14} />
             </Link>
           </p>
         </div>
@@ -350,13 +348,13 @@ const Home: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <SectionHeader
             eyebrow="Watch"
-            title="See the chapter in action"
+            title="What TSA is all about"
             className="mb-6"
           />
           <Reveal>
             <VideoEmbed
               src="https://player.vimeo.com/video/986072709?h=49a2c22ff7"
-              title="Little Elm TSA chapter video"
+              title="TSA Overview, from the Technology Student Association"
             />
           </Reveal>
         </div>
@@ -381,15 +379,14 @@ const Home: React.FC = () => {
       <section className="py-7 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
-        <DiamondField variant="band" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { val: 75,  suffix: '+',  label: 'Active Members',      accent: 'var(--c-blue-bright)' },
-              { val: 50,  suffix: '+',  label: 'State Qualifiers',    accent: 'var(--c-red)' },
-              { val: 15,  suffix: '+',  label: 'National Qualifiers', accent: 'var(--c-amber)' },
-              { val: 3,   suffix: '',   label: 'Years of Excellence', accent: 'var(--c-green)' },
+              { val: 50,  suffix: '+',  label: 'Active Members',      accent: 'var(--c-blue-bright)' },
+              { val: 20,  suffix: '+',  label: 'State Qualifiers',    accent: 'var(--c-red)' },
+              { val: 14,  suffix: '+',  label: 'National Qualifiers', accent: 'var(--c-amber)' },
+              { val: CHAPTER_YEARS, suffix: '', label: 'Years of Excellence', accent: 'var(--c-green)' },
             ].map((stat, i) => (
               <Reveal key={i} delay={i * 80}>
                 <StatCard
@@ -526,9 +523,9 @@ const Home: React.FC = () => {
       >
         <div className="max-w-6xl mx-auto">
           <SectionHeader
-            eyebrow="Track Record"
-            title="What the chapter has done"
-            dek="Four years of results, from ten founding members to one of the largest STEM organizations at Little Elm High School."
+            eyebrow="Accomplishments"
+            title="Chapter Achievements"
+            dek={`${CHAPTER_YEARS_WORD} years of results, from ten founding members to the largest STEM organization at Little Elm High School.`}
             className="mb-10"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -589,7 +586,7 @@ const Home: React.FC = () => {
               Your future in tech starts here.
             </h3>
             <p className="text-ink-dim text-base">
-              Applications open for 2026 to 2027. Get started in 3 steps.
+              Applications open for 2026-2027. Get started in 3 steps.
             </p>
           </div>
           <div className="flex gap-3 flex-shrink-0">

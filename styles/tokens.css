@@ -132,29 +132,11 @@ html.light .sr-cursor-scope {
     radial-gradient(26% 34% at 40% 62%, rgba(130, 80, 255, 0.34), transparent 70%);
   opacity: 0.14;
   filter: blur(52px) saturate(1.25);
-  animation: sr-aurora-drift 26s ease-in-out infinite alternate;
+  /* Deliberately unanimated: animating a blur this large across a fixed
+     full-viewport layer repaints the screen every frame and wrecks scrolling. */
+  transform: translateZ(0);
 }
 html.light .sr-aurora { opacity: 0.07; }
-@keyframes sr-aurora-drift {
-  0%   { transform: rotate(0deg) scale(1);      filter: blur(52px) saturate(1.25) hue-rotate(0deg); }
-  100% { transform: rotate(6deg) scale(1.12);   filter: blur(52px) saturate(1.25) hue-rotate(28deg); }
-}
-@media (prefers-reduced-motion: reduce) { .sr-aurora { animation: none; } }
-
-/* ── ART BACKDROP: the artful canvas BEHIND all elements, site-wide.
-   A fixed layer under the content: aurora washes + faint line-art, so
-   cards, buttons, and text sit on top of an art print in both themes. */
-.art-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.art-backdrop .sr-aurora { opacity: 0.28; animation-duration: 38s; }
-html.light .art-backdrop .sr-aurora { opacity: 0.3; }
-.art-backdrop .sr-art { opacity: 0.26; }
-html.light .art-backdrop .sr-art { opacity: 0.2; }
 
 /* ── SPECTRAL TEXT: gradient-filled display words ──────────────────── */
 .sr-grad-text {

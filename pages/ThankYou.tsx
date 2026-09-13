@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Calendar, BookOpen, Instagram } from 'lucide-react';
 import { SEO } from '../components/SEO';
-import { SectionHeader, DiamondField } from '../components/sections';
+import { SectionHeader } from '../components/sections';
+import { TOTAL_COMPETITIONS } from '../data/competitions';
 
 const NEXT_STEPS = [
   { to: '/events',        icon: Calendar, label: 'Check the calendar', desc: 'See when the next meeting and competition deadlines land.' },
-  { to: '/competitions',  icon: BookOpen, label: 'Pick your events',   desc: 'Browse all 42 events and this season themes before you choose.' },
+  { to: '/competitions',  icon: BookOpen, label: 'Pick your events',   desc: `Browse all ${TOTAL_COMPETITIONS} events and this season's themes before you choose.` },
   { to: '/resources',     icon: Instagram, label: 'Get the resources', desc: 'Study guides, rulebooks and prep material for your event.' },
 ];
 
@@ -19,7 +20,6 @@ const ThankYou: React.FC = () => (
     />
 
     <section className="relative overflow-hidden" style={{ paddingTop: 'var(--section-py)', paddingBottom: 'var(--section-py)' }}>
-      <DiamondField variant="hero" />
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="flex justify-center mb-5">
           <span

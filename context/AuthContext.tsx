@@ -24,22 +24,73 @@ interface AuthContextType {
 
 /* ── Avatar helpers ──────────────────────────────────────────────────────────
    A member's avatar is either an uploaded photo (a data URL) or a generated
-   initials tile whose colour comes from `avatarColor`. Older accounts only ever
-   stored the generated URL, so the colour is recovered from it as a fallback. */
+   initials tile whose color comes from `avatarColor`. Older accounts only ever
+   stored the generated URL, so the color is recovered from it as a fallback. */
 
 export const DEFAULT_AVATAR_COLOR = '6A9BCC';
 
-export const buildAvatarUrl = (name: string, color: string) =>
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Member')}&background=${color}&color=fff&size=256`;
+const xmlEscape = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-/** True when the avatar is a generated initials tile rather than a real photo. */
-export const isGeneratedAvatar = (url?: string) => !url || url.includes('ui-avatars.com');
+/** First letter of the first two words, e.g. "Jane Doe" -> "JD". */
+const initialsOf = (name: string) => {
+  const letters = (name || '')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map(w => w.charAt(0))
+    .join('')
+    .toUpperCase();
+  return letters || 'M';
+};
+
+/**
+ * The initials tile, drawn locally as an inline SVG.
+ *
+ * This used to point at ui-avatars.com. That is a third-party request on every
+ * avatar, so anywhere the host is slow, offline, filtered by a school network,
+ * or blocked by an extension, every member photo renders as a broken image.
+ * Same string-URL shape as before, so every `<img src={avatar}>` is unchanged,
+ * but nothing leaves the device.
+ */
+export const buildAvatarUrl = (name: string, color: string) => {
+  const hex = (color || DEFAULT_AVATAR_COLOR).replace('#', '');
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">' +
+    `<rect width="256" height="256" fill="#${hex}"/>` +
+    '<text x="50%" y="50%" dy=".35em" text-anchor="middle" fill="#ffffff" ' +
+    'font-family="Helvetica, Arial, sans-serif" font-size="112" font-weight="700">' +
+    xmlEscape(initialsOf(name)) +
+    '</text></svg>';
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
+
+/** True when the avatar is a generated initials tile rather than a real photo.
+ *  Uploads are always JPEG data URLs, so the SVG form is unambiguous. */
+export const isGeneratedAvatar = (url?: string) =>
+  !url || url.includes('ui-avatars.com') || url.startsWith('data:image/svg+xml');
 
 export const avatarColorOf = (user?: Pick<User, 'avatar' | 'avatarColor'> | null): string => {
   if (user?.avatarColor) return user.avatarColor.replace('#', '');
-  const match = user?.avatar?.match(/background=([A-Fa-f0-9]{6})/);
-  return match ? match[1] : DEFAULT_AVATAR_COLOR;
+  // Legacy ui-avatars URL, then the inline SVG tile (%23 is an encoded '#').
+  const legacy = user?.avatar?.match(/background=([A-Fa-f0-9]{6})/);
+  if (legacy) return legacy[1];
+  const inline = user?.avatar?.match(/fill%3D%22%23([A-Fa-f0-9]{6})%22/);
+  return inline ? inline[1] : DEFAULT_AVATAR_COLOR;
 };
+
+/** Tile colors offered wherever an avatar can be set. */
+export const AVATAR_COLORS = [
+  { hex: '6A9BCC', label: 'Blue'   },
+  { hex: 'D97757', label: 'Orange' },
+  { hex: '788C5D', label: 'Green'  },
+  { hex: 'B0AEA5', label: 'Gray'   },
+  { hex: '5B89B5', label: 'Steel'  },
+  { hex: 'C4633E', label: 'Rust'   },
+  { hex: '4D749E', label: 'Navy'   },
+  { hex: 'A84F2A', label: 'Amber'  },
+  { hex: '3A5A82', label: 'Slate'  },
+];
 
 /** The uploaded photo, if the member has one. */
 export const avatarPhotoOf = (user?: Pick<User, 'avatar'> | null): string | undefined =>
@@ -125,7 +176,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 grade: 'Faculty',
                 status: 'active',
                 joinDate: new Date().toISOString().split('T')[0],
-                avatar: `https://ui-avatars.com/api/?name=Admin&background=3B6DF6&color=fff`
+                avatar: buildAvatarUrl('Admin', '3B6DF6')
             };
             try {
                 await setDoc(docRef, newAdmin);
@@ -174,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             grade: 'Student',
                             status: 'active',
                             joinDate: new Date().toISOString().split('T')[0],
-                            avatar: `https://ui-avatars.com/api/?name=Student&background=3B6DF6&color=fff`
+                            avatar: buildAvatarUrl('Student', '3B6DF6')
                         };
                         await setDoc(doc(db, "members", firebaseUser.uid), newUser);
                         setUser(newUser);
@@ -216,7 +267,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 grade: 'Faculty',
                 status: 'active',
                 joinDate: new Date().toISOString().split('T')[0],
-                avatar: `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=3B6DF6&color=fff`
+                avatar: buildAvatarUrl(name, '3B6DF6')
             };
             await setDoc(doc(db, "members", firebaseUser.uid), newUser);
             setUser(newUser);
@@ -237,7 +288,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             grade: 'Faculty',
                             status: 'active',
                             joinDate: new Date().toISOString().split('T')[0],
-                            avatar: `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=3B6DF6&color=fff`
+                            avatar: buildAvatarUrl(name, '3B6DF6')
                         };
                         await setDoc(doc(db, "members", auth.currentUser.uid), newUser, { merge: true });
                         setUser(newUser);

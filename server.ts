@@ -47,7 +47,16 @@ async function startServer() {
         scriptSrc: isDev
           ? ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"]
           : ["'self'", "https://www.googletagmanager.com"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
+        // Google Fonts: the stylesheet comes from fonts.googleapis.com and the
+        // font files it references from fonts.gstatic.com. Without both, the
+        // page silently falls back to system fonts.
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        // Images fall back to default-src 'self' when unset, which blocks every
+        // uploaded profile photo and generated avatar tile (both data: URLs),
+        // and any photo an officer added by pasting a URL.
+        imgSrc: ["'self'", "data:", "blob:", "https:"],
+        mediaSrc: ["'self'", "data:", "blob:"],
         // Vimeo player for the chapter video. frame-src otherwise falls back
         // to default-src 'self' and the embed is blocked.
         frameSrc: ["'self'", "https://player.vimeo.com"],

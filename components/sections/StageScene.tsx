@@ -6,7 +6,7 @@ export interface Stage {
   num: string;
   title: string;
   body: string;
-  /** CSS colour used for the active accent. */
+  /** CSS color used for the active accent. */
   accent: string;
   /** Illustration shown in the panel while this stage is active. */
   image: string;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf,
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS,
 } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import {
@@ -12,18 +12,6 @@ import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
-
-const AVATAR_COLORS = [
-  { hex: '6A9BCC', label: 'Blue'   },
-  { hex: 'D97757', label: 'Orange' },
-  { hex: '788C5D', label: 'Green'  },
-  { hex: 'B0AEA5', label: 'Gray'   },
-  { hex: '5B89B5', label: 'Steel'  },
-  { hex: 'C4633E', label: 'Rust'   },
-  { hex: '4D749E', label: 'Navy'   },
-  { hex: 'A84F2A', label: 'Amber'  },
-  { hex: '3A5A82', label: 'Slate'  },
-];
 
 const GRADE_OPTIONS = ['9', '10', '11', '12', 'Faculty', 'Alumni'];
 
@@ -136,7 +124,7 @@ const IdentitySection: React.FC = () => {
     setSaving(true);
     try {
       // A photo, when present, *is* the avatar; otherwise fall back to the
-      // generated initials tile in the chosen colour.
+      // generated initials tile in the chosen color.
       await updateProfile({
         name: name.trim(),
         avatar: photo || buildAvatarUrl(name.trim(), color),
@@ -157,7 +145,7 @@ const IdentitySection: React.FC = () => {
   return (
     <div className={card}>
       <SectionHeader
-        title="Identity" subtitle="Display name, photo, and avatar colour"
+        title="Identity" subtitle="Display name, photo, and avatar color"
         icon={UserIcon} color="#6a9bcc"
         editing={editing} saving={saving} saved={saved}
         onEdit={() => setEditing(true)} onSave={save} onCancel={reset}
@@ -200,7 +188,7 @@ const IdentitySection: React.FC = () => {
             </div>
 
             <div>
-              <label className={labelCls}><Palette size={12} /> Avatar Colour</label>
+              <label className={labelCls}><Palette size={12} /> Avatar Color</label>
               <div className="flex flex-wrap gap-2 mt-1">
                 {AVATAR_COLORS.map(c => (
                   <button
@@ -219,7 +207,7 @@ const IdentitySection: React.FC = () => {
               </div>
               <p className="text-[11px] text-ink-muted mt-2">
                 {photo
-                  ? 'Your photo is shown instead of the colour tile. Remove the photo to use the colour.'
+                  ? 'Your photo is shown instead of the color tile. Remove the photo to use the color.'
                   : 'Used for your initials tile across the portal.'}
               </p>
             </div>

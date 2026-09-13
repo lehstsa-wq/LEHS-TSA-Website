@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
-/* This panel keeps its dark gradient in both themes, so its text is coloured
+/* This panel keeps its dark gradient in both themes, so its text is colored
    inline rather than with `text-white` utilities: light mode rewrites those
    utilities to dark ink, which would make the countdown unreadable here. */
 
@@ -51,7 +51,6 @@ export const Countdown: React.FC = () => {
     <div className="countdown-panel relative py-20 px-4 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e3a5f, #07111e 40%, #2d1f4f)' }} />
-      <div className="absolute inset-0 grid-bg opacity-20" />
 
       <div className="relative max-w-3xl mx-auto text-center">
         <motion.div

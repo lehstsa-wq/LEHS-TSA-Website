@@ -69,7 +69,7 @@ export const StoryTrack: React.FC<StoryTrackProps> = ({ children, className = ''
         role="region"
         aria-label={label}
         tabIndex={0}
-        className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:thin] [scroll-snap-type:x_mandatory]"
+        className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:thin] [scroll-snap-type:x_proximity] [overscroll-behavior-x:contain]"
       >
         {React.Children.map(children, child => (
           <div className="flex-shrink-0 [scroll-snap-align:start] w-[min(22rem,80vw)]">

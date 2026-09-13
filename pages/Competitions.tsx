@@ -10,10 +10,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useToast } from '../context/ToastContext';
-import { COMPETITIONS } from '../data/competitions';
+import {
+  COMPETITIONS, isUTE,
+  TOTAL_COMPETITIONS, UTE_COMPETITIONS, NQE_COMPETITIONS, COMPETITION_CATEGORIES,
+} from '../data/competitions';
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
-import { DiamondField, SegmentedToggle } from '../components/sections';
+import { SegmentedToggle } from '../components/sections';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -113,9 +116,9 @@ const Competitions: React.FC = () => {
     : null;
 
   const filteredCompetitions = COMPETITIONS.filter(comp => {
-    const isUTE = comp.id.startsWith('ute-') || comp.title.includes('(UTE)');
-    if (filterType === 'nqe' && isUTE) return false;
-    if (filterType === 'ute' && !isUTE) return false;
+    const ute = isUTE(comp);
+    if (filterType === 'nqe' && ute) return false;
+    if (filterType === 'ute' && !ute) return false;
     const matchesCategory = activeCategory === 'all' || comp.category === activeCategory;
     const matchesSearch =
       comp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -191,7 +194,6 @@ const Competitions: React.FC = () => {
           HERO
       ════════════════════════════════════════ */}
       <section className="relative py-32 overflow-hidden">
-        <DiamondField variant="hero" />
 
         {/* Orbs */}
 
@@ -204,7 +206,7 @@ const Competitions: React.FC = () => {
           >
             <p className="section-eyebrow justify-center">
               <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
-              2026 to 2027 Season
+              2026-2027 Season
               <span aria-hidden="true" className="section-eyebrow__flank">◆</span>
             </p>
 
@@ -216,17 +218,17 @@ const Competitions: React.FC = () => {
             </h1>
 
             <p className="section-dek mx-auto mb-7">
-              42 official TSA events spanning engineering, coding, design, and leadership.
-              Find your event, join a team, and make it to nationals.
+              {TOTAL_COMPETITIONS} official TSA events spanning engineering, coding, design, and
+              leadership. Find your event, join a team, and make it to nationals!
             </p>
 
             {/* Quick-stat chips */}
             <div className="flex flex-wrap gap-3 mb-7 justify-center">
               {[
-                { val: '42', label: 'Total Events',  color: '#6a9bcc' },
-                { val: '8',  label: 'Categories',    color: '#d97757' },
-                { val: '1',  label: 'per Chapter',   color: '#d97757' },
-                { val: 'TX', label: 'UTE Events Available', color: '#6a9bcc' },
+                { val: String(TOTAL_COMPETITIONS),        label: 'Total Events',        color: '#6a9bcc' },
+                { val: String(COMPETITION_CATEGORIES),    label: 'Categories',          color: '#d97757' },
+                { val: String(NQE_COMPETITIONS),          label: 'National Qualifying',  color: '#d97757' },
+                { val: String(UTE_COMPETITIONS),          label: 'Texas-Only (UTE)',     color: '#6a9bcc' },
               ].map((chip, i) => (
                 <motion.div
                   key={i}
@@ -279,13 +281,12 @@ const Competitions: React.FC = () => {
           >
             <AlertTriangle size={15} className="flex-shrink-0" />
             <span>
-              <strong className="text-gold-300">2026 to 2027 Update:</strong>{' '}
+              <strong className="text-gold-300">2026-2027 Update:</strong>{' '}
               Events reflect the current National TSA High School Competitive Events Summary and Texas UTE list.
             </span>
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* ════════════════════════════════════════
@@ -531,18 +532,18 @@ const Competitions: React.FC = () => {
               </span>
             </div>
             <p className="text-ink-dim text-lg max-w-2xl leading-relaxed mb-6">
-              A nationally recognized TSA competition where teams of 2 to 4 students tackle real-world engineering challenges using math and science. Winners advance from state to the National TSA Conference.
+              A nationally recognized TSA competition where teams of 4 to 6 students tackle real-world engineering challenges using math and science. Winners advance from state to the National TSA Conference.
             </p>
 
             {/* Theme + size chips */}
             <div className="flex flex-wrap gap-3">
               <div className="bg-space-800 border border-gold-500/30 rounded-2xl px-5 py-3">
-                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026 to 2027 Theme</div>
-                <div className="text-sm font-black text-gold-300">Engineering for Good</div>
+                <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">2026-2027 Theme</div>
+                <div className="text-sm font-black text-gold-300">Engineering a Smarter World</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Team Size</div>
-                <div className="text-sm font-black text-ink">2 to 4 Members</div>
+                <div className="text-sm font-black text-ink">4 to 6 Members</div>
               </div>
               <div className="bg-space-800 border border-electric-500/30 rounded-2xl px-5 py-3">
                 <div className="text-[10px] text-ink-muted font-bold uppercase tracking-widest">Advancement</div>

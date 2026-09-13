@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInView, useMotionValue, useSpring, useReducedMotion } from 'motion/react';
-import { DiamondField } from './DiamondField';
 
 interface CounterProps {
   value: number;
@@ -38,7 +37,7 @@ interface StatCardProps {
   description?: string;
   /** Internal route. When present the whole card becomes a link. */
   href?: string;
-  /** CSS colour for the border tint. Defaults to TSA blue. */
+  /** CSS color for the border tint. Defaults to TSA blue. */
   accent?: string;
 }
 
@@ -61,10 +60,6 @@ export const StatCard: React.FC<StatCardProps> = ({
         boxShadow: 'var(--shadow-card)',
       }}
     >
-      <div className="absolute top-0 right-0 h-20 w-20">
-        <DiamondField variant="corner" />
-      </div>
-
       <div className="relative">
         <div className="text-4xl font-bold" style={{ color: accent }}>
           <Counter value={value} suffix={suffix} />

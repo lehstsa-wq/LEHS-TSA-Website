@@ -85,9 +85,13 @@ export const Cursor: React.FC = () => {
 
     /* scroll moves the page under a stationary pointer: re-check what's
        beneath it so the ring/label never go stale outside .sr regions */
+    let scrollRaf = 0;
     const onScroll = () => {
-      if (x < 0) return;
-      evaluate(document.elementFromPoint(x, y) as HTMLElement | null);
+      if (x < 0 || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        evaluate(document.elementFromPoint(x, y) as HTMLElement | null);
+      });
     };
 
     const tick = () => {
@@ -120,6 +124,7 @@ export const Cursor: React.FC = () => {
       document.documentElement.removeEventListener('pointerleave', onLeave);
       document.documentElement.classList.remove('sr-cursor-on');
       if (raf) cancelAnimationFrame(raf);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
     };
   }, []);
 

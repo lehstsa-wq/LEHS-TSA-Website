@@ -7,7 +7,6 @@ import {
 import { useAuth, avatarColorOf, avatarPhotoOf } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
-import { Constellation } from '../components/art/LineArt';
 import { User } from '../types';
 
 const GRADE_OPTIONS = ['All', '9', '10', '11', '12', 'Faculty', 'Alumni'];
@@ -196,10 +195,6 @@ const MemberDirectory: React.FC = () => {
 
       {/* Hero */}
       <section className="relative py-28 overflow-hidden">
-        <div className="sr-aurora" />
-        <Constellation className="sr-art sr-float" size="min(20vw, 14rem)"
-          style={{ top: '8%', right: '5%', color: 'var(--sr-violet)', opacity: 0.5 }} />
-        <div className="absolute inset-0 grid-bg opacity-25" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Chapter Members</div>
@@ -209,7 +204,6 @@ const MemberDirectory: React.FC = () => {
             </p>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-space-900 to-transparent" />
       </section>
 
       {/* Controls */}
