@@ -274,7 +274,7 @@ const Home: React.FC = () => {
             initial={{ y: 14 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.45, delay: 0.33 }}
-            className="grid grid-cols-2 gap-3 mt-8 max-w-lg mx-auto text-left"
+            className="grid grid-cols-1 gap-3 mt-8 max-w-xs mx-auto text-left"
           >
             {[
               {
@@ -284,7 +284,6 @@ const Home: React.FC = () => {
                   ? new Date(nextEvent.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
                   : undefined,
               },
-              { label: 'Chapter Status', value: 'Active, TX' },
             ].map((item, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="text-[10px] text-ink-muted uppercase tracking-wide">{item.label}</div>
@@ -383,7 +382,7 @@ const Home: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { val: 50,  suffix: '+',  label: 'Active Members',      accent: 'var(--c-blue-bright)' },
+              { val: 50,  suffix: '+',  label: 'Members',             accent: 'var(--c-blue-bright)' },
               { val: 20,  suffix: '+',  label: 'State Qualifiers',    accent: 'var(--c-red)' },
               { val: 14,  suffix: '+',  label: 'National Qualifiers', accent: 'var(--c-amber)' },
               { val: CHAPTER_YEARS, suffix: '', label: 'Years of Excellence', accent: 'var(--c-green)' },

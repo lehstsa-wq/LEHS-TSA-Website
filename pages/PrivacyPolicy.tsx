@@ -21,7 +21,7 @@ const SECTIONS = [
   },
   {
     title: 'Data Storage & Security',
-    body: `Your data is stored using Google Firebase, which employs industry-standard security measures including encryption in transit and at rest. We retain your information for as long as your account is active. To request account deletion, contact an officer or email lehstsa@gmail.com.`,
+    body: `Your data is stored using Google Firebase, which employs industry-standard security measures including encryption in transit and at rest. We retain your information for as long as your account remains open. To request account deletion, contact an officer or email lehstsa@gmail.com.`,
   },
   {
     title: 'Newsletter & Email Updates',

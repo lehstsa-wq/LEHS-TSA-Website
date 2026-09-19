@@ -170,7 +170,6 @@ const EditorModal: React.FC<{
 const OverviewTab: React.FC = () => {
     const { members, competitionInterests, problemReports } = useData();
     const totalMembers = members.length;
-    const activeMembers = members.filter(m => m.status === 'active').length;
     const openIssues = problemReports.filter(r => r.status === 'Open').length;
     const recentInterests = [...competitionInterests]
 .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
@@ -182,7 +181,6 @@ const OverviewTab: React.FC = () => {
                 <div className={cardClass}>
                     <p className="text-ink-muted text-xs font-bold uppercase tracking-wider">Total Members</p>
                     <h3 className="text-3xl font-bold text-ink mt-1">{totalMembers}</h3>
-                    <p className="text-xs font-medium flex items-center mt-1" style={{ color: '#788c5d' }}><TrendingUp size={12} className="mr-1" /> {activeMembers} Active</p>
                 </div>
                 <div className={cardClass}>
                     <p className="text-ink-muted text-xs font-bold uppercase tracking-wider">New Interests</p>
@@ -437,7 +435,7 @@ const MemberEditor: React.FC<{
                     <div>
                         <label className={labelClass}>Status</label>
                         <select value={draft.status} onChange={e => set({ status: e.target.value as User['status'] })} className={inputClass}>
-                            <option value="active">Active</option>
+                            <option value="active">Member</option>
                             <option value="pending">Pending</option>
                             <option value="suspended">Suspended</option>
                             <option value="archived">Archived</option>
@@ -549,7 +547,7 @@ const MembersTab: React.FC = () => {
                                         </td>
                                         <td className="p-3">
                                             <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${m.status === 'active' ? 'bg-electric-50 text-electric-500' : 'bg-space-700 text-ink-muted'}`}>
-                                                {m.status || 'pending'}
+                                                {!m.status || m.status === 'active' ? 'member' : m.status}
                                             </span>
                                         </td>
                                         <td className="p-3 flex gap-2 items-center">

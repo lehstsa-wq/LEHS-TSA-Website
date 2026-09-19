@@ -169,7 +169,7 @@ const Login: React.FC = () => {
                 Join with Code
               </Link>
             </p>
-            <p className="text-[10px] text-ink-muted mt-4 font-mono">v1.2 (Recovery Mode Active)</p>
+            <p className="text-[10px] text-ink-muted mt-4 font-mono">v1.2 (Recovery Mode)</p>
           </div>
         </div>
       </div>

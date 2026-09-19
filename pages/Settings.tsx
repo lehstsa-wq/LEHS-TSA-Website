@@ -504,7 +504,7 @@ const AccountInfoSection: React.FC = () => {
     { icon: Hash,       label: 'Member ID',  value: user.memberId || 'Pending' },
     { icon: Mail,       label: 'Email',       value: user.email },
     { icon: Shield,     label: 'Role',        value: user.role, badge: roleColors[user.role] },
-    { icon: Activity,   label: 'Status',      value: user.status ?? 'active', badge: statusColors[user.status ?? 'active'] },
+    { icon: Activity,   label: 'Status',      value: !user.status || user.status === 'active' ? 'member' : user.status, badge: statusColors[user.status ?? 'active'] },
     { icon: Calendar,   label: 'Joined',      value: user.joinDate ? new Date(user.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown' },
   ];
 

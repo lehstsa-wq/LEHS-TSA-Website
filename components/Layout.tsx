@@ -511,21 +511,7 @@ export const Navbar: React.FC = () => {
    FOOTER
 ───────────────────────────────────────────────────────────── */
 export const Footer: React.FC = () => {
-  const { siteSettings, subscribe } = useData();
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
-
-  const handleSubscribe = async () => {
-    if (!email.includes('@')) return;
-    setStatus('loading');
-    try {
-      await subscribe(email);
-      setStatus('done');
-      setEmail('');
-    } catch {
-      setStatus('error');
-    }
-  };
+  const { siteSettings } = useData();
 
   const footerLinks = {
     'Chapter': [
@@ -569,7 +555,7 @@ export const Footer: React.FC = () => {
             </p>
 
             {/* Social */}
-            <div className="flex gap-3 mb-8">
+            <div className="flex gap-3">
               {siteSettings.instagramLink && (
                 <a href={siteSettings.instagramLink} target="_blank" rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-space-700 border border-space-500/50 flex items-center justify-center text-ink-muted hover:text-electric-500 hover:border-electric-300 transition-all duration-200">
@@ -582,36 +568,6 @@ export const Footer: React.FC = () => {
                   <Twitter size={16} />
                 </a>
               )}
-            </div>
-
-            {/* Newsletter */}
-            <div>
-              <div className="text-xs font-semibold text-ink mb-2 uppercase tracking-wider">Stay Updated</div>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSubscribe()}
-                  placeholder="your@email.com"
-                  disabled={status === 'done'}
-                  className="flex-1 min-w-0 bg-space-700/50 border border-space-500/60 rounded-lg px-3 py-2 text-sm text-ink placeholder-ink-muted focus:border-electric-500 focus:outline-none focus:ring-1 focus:ring-electric-500/40 transition-all"
-                />
-                <button
-                  onClick={handleSubscribe}
-                  disabled={status === 'loading' || status === 'done'}
-                  className="btn-primary text-sm py-2 px-4 flex-shrink-0 disabled:opacity-50"
-                >
-                  {status === 'done' ? 'Done' : status === 'loading' ? '...' : 'Go'}
-                </button>
-              </div>
-              {status === 'done' && (
-                <p className="text-xs text-electric-400 mt-1.5">You're subscribed!</p>
-              )}
-              {status === 'error' && (
-                <p className="text-xs text-gold-400 mt-1.5">Something went wrong. Try again.</p>
-              )}
-              <p className="text-[10px] text-ink-ghost mt-1.5">For ages 13 and older only.</p>
             </div>
           </div>
 

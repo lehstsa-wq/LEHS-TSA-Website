@@ -200,7 +200,7 @@ const MemberDirectory: React.FC = () => {
             <div className="section-label inline-flex mb-4">Chapter Members</div>
             <h1 className="section-title text-5xl lg:text-6xl mb-4">Member Directory</h1>
             <p className="section-body max-w-2xl">
-              Find teammates, explore skills, and connect with chapter members. {activeMembers.length} active members.
+              Find teammates, explore skills, and connect with chapter members. {activeMembers.length} members.
             </p>
           </motion.div>
         </div>

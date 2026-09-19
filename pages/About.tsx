@@ -84,7 +84,7 @@ const About: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: 50,  label: 'Active Members',      color: '#6a9bcc' },
+              { val: 50,  label: 'Members',             color: '#6a9bcc' },
               { val: 20,  label: 'State Qualifiers',    color: '#d97757' },
               { val: 14,  label: 'National Qualifiers', color: '#6a9bcc' },
               { val: CHAPTER_YEARS, label: 'Years of Excellence', color: '#788c5d' },

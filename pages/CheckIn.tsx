@@ -161,7 +161,7 @@ const CheckIn: React.FC = () => {
 
         {todayMeetings.length === 0 && status === 'idle' && (
           <p className="text-center text-xs text-ink-muted mt-4">
-            No meetings scheduled for today. Check back when a meeting is active.
+            No meetings scheduled for today. Check back when a meeting is open.
           </p>
         )}
       </motion.div>
