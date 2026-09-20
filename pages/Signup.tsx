@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, GraduationCap, ChevronRight, AlertCircle, Loader2, Key, Lock } from 'lucide-react';
-import { useAuth, MIN_PASSWORD_LENGTH } from '../context/AuthContext';
+import { Mail, User, GraduationCap, ChevronRight, AlertCircle, Loader2, Key } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { SEO } from '../components/SEO';
 
 const Signup: React.FC = () => {
@@ -10,8 +10,6 @@ const Signup: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [grade, setGrade] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,24 +39,6 @@ const Signup: React.FC = () => {
         return;
     }
 
-    if (password.length < MIN_PASSWORD_LENGTH) {
-      setError(`Choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Those passwords do not match.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (password.trim() === accessCode.trim()) {
-      setError('Your password cannot be the same as your access code.');
-      setIsSubmitting(false);
-      return;
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email.');
@@ -67,7 +47,7 @@ const Signup: React.FC = () => {
     }
 
     try {
-      await signup(accessCode, name, email, grade, password);
+      await signup(accessCode, name, email, grade);
       navigate('/dashboard');
     } catch (err: any) {
       const isKnownError = 
@@ -75,9 +55,7 @@ const Signup: React.FC = () => {
         err.message?.includes('email-already-in-use') ||
         err.message?.includes("Invalid Access Code") ||
         err.message?.includes("Access Code has already been used") ||
-        err.message?.includes("Admin account already exists") ||
-        err.message?.includes("at least") ||
-        err.message?.includes("same as your access code");
+        err.message?.includes("Admin account already exists");
 
       if (!isKnownError) console.error("Signup error:", err);
 
@@ -166,43 +144,6 @@ const Signup: React.FC = () => {
                 required
               />
               <Mail size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="signup-password" className="text-xs font-bold text-ink-muted uppercase ml-1">Password</label>
-            <div className="relative">
-              <input
-                id="signup-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-                minLength={MIN_PASSWORD_LENGTH}
-                placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
-                className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted"
-                required
-              />
-              <Lock size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
-            </div>
-            <p className="text-[10px] text-ink-ghost ml-1">Choose something only you know. Do not reuse your access code.</p>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="signup-confirm" className="text-xs font-bold text-ink-muted uppercase ml-1">Confirm Password</label>
-            <div className="relative">
-              <input
-                id="signup-confirm"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-                minLength={MIN_PASSWORD_LENGTH}
-                placeholder="Re-enter your password"
-                className="w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted"
-                required
-              />
-              <Lock size={18} className="absolute left-3.5 top-3.5 text-ink-muted pointer-events-none" />
             </div>
           </div>
 

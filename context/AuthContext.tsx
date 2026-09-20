@@ -15,7 +15,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (accessCode: string, name: string, email: string, grade: string, password: string) => Promise<void>;
+  signup: (accessCode: string, name: string, email: string, grade: string) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
   isAuthenticated: boolean;
@@ -28,9 +28,6 @@ interface AuthContextType {
    stored the generated URL, so the color is recovered from it as a fallback. */
 
 export const DEFAULT_AVATAR_COLOR = '6A9BCC';
-
-/** Shared by the signup form and the signup call so the rule lives in one place. */
-export const MIN_PASSWORD_LENGTH = 10;
 
 const xmlEscape = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -176,24 +173,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signup = async (
-    accessCode: string,
-    name: string,
-    email: string,
-    grade: string,
-    password: string,
-  ) => {
+  const signup = async (accessCode: string, name: string, email: string, grade: string) => {
     const formattedCode = accessCode.trim();
-
-    // The access code authorises registration; it is not the password. It used
-    // to be both, which meant every member's password was a short string that
-    // officers handed out and other members could see.
-    if (!password || password.length < MIN_PASSWORD_LENGTH) {
-      throw new Error(`Please choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`);
-    }
-    if (password.trim() === formattedCode) {
-      throw new Error('Your password cannot be the same as your access code.');
-    }
+    const password = formattedCode;
 
 
     // 1. Verify Access Code exists and is unused
