@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
-  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS,
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS, deriveMemberId,
 } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import { useToast } from '../context/ToastContext';
@@ -307,10 +307,8 @@ const MEMBER_GRADES = ['9', '10', '11', '12', 'Faculty', 'Alumni'];
 const MemberEditor: React.FC<{
     member: User;
     canChangeRole: boolean;
-    /** Advisors only may see a member's access code. */
-    canSeeAccessCode: boolean;
     onClose: () => void;
-}> = ({ member, canChangeRole, canSeeAccessCode, onClose }) => {
+}> = ({ member, canChangeRole, onClose }) => {
     const { updateMember } = useData();
     const { alert: showAlert } = useModal();
     const [saving, setSaving] = useState(false);
@@ -471,14 +469,11 @@ const MemberEditor: React.FC<{
                     </div>
                 </div>
 
-                {/* memberId holds the access code issued to this member, which is
-                    also their password, so only an advisor may see it. */}
+                {/* Render the derived id rather than the stored memberId: until the
+                    one-off purge has run, older records still hold the raw access
+                    code there, which is also the member's password. */}
                 <div className="text-xs text-ink-muted border-t border-space-500/30 pt-3">
-                    {canSeeAccessCode ? (
-                        <>Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span>, change it from the Access Codes tab.</>
-                    ) : (
-                        <>Member ID is hidden. Ask an advisor if it needs changing.</>
-                    )}
+                    Member ID <span className="font-mono text-ink-dim">{deriveMemberId(member.id)}</span>
                 </div>
             </div>
         </EditorModal>
@@ -487,9 +482,25 @@ const MemberEditor: React.FC<{
 
 const MembersTab: React.FC = () => {
     const { user } = useAuth();
-    const { members, accessCodes, generateAccessCode, deleteAccessCode, archiveAccessCode, updateMemberRole, deleteMember, regenerateMemberAccessCode } = useData();
+    const { members, accessCodes, generateAccessCode, deleteAccessCode, archiveAccessCode, updateMemberRole, deleteMember, regenerateMemberAccessCode, purgeAccessCodesFromProfiles } = useData();
     const { confirm, alert: showAlert } = useModal();
     const [activeSection, setActiveSection] = useState<'directory' | 'codes'>('directory');
+    const [purging, setPurging] = useState(false);
+    const staleProfiles = members.filter(m => m.memberId !== deriveMemberId(m.id)).length;
+
+    const handlePurge = async () => {
+        if (!await confirm(
+            'Clear access codes from profiles',
+            `${staleProfiles} member ${staleProfiles === 1 ? 'profile stores' : 'profiles store'} a raw access code, which is also that member's password, where every signed-in member can read it. Replace those with derived IDs? Access codes themselves are not touched.`,
+            false, 'Clear'
+        )) return;
+        setPurging(true);
+        const r = await purgeAccessCodesFromProfiles();
+        setPurging(false);
+        showAlert('Done', `Scanned ${r.scanned}. Cleaned ${r.cleaned}. Failed ${r.failed}.`);
+    };
+
+
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
     const [editingMember, setEditingMember] = useState<User | null>(null);
 
@@ -612,6 +623,22 @@ const MembersTab: React.FC = () => {
                 </div>
             ) : (
                 <div className="grid md:grid-cols-2 gap-6">
+                    {staleProfiles > 0 && (
+                      <div className={`${cardClass} md:col-span-2 border-gold-300`}>
+                        <h3 className="font-bold text-ink mb-2">Clear access codes from member profiles</h3>
+                        <p className="text-sm text-ink-muted mb-4">
+                          {staleProfiles} member {staleProfiles === 1 ? 'profile still stores' : 'profiles still store'} the raw
+                          access code it signed up with. That code is also the member's password, and every signed-in member can
+                          read every profile, so those passwords are readable by the whole chapter. This replaces the stored code
+                          with a derived ID. Access codes themselves are left alone, and the code stays linked to its member.
+                          Run once; it is safe to run again.
+                        </p>
+                        <button onClick={handlePurge} disabled={purging}
+                          className={`${buttonClass} bg-gold-500 text-white hover:bg-gold-400 transition-colors disabled:opacity-50`}>
+                          <Shield size={18} /> {purging ? 'Clearing...' : `Clear ${staleProfiles} profile${staleProfiles === 1 ? '' : 's'}`}
+                        </button>
+                      </div>
+                    )}
                     <div className={cardClass}>
                         <h3 className="font-bold text-ink mb-4">Generate New Code</h3>
                         <p className="text-sm text-ink-muted mb-6">Create a one-time use code for new members to sign up.</p>
@@ -768,7 +795,6 @@ const MembersTab: React.FC = () => {
                 <MemberEditor
                     member={editingMember}
                     canChangeRole={isAdvisor}
-                    canSeeAccessCode={isAdvisor}
                     onClose={() => setEditingMember(null)}
                 />
             )}

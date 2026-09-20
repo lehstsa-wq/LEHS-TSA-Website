@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport, CompetitionResult, Meeting, Team, Opportunity } from '../types';
-import { useAuth } from './AuthContext';
+import { useAuth, deriveMemberId } from './AuthContext';
 
 // --- MOCK DATA ---
 const MOCK_ANNOUNCEMENTS: Announcement[] = [
@@ -209,6 +209,8 @@ interface DataContextType {
   deleteAccessCode: (id: string) => Promise<void>;
   archiveAccessCode: (id: string) => Promise<void>;
   regenerateMemberAccessCode: (oldCodeId: string, memberUid: string, memberName: string, role: 'member' | 'officer') => Promise<string | null>;
+  /** One-off cleanup: replace access codes stored in members.memberId with derived IDs. */
+  purgeAccessCodesFromProfiles: () => Promise<{ scanned: number; cleaned: number; failed: number }>;
   subscribe: (email: string) => Promise<void>;
 
   // Teams
@@ -570,9 +572,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteMember = async (id: string) => {
-      // Find the member to get their memberId (which is the access code)
-      const member = members.find(m => m.id === id);
-      const accessCodeId = member?.memberId;
+      // The access code is linked by assignedUid on the code document, not by
+      // memberId — memberId is a derived public ID and no longer holds the code.
+      // accessCodes is advisor-only, so for an officer this list is empty and
+      // the code is simply left for an advisor to clear.
+      const accessCodeId = accessCodes.find(c => c.assignedUid === id)?.id;
 
       setMembers(prev => prev.filter(m => m.id !== id));
       try {
@@ -859,6 +863,35 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   };
 
+  /**
+   * One-off cleanup. members.memberId used to hold the raw access code the
+   * member signed up with, which is also their password, and every signed-in
+   * member receives every member document. This overwrites that field with the
+   * derived public ID. It does not touch access_codes, so the advisor keeps the
+   * code-to-member link via assignedUid.
+   *
+   * Idempotent: documents already holding the derived value are skipped.
+   */
+  const purgeAccessCodesFromProfiles = async () => {
+    let scanned = 0, cleaned = 0, failed = 0;
+    for (const m of members) {
+      scanned++;
+      const derived = deriveMemberId(m.id);
+      if (m.memberId === derived) continue;
+      try {
+        await setDoc(doc(db, "members", m.id), { memberId: derived }, { merge: true });
+        cleaned++;
+      } catch (e) {
+        console.error(`Could not clean memberId for ${m.id}:`, e);
+        failed++;
+      }
+    }
+    if (cleaned > 0) {
+      setMembers(prev => prev.map(m => ({ ...m, memberId: deriveMemberId(m.id) })));
+    }
+    return { scanned, cleaned, failed };
+  };
+
   const regenerateMemberAccessCode = async (oldCodeId: string, memberUid: string, memberName: string, role: 'member' | 'officer') => {
       // 1. Generate new code
       const prefix = role === 'officer' ? 'OFF' : 'MEM';
@@ -880,16 +913,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           newCode
       ]);
       
-      // Update member locally
-      setMembers(prev => prev.map(m => m.id === memberUid ? { ...m, memberId: newCodeId } : m));
 
       try {
           // 3. Firestore Operations
           await Promise.all([
               // Create new code
               setDoc(doc(db, "access_codes", newCodeId), stripUndefined(newCode)),
-              // Update member
-              setDoc(doc(db, "members", memberUid), { memberId: newCodeId }, { merge: true }),
               // Delete old code
               deleteDoc(doc(db, "access_codes", oldCodeId))
           ]);
@@ -1053,6 +1082,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       competitionResults, addCompetitionResult, updateCompetitionResult, deleteCompetitionResult,
       meetings, addMeeting, updateMeeting, deleteMeeting, checkInMeeting,
       officersList, eventsList, projectsList, galleryList, accessCodes, nextEvent,
+      purgeAccessCodesFromProfiles,
       addAnnouncement, updateAnnouncement, deleteAnnouncement,
       updateMember, updateMemberRole, updateMemberStatus, updateMemberRequirement, deleteMember,
       addResource, updateResource, deleteResource,

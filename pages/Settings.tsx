@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS,
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS, deriveMemberId,
 } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import {
@@ -501,7 +501,7 @@ const AccountInfoSection: React.FC = () => {
   };
 
   const items = [
-    { icon: Hash,       label: 'Member ID',  value: user.memberId || 'Pending' },
+    { icon: Hash,       label: 'Member ID',  value: deriveMemberId(user.id) },
     { icon: Mail,       label: 'Email',       value: user.email },
     { icon: Shield,     label: 'Role',        value: user.role, badge: roleColors[user.role] },
     { icon: Activity,   label: 'Status',      value: !user.status || user.status === 'active' ? 'member' : user.status, badge: statusColors[user.status ?? 'active'] },

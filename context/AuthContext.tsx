@@ -29,6 +29,22 @@ interface AuthContextType {
 
 export const DEFAULT_AVATAR_COLOR = '6A9BCC';
 
+/**
+ * A member's public-facing ID, derived from their account id.
+ *
+ * This field used to hold the raw access code the member registered with.
+ * Because the access code is also their password, and every signed-in member
+ * receives every member document, that leaked all members' passwords to each
+ * other. The code-to-member link lives on the access_codes document
+ * (assignedUid / assignedTo), which is advisor-only, so nothing needs the
+ * code duplicated here.
+ *
+ * Derived rather than stored-random so it is stable, unique (account ids are)
+ * and needs no uniqueness bookkeeping.
+ */
+export const deriveMemberId = (uid: string) =>
+  `LEHS-${(uid || '').replace(/[^A-Za-z0-9]/g, '').slice(-6).toUpperCase().padStart(6, '0')}`;
+
 const xmlEscape = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -207,7 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const newUser: User = {
           id: firebaseUser.uid,
-          memberId: formattedCode, // Store the code used as reference
+          memberId: deriveMemberId(firebaseUser.uid),
           name,
           email,
           role: assignedRole,
