@@ -307,8 +307,10 @@ const MEMBER_GRADES = ['9', '10', '11', '12', 'Faculty', 'Alumni'];
 const MemberEditor: React.FC<{
     member: User;
     canChangeRole: boolean;
+    /** Advisors only may see a member's access code. */
+    canSeeAccessCode: boolean;
     onClose: () => void;
-}> = ({ member, canChangeRole, onClose }) => {
+}> = ({ member, canChangeRole, canSeeAccessCode, onClose }) => {
     const { updateMember } = useData();
     const { alert: showAlert } = useModal();
     const [saving, setSaving] = useState(false);
@@ -469,8 +471,14 @@ const MemberEditor: React.FC<{
                     </div>
                 </div>
 
+                {/* memberId holds the access code issued to this member, which is
+                    also their password, so only an advisor may see it. */}
                 <div className="text-xs text-ink-muted border-t border-space-500/30 pt-3">
-                    Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span>, change it from the Access Codes tab.
+                    {canSeeAccessCode ? (
+                        <>Member ID <span className="font-mono text-ink-dim">{member.memberId || 'pending'}</span>, change it from the Access Codes tab.</>
+                    ) : (
+                        <>Member ID is hidden. Ask an advisor if it needs changing.</>
+                    )}
                 </div>
             </div>
         </EditorModal>
@@ -518,10 +526,14 @@ const MembersTab: React.FC = () => {
         <div className="space-y-6 animate-fade-in">
             <div className="flex space-x-4 mb-6">
                 <button onClick={() => setActiveSection('directory')} className={`pb-2 px-1 border-b-2 font-bold text-sm transition-colors ${activeSection === 'directory' ? 'border-electric-500 text-electric-400' : 'border-transparent text-ink-muted hover:text-ink'}`}>Member Directory</button>
-                <button onClick={() => setActiveSection('codes')} className={`pb-2 px-1 border-b-2 font-bold text-sm transition-colors ${activeSection === 'codes' ? 'border-electric-500 text-electric-400' : 'border-transparent text-ink-muted hover:text-ink'}`}>Access Codes</button>
+                {/* Advisor-only: a member's password is the access code issued to
+                    them, so officers must not be able to read codes. */}
+                {isAdvisor && (
+                  <button onClick={() => setActiveSection('codes')} className={`pb-2 px-1 border-b-2 font-bold text-sm transition-colors ${activeSection === 'codes' ? 'border-electric-500 text-electric-400' : 'border-transparent text-ink-muted hover:text-ink'}`}>Access Codes</button>
+                )}
             </div>
 
-            {activeSection === 'directory' ? (
+            {(activeSection === 'directory' || !isAdvisor) ? (
                 <div className={cardClass}>
                     <h3 className="font-bold text-ink mb-4">All Members ({members.length})</h3>
                     <div className="overflow-x-auto">
@@ -756,6 +768,7 @@ const MembersTab: React.FC = () => {
                 <MemberEditor
                     member={editingMember}
                     canChangeRole={isAdvisor}
+                    canSeeAccessCode={isAdvisor}
                     onClose={() => setEditingMember(null)}
                 />
             )}

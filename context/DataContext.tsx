@@ -306,14 +306,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // Sync Access Codes from Firestore
+  // Sync Access Codes from Firestore. Listing codes is advisor-only — a
+  // member's password is the code issued to them — so subscribing as anyone
+  // else only produces permission-denied and an idle connection.
   useEffect(() => {
+    if (user?.role !== 'advisor') { setAccessCodes([]); return; }
     const unsubscribe = onSnapshot(collection(db, "access_codes"), (snapshot) => {
       const codes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AccessCode));
       setAccessCodes(codes);
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   // Sync Members from Firestore. Rules require a signed-in user, so subscribing
   // while signed out only yields permission-denied and an idle connection.

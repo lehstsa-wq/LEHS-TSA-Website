@@ -150,7 +150,13 @@ html.light {
     color: var(--c-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    /* `overflow-x: hidden` here forced the computed overflow-y to `auto`,
+       which made body its own scroll container nested inside the document
+       scroller. A wheel gesture then landed on body, which cannot scroll,
+       before chaining to the real scroller — the first gesture appeared to do
+       nothing. `clip` clips the same overflow without creating a scroll
+       container, so overflow-y stays `visible`. */
+    overflow-x: clip;
   }
 
   /* TSA: Proxima Nova (Franklin Gothic fallback) for headings */

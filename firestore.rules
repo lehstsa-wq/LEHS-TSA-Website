@@ -120,12 +120,18 @@ service cloud.firestore {
     // Signup has to validate a code *before* an account exists, so a single-doc
     // read by exact code is public; listing every code stays officer-only.
     match /access_codes/{id} {
+      // A single code may be read by exact id because signup has to validate
+      // one before an account exists. That permits checking a code you already
+      // know, not discovering codes — enumeration needs `list`.
       allow get: if true;
-      allow list: if isOfficer();
-      allow create, delete: if isOfficer();
-      // Officers manage codes freely. A brand-new account may claim one unused
-      // code for itself, and may only touch the three claim fields.
-      allow update: if isOfficer() || (
+      // Advisors only. Because a member's password is the access code issued to
+      // them, anyone who can list codes can sign in as those members, so this
+      // is deliberately narrower than isOfficer().
+      allow list: if isAdvisor();
+      allow create, delete: if isAdvisor();
+      // A brand-new account may claim one unused code for itself, and may only
+      // touch the three claim fields.
+      allow update: if isAdvisor() || (
         isSignedIn() &&
         resource.data.status == 'unused' &&
         request.resource.data.diff(resource.data)
