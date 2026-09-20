@@ -11,6 +11,15 @@ service cloud.firestore {
         get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role in ['officer', 'advisor'];
     }
 
+    // Helper: caller is an authenticated advisor. Advisors are the only role
+    // that may change someone else's role, so this is deliberately narrower
+    // than isOfficer().
+    function isAdvisor() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/members/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role == 'advisor';
+    }
+
     // Helper: caller is any authenticated member
     function isSignedIn() {
       return request.auth != null;
@@ -70,9 +79,40 @@ service cloud.firestore {
     // ── Member directory ────────────────────────────────────────────────────
     match /members/{userId} {
       allow read: if isSignedIn();
-      // Users can update their own profile; officers can update anyone
-      allow update: if isOfficer() || (isSignedIn() && request.auth.uid == userId);
-      allow create: if isOfficer() || (isSignedIn() && request.auth.uid == userId);
+
+      // Role changes are an advisor's job, and nobody may change their own.
+      // Previously any officer could write any member document including
+      // `role`, so an officer could promote themselves to advisor or demote
+      // the real one. Barring self-role-changes also stops a lone advisor
+      // accidentally demoting themselves and leaving nobody able to promote.
+      allow update: if (
+        // An advisor may change anyone else's record, role included.
+        isAdvisor() && request.auth.uid != userId
+      ) || (
+        // Officers, and members on their own record, may change anything
+        // except the role field.
+        isSignedIn() &&
+        (isOfficer() || request.auth.uid == userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
+      );
+
+      // A new account writes its own member document during signup, so the
+      // role it claims has to be constrained here: 'advisor' can never be
+      // self-assigned, and 'officer' only when the access code being redeemed
+      // is itself an officer code. The plain member path needs no lookup, so
+      // ordinary signup cannot break on a missing access-code document.
+      allow create: if isOfficer() || (
+        isSignedIn() &&
+        request.auth.uid == userId && (
+          request.resource.data.role == 'member' ||
+          (
+            request.resource.data.role == 'officer' &&
+            exists(/databases/$(database)/documents/access_codes/$(request.resource.data.memberId)) &&
+            get(/databases/$(database)/documents/access_codes/$(request.resource.data.memberId)).data.role == 'officer'
+          )
+        )
+      );
+
       allow delete: if isOfficer();
     }
 
