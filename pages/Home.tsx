@@ -169,8 +169,14 @@ const Home: React.FC = () => {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 4);
 
+  // The wrapper below uses overflow-x-clip, not -hidden. Setting one overflow
+  // axis to `hidden` forces the computed overflow-y to `auto`, which made this
+  // wrapper a scroll container holding ~6px of scrollable overflow. The first
+  // wheel gesture was spent scrolling those few pixels before chaining to the
+  // page, so scrolling appeared to need two gestures to start. `clip` clips
+  // identically without creating a scroll container.
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-clip">
       <SEO
         title="Home"
         description="Little Elm High School TSA. Compete. Innovate. Lead. Join Texas's most driven TSA chapter."
