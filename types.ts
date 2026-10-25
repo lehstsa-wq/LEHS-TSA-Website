@@ -73,7 +73,16 @@ export interface User {
   role: UserRole;
   grade?: string;
   avatar?: string;
+  // New sign-ups start 'pending' until an officer approves them. Profiles
+  // without a status predate approvals and count as active.
   status?: 'active' | 'pending' | 'suspended' | 'archived';
+  // Students join themselves; a parent may only join as the parent of a
+  // named current member (parentOf), which officers check before approving.
+  accountType?: 'student' | 'parent';
+  parentOf?: string;
+  // Accounts that joined with an access code had that code as their password.
+  // Unset means they have not yet chosen to keep it or set their own.
+  passwordChoice?: 'own' | 'kept-code';
   joinDate?: string;
   bio?: string;
   interests?: string[];

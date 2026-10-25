@@ -5,7 +5,7 @@ import { SEO } from '../components/SEO';
 const SECTIONS = [
   {
     title: 'Information We Collect',
-    body: `When you create an account, we collect your full name, school email address, grade level, and the access code issued by a club officer. We also collect information you voluntarily provide, such as competition interests, team memberships, and skills listed on your profile.`,
+    body: `When you create an account, we collect your full name, email address, and either your grade level (students) or the name of the member you are the parent of (parents). Parents may only have an account as the parent of a current member. Every new account is reviewed and approved by a club officer. Your password is stored by our sign-in provider, Google Firebase, only in a scrambled one-way form: officers, advisors, and site administrators can never see it. We also collect information you voluntarily provide, such as competition interests, team memberships, and skills listed on your profile.`,
   },
   {
     title: 'How We Use Your Information',

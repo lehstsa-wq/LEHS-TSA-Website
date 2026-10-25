@@ -1,26 +1,53 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signOut, 
-  User as FirebaseUser 
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updatePassword,
+  signOut,
+  User as FirebaseUser
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
-import { User, AccessCode } from '../types';
+import { User } from '../types';
+
+export interface SignupDetails {
+  name: string;
+  email: string;
+  password: string;
+  accountType: 'student' | 'parent';
+  /** Students only. */
+  grade?: string;
+  /** Parents only: the current member they are the parent of. */
+  parentOf?: string;
+}
 
 interface AuthContextType {
+  /** The signed-in profile, including one still awaiting approval. */
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (accessCode: string, name: string, email: string, grade: string) => Promise<void>;
+  signup: (details: SignupDetails) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
+  /** Replaces the signed-in user's password. Firebase stores only a hash, so
+   *  nobody, officers and project owner included, can ever read it. */
+  changePassword: (newPassword: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
+  /** Signed in AND approved. Pending or deactivated accounts are false. */
   isAuthenticated: boolean;
   isOfficer: boolean;
 }
+
+/** Approved for the member portal. Profiles from before approvals existed
+ *  carry no status and count as active. */
+export const isApprovedMember = (u?: Pick<User, 'status'> | null) =>
+  !!u && (!u.status || u.status === 'active');
+
+/** Passwords chosen at signup or when replacing an access code. */
+export const MIN_PASSWORD_LENGTH = 8;
 
 /* ── Avatar helpers ──────────────────────────────────────────────────────────
    A member's avatar is either an uploaded photo (a data URL) or a generated
@@ -157,8 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // anyone holding an access code self-promote to advisor simply by
         // typing one of those addresses at signup — the app never verifies
         // that a member owns the email they register. Advisor and officer
-        // roles are now granted by the access code or by an existing
-        // advisor in the admin panel.
+        // roles are granted only by an existing advisor in the admin panel.
         setUser(userData);
       } else {
         // An authenticated session with no member profile gets signed out.
@@ -189,73 +215,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signup = async (accessCode: string, name: string, email: string, grade: string) => {
-    const formattedCode = accessCode.trim();
-    const password = formattedCode;
-
-
-    // 1. Verify Access Code exists and is unused
-    const codeRef = doc(db, "access_codes", formattedCode);
-    let codeSnap;
+  /**
+   * Self-service signup. Anyone can create an account with their own email and
+   * password, but it starts 'pending': an officer approves it in the admin
+   * panel before any member data opens up (enforced by firestore.rules, not
+   * just the UI). Role is always 'member'; officer and advisor are granted by
+   * an advisor afterwards.
+   */
+  const signup = async ({ name, email, password, accountType, grade, parentOf }: SignupDetails) => {
     try {
-      codeSnap = await getDoc(codeRef);
-    } catch (e) {
-      console.error("Could not read access code:", e);
-      throw new Error("We couldn't verify that access code right now. Please try again or contact an officer.");
-    }
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
 
-    if (!codeSnap.exists()) {
-      throw new Error("Invalid Access Code. Please contact an officer.");
-    }
+      const newUser: User = {
+        id: firebaseUser.uid,
+        memberId: deriveMemberId(firebaseUser.uid),
+        name,
+        email,
+        role: 'member',
+        status: 'pending',
+        accountType,
+        passwordChoice: 'own',
+        joinDate: new Date().toISOString().split('T')[0],
+        avatarColor: DEFAULT_AVATAR_COLOR,
+        avatar: buildAvatarUrl(name, DEFAULT_AVATAR_COLOR),
+        // Firestore rejects undefined, so only the field that applies is set.
+        ...(accountType === 'student' && grade ? { grade } : {}),
+        ...(accountType === 'parent' && parentOf ? { parentOf } : {}),
+      };
 
-    const codeData = codeSnap.data() as AccessCode;
-    if (codeData.status === 'used') {
-      throw new Error("This Access Code has already been used.");
-    }
-
-    // 2. Create Authentication User
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const firebaseUser = userCredential.user;
-
-        // 3. Prepare Data
-        const assignedRole = codeData.role || 'member';
-
-        const newUser: User = {
-          id: firebaseUser.uid,
-          memberId: deriveMemberId(firebaseUser.uid),
-          name,
-          email,
-          role: assignedRole,
-          grade,
-          status: 'active',
-          joinDate: new Date().toISOString().split('T')[0],
-          avatarColor: DEFAULT_AVATAR_COLOR,
-          avatar: buildAvatarUrl(name, DEFAULT_AVATAR_COLOR)
-        };
-
-        // 4. Write the profile first — it is what gates access to the portal.
-        await setDoc(doc(db, "members", firebaseUser.uid), newUser);
-
-        // 5. Claim the code. A failure here must not strand the new account,
-        //    so log it and let an officer reconcile from the admin panel.
-        try {
-          await updateDoc(codeRef, {
-            status: 'used',
-            assignedTo: name,
-            assignedUid: firebaseUser.uid
-          });
-        } catch (claimError) {
-          console.error("Account created but access code could not be marked as used:", claimError);
-        }
-
-        setUser(newUser);
+      await setDoc(doc(db, "members", firebaseUser.uid), newUser);
+      setUser(newUser);
     } catch (error: any) {
-        if (error.code === 'auth/email-already-in-use') {
-            throw new Error("This email is already registered. Please go to Sign In.");
-        }
-        throw error;
+      if (error.code === 'auth/email-already-in-use') {
+        throw new Error("This email is already registered. Please go to Sign In.");
+      }
+      if (error.code === 'auth/weak-password') {
+        throw new Error(`Please choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`);
+      }
+      throw error;
     }
+  };
+
+  const changePassword = async (newPassword: string) => {
+    if (!auth.currentUser) throw new Error("You're not signed in.");
+    try {
+      await updatePassword(auth.currentUser, newPassword);
+    } catch (error: any) {
+      if (error.code === 'auth/requires-recent-login') {
+        throw new Error("For security, please sign out, sign back in, and try again.");
+      }
+      if (error.code === 'auth/weak-password') {
+        throw new Error(`Please choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`);
+      }
+      throw error;
+    }
+  };
+
+  const sendPasswordReset = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
   };
 
   const logout = async () => {
@@ -293,8 +311,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       signup, 
       logout,
       updateProfile,
-      isAuthenticated: !!user,
-      isOfficer: user?.role === 'officer' || user?.role === 'advisor'
+      changePassword,
+      sendPasswordReset,
+      isAuthenticated: isApprovedMember(user),
+      isOfficer: isApprovedMember(user) && (user?.role === 'officer' || user?.role === 'advisor')
     }}>
       {children}
     </AuthContext.Provider>

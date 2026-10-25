@@ -2,27 +2,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: check if the caller is an authenticated officer or advisor.
-    // The exists() guard matters during signup — the member document does not
-    // exist yet, and get() on a missing document aborts rule evaluation.
+    function myProfile() {
+      return get(/databases/$(database)/documents/members/$(request.auth.uid)).data;
+    }
+
+    // Helper: caller is an APPROVED member. Anyone can create an account, but
+    // it starts 'pending' until an officer approves it, and a pending,
+    // suspended or declined ('archived') account gets none of the member
+    // data below. Profiles from before approvals existed have no status and
+    // count as approved. The exists() guard matters during signup: the
+    // profile does not exist yet, and get() on a missing document aborts
+    // rule evaluation.
+    function isMember() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/members/$(request.auth.uid)) &&
+        (!('status' in myProfile()) || myProfile().status == 'active');
+    }
+
+    // Helper: caller is an approved officer or advisor.
     function isOfficer() {
-      return request.auth != null &&
-        exists(/databases/$(database)/documents/members/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role in ['officer', 'advisor'];
+      return isMember() && myProfile().role in ['officer', 'advisor'];
     }
 
-    // Helper: caller is an authenticated advisor. Advisors are the only role
-    // that may change someone else's role, so this is deliberately narrower
-    // than isOfficer().
+    // Helper: caller is an approved advisor. Advisors are the only role that
+    // may change someone else's role, so this is deliberately narrower than
+    // isOfficer().
     function isAdvisor() {
-      return request.auth != null &&
-        exists(/databases/$(database)/documents/members/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role == 'advisor';
+      return isMember() && myProfile().role == 'advisor';
     }
 
-    // Helper: caller is any authenticated member
-    function isSignedIn() {
-      return request.auth != null;
+    function changes(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
     }
 
     // ── Public-facing content (read by anyone, write by officers only) ──────
@@ -52,7 +62,7 @@ service cloud.firestore {
     }
 
     match /resources/{id} {
-      allow read: if isSignedIn();
+      allow read: if isMember();
       allow write: if isOfficer();
     }
 
@@ -70,45 +80,47 @@ service cloud.firestore {
     match /meetings/{id} {
       allow read: if true;
       allow create, delete: if isOfficer();
-      // Allow any signed-in user to update attendees (check-in), officers can update anything
+      // Approved members may update attendees (check-in), officers anything
       allow update: if isOfficer() ||
-        (isSignedIn() &&
+        (isMember() &&
          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['attendees']));
     }
 
     // ── Member directory ────────────────────────────────────────────────────
     match /members/{userId} {
-      allow read: if isSignedIn();
+      // Approved members see the directory. A pending or declined account
+      // can read only its own profile, so the app can show its status.
+      allow get: if isMember() || (request.auth != null && request.auth.uid == userId);
+      allow list: if isMember();
 
       // Role changes are an advisor's job, and nobody may change their own.
-      // Previously any officer could write any member document including
-      // `role`, so an officer could promote themselves to advisor or demote
-      // the real one. Barring self-role-changes also stops a lone advisor
-      // accidentally demoting themselves and leaving nobody able to promote.
+      // Officers approve and decline accounts (status) but can't touch roles.
+      // A member editing their own profile can change neither role nor
+      // status, so a pending account can't approve itself, and can't rewrite
+      // the account type or parent link officers approved it on.
       allow update: if (
-        // An advisor may change anyone else's record, role included.
         isAdvisor() && request.auth.uid != userId
       ) || (
-        // Officers, and members on their own record, may change anything
-        // except the role field.
-        isSignedIn() &&
-        (isOfficer() || request.auth.uid == userId) &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
+        isOfficer() && !changes(['role'])
+      ) || (
+        request.auth != null && request.auth.uid == userId &&
+        !changes(['role', 'status', 'accountType', 'parentOf'])
       );
 
-      // A new account writes its own member document during signup, so the
-      // role it claims has to be constrained here: 'advisor' can never be
-      // self-assigned, and 'officer' only when the access code being redeemed
-      // is itself an officer code. The plain member path needs no lookup, so
-      // ordinary signup cannot break on a missing access-code document.
+      // Self-signup. Anyone may create their own profile, but only as a
+      // pending, plain member: never pre-approved and never an officer or
+      // advisor. A parent account must name the member it is the parent of.
       allow create: if isOfficer() || (
-        isSignedIn() &&
-        request.auth.uid == userId && (
-          request.resource.data.role == 'member' ||
+        request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.data.role == 'member' &&
+        request.resource.data.status == 'pending' &&
+        (
+          request.resource.data.accountType == 'student' ||
           (
-            request.resource.data.role == 'officer' &&
-            exists(/databases/$(database)/documents/access_codes/$(request.resource.data.memberId)) &&
-            get(/databases/$(database)/documents/access_codes/$(request.resource.data.memberId)).data.role == 'officer'
+            request.resource.data.accountType == 'parent' &&
+            request.resource.data.parentOf is string &&
+            request.resource.data.parentOf.size() >= 2
           )
         )
       );
@@ -117,50 +129,34 @@ service cloud.firestore {
     }
 
     // ── Access codes ────────────────────────────────────────────────────────
-    // Signup has to validate a code *before* an account exists, so a single-doc
-    // read by exact code is public; listing every code stays officer-only.
+    // Retired. Sign-up no longer uses codes, but a code is still the password
+    // of every member who chose to keep it, so no app user (officer or
+    // advisor) may read or change them. They are visible only in the Firebase
+    // console, to the project owner.
     match /access_codes/{id} {
-      // A single code may be read by exact id because signup has to validate
-      // one before an account exists. That permits checking a code you already
-      // know, not discovering codes — enumeration needs `list`.
-      allow get: if true;
-      // Advisors only. Because a member's password is the access code issued to
-      // them, anyone who can list codes can sign in as those members, so this
-      // is deliberately narrower than isOfficer().
-      allow list: if isAdvisor();
-      allow create, delete: if isAdvisor();
-      // A brand-new account may claim one unused code for itself, and may only
-      // touch the three claim fields.
-      allow update: if isAdvisor() || (
-        isSignedIn() &&
-        resource.data.status == 'unused' &&
-        request.resource.data.diff(resource.data)
-          .affectedKeys().hasOnly(['status', 'assignedTo', 'assignedUid']) &&
-        request.resource.data.status == 'used' &&
-        request.resource.data.assignedUid == request.auth.uid
-      );
+      allow read, write: if false;
     }
 
     // ── Competition interests (any member can submit) ───────────────────────
     match /competition_interests/{id} {
       allow read: if isOfficer();
-      allow create: if isSignedIn();
+      allow create: if isMember();
       allow delete: if isOfficer();
     }
 
     // ── Problem reports ─────────────────────────────────────────────────────
     match /problem_reports/{id} {
       allow read: if isOfficer();
-      allow create: if isSignedIn();
+      allow create: if isMember();
       allow update, delete: if isOfficer();
     }
 
     // ── Teams (members create/join, officers can manage) ────────────────────
     match /teams/{id} {
       allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
+      allow create: if isMember();
+      allow update: if isMember();
+      allow delete: if isMember();
     }
 
     // ── Site settings & competition links ───────────────────────────────────

@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Announcement, User, ResourceLink, OfficerNote, InternalDeadline, SiteSettings, CompetitionInterest, Officer, Event, Project, GalleryItem, AccessCode, ProblemReport, CompetitionResult, Meeting, Team, Opportunity } from '../types';
-import { useAuth, deriveMemberId } from './AuthContext';
+import { useAuth, deriveMemberId, isApprovedMember } from './AuthContext';
 
 // --- MOCK DATA ---
 const MOCK_ANNOUNCEMENTS: Announcement[] = [
@@ -308,22 +308,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // Sync Access Codes from Firestore. Listing codes is advisor-only — a
-  // member's password is the code issued to them — so subscribing as anyone
-  // else only produces permission-denied and an idle connection.
-  useEffect(() => {
-    if (user?.role !== 'advisor') { setAccessCodes([]); return; }
-    const unsubscribe = onSnapshot(collection(db, "access_codes"), (snapshot) => {
-      const codes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AccessCode));
-      setAccessCodes(codes);
-    });
-    return () => unsubscribe();
-  }, [user]);
+  // Access codes are no longer loaded. Members now sign up with their own
+  // password, and a code is still the password of anyone who chose to keep
+  // it, so firestore.rules close access_codes to every app user: they are
+  // visible only in the Firebase console, to the project owner.
 
-  // Sync Members from Firestore. Rules require a signed-in user, so subscribing
-  // while signed out only yields permission-denied and an idle connection.
+  // Sync Members from Firestore. Rules require an approved member, so
+  // subscribing while signed out or pending only yields permission-denied.
   useEffect(() => {
-    if (!user) { setMembers([]); return; }
+    if (!isApprovedMember(user)) { setMembers([]); return; }
     const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
       const memberList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
       setMembers(memberList);
@@ -333,7 +326,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Sync Problem Reports from Firestore (officer-only data).
   useEffect(() => {
-    if (!user) { setProblemReports([]); return; }
+    if (!isApprovedMember(user)) { setProblemReports([]); return; }
     const unsubscribe = onSnapshot(collection(db, "problem_reports"), (snapshot) => {
       const reports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ProblemReport));
       setProblemReports(reports);

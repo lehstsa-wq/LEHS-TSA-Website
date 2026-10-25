@@ -4,15 +4,15 @@ import {
   Shield, Users, Bell, Calendar, Settings,
   Plus, Trash2, X, Search, Edit2,
   Briefcase, FolderOpen, Image as ImageIcon,
-  TrendingUp, AlertCircle, UserPlus, Activity, Archive,
+  TrendingUp, AlertCircle, Activity, Archive,
   Star, FileText, ExternalLink,
   Link as LinkIcon, Save, ChevronDown, ChevronUp,
-  AlertOctagon, CheckCircle,
+  AlertOctagon, CheckCircle, UserCheck, UserX,
   Cpu, Hammer, Layers, Plane, Zap, PenTool, Palette
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
-  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS, deriveMemberId,
+  useAuth, buildAvatarUrl, avatarColorOf, avatarPhotoOf, AVATAR_COLORS, deriveMemberId, isApprovedMember,
 } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
 import { useToast } from '../context/ToastContext';
@@ -22,7 +22,7 @@ import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
 import { tint } from '../lib/color';
 
-type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
+type Tab = 'overview' | 'approvals' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
 // Shared Styles
 const cardClass = "bg-space-800 border border-space-500/30 rounded-xl shadow-sm p-6";
@@ -31,8 +31,9 @@ const labelClass = "block text-xs font-bold text-ink-muted uppercase tracking-wi
 const buttonClass = "px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2";
 
 const AdminPanel: React.FC = () => {
-  const { } = useAuth();
+  const { members } = useData();
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const pendingCount = members.filter(m => m.status === 'pending').length;
 
   return (
     <div className="bg-space-900 min-h-screen animate-fade-in transition-colors duration-300 flex flex-col md:flex-row">
@@ -57,7 +58,8 @@ const AdminPanel: React.FC = () => {
             {
               label: 'Members',
               items: [
-                { id: 'members', label: 'Members & Access', icon: Users },
+                { id: 'approvals', label: 'Approvals', icon: UserCheck, badge: pendingCount },
+                { id: 'members', label: 'Members', icon: Users },
                 { id: 'attendance', label: 'Attendance', icon: CheckCircle },
                 { id: 'issues', label: 'Issue Reports', icon: AlertOctagon },
               ]
@@ -99,6 +101,12 @@ const AdminPanel: React.FC = () => {
                     >
                       <item.icon size={16} />
                       {item.label}
+                      {'badge' in item && (item as { badge?: number }).badge ? (
+                        <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-bold flex items-center justify-center text-on-accent"
+                          style={{ background: 'var(--cta)' }}>
+                          {(item as { badge?: number }).badge}
+                        </span>
+                      ) : null}
                     </button>
                   </li>
                 ))}
@@ -110,7 +118,8 @@ const AdminPanel: React.FC = () => {
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto h-[calc(100vh-5rem)]">
         <div className="max-w-6xl mx-auto">
-           {activeTab === 'overview' && <OverviewTab />}
+           {activeTab === 'overview' && <OverviewTab onOpenApprovals={() => setActiveTab('approvals')} />}
+           {activeTab === 'approvals' && <ApprovalsTab />}
            {activeTab === 'members' && <MembersTab />}
            {activeTab === 'issues' && <IssuesTab />}
            {activeTab === 'updates' && <UpdatesTab />}
@@ -168,9 +177,10 @@ const EditorModal: React.FC<{
 
 /* --- TAB COMPONENTS --- */
 
-const OverviewTab: React.FC = () => {
+const OverviewTab: React.FC<{ onOpenApprovals: () => void }> = ({ onOpenApprovals }) => {
     const { members, competitionInterests, problemReports } = useData();
-    const totalMembers = members.length;
+    const totalMembers = members.filter(m => isApprovedMember(m)).length;
+    const pendingCount = members.filter(m => m.status === 'pending').length;
     const openIssues = problemReports.filter(r => r.status === 'Open').length;
     const recentInterests = [...competitionInterests]
 .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
@@ -178,6 +188,21 @@ const OverviewTab: React.FC = () => {
 
     return (
         <div className="space-y-6 animate-fade-in">
+             {pendingCount > 0 && (
+                <button onClick={onOpenApprovals}
+                    className="w-full flex items-center justify-between gap-4 p-5 rounded-xl text-left bg-gold-500/10 border-2 border-gold-500 hover:bg-gold-500/20 transition-colors">
+                    <span className="flex items-center gap-3">
+                        <UserCheck size={22} className="text-gold-500 shrink-0" />
+                        <span>
+                            <span className="block font-bold text-ink">
+                                {pendingCount} {pendingCount === 1 ? 'account is' : 'accounts are'} awaiting approval
+                            </span>
+                            <span className="block text-sm text-ink-muted">Review new sign-ups before they can use the member portal.</span>
+                        </span>
+                    </span>
+                    <span className="text-sm font-bold text-gold-500 shrink-0">Review &rarr;</span>
+                </button>
+             )}
              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className={cardClass}>
                     <p className="text-ink-muted text-xs font-bold uppercase tracking-wider">Total Members</p>
@@ -481,316 +506,194 @@ const MemberEditor: React.FC<{
     );
 };
 
-const MembersTab: React.FC = () => {
-    const { user } = useAuth();
-    const { members, accessCodes, generateAccessCode, deleteAccessCode, archiveAccessCode, updateMemberRole, deleteMember, regenerateMemberAccessCode, purgeAccessCodesFromProfiles } = useData();
-    const { confirm, alert: showAlert } = useModal();
-    const [activeSection, setActiveSection] = useState<'directory' | 'codes'>('directory');
-    const [purging, setPurging] = useState(false);
-    const staleProfiles = members.filter(m => m.memberId !== deriveMemberId(m.id)).length;
+/** Who an account is: a student, or the parent of a named member. */
+const accountLabel = (m: User) =>
+    m.accountType === 'parent' ? `Parent of ${m.parentOf || 'a member'}` : (m.grade || 'Student');
 
-    const handlePurge = async () => {
-        if (!await confirm(
-            'Clear access codes from profiles',
-            `${staleProfiles} member ${staleProfiles === 1 ? 'profile stores' : 'profiles store'} a raw access code, which is also that member's password, where every signed-in member can read it. Replace those with derived IDs? Access codes themselves are not touched.`,
-            false, 'Clear'
-        )) return;
-        setPurging(true);
-        const r = await purgeAccessCodesFromProfiles();
-        setPurging(false);
-        showAlert('Done', `Scanned ${r.scanned}. Cleaned ${r.cleaned}. Failed ${r.failed}.`);
+/**
+ * New sign-ups wait here. Approving opens the member portal to them;
+ * declining marks the account archived, which keeps it locked out (the email
+ * stays registered, so it can't simply sign up again). Officers never see
+ * passwords: Firebase stores only a hash.
+ */
+const ApprovalsTab: React.FC = () => {
+    const { members, updateMemberStatus } = useData();
+    const { confirm } = useModal();
+    const { showToast } = useToast();
+
+    const byNewest = (a: User, b: User) => (b.joinDate || '').localeCompare(a.joinDate || '');
+    const pending = members.filter(m => m.status === 'pending').sort(byNewest);
+    const declined = members.filter(m => m.status === 'archived').sort(byNewest);
+    const studentNames = new Set(
+        members
+            .filter(m => isApprovedMember(m) && m.accountType !== 'parent')
+            .map(m => m.name.trim().toLowerCase())
+    );
+
+    const approve = async (m: User) => {
+        await updateMemberStatus(m.id, 'active');
+        showToast(`${m.name} approved`, 'success');
+    };
+    const decline = async (m: User) => {
+        if (!await confirm('Decline account', `Decline ${m.name}'s account? They won't be able to use the member portal. You can approve them later from this tab.`, true, 'Decline')) return;
+        await updateMemberStatus(m.id, 'archived');
     };
 
+    const Row: React.FC<{ m: User; declinedRow?: boolean }> = ({ m, declinedRow }) => {
+        const parentMatch = m.accountType === 'parent'
+            ? studentNames.has((m.parentOf || '').trim().toLowerCase())
+            : null;
+        return (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-space-700/50">
+                <div className="min-w-0">
+                    <p className="font-bold text-ink">{m.name}</p>
+                    <p className="text-xs text-ink-muted break-all">{m.email}</p>
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                        <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${m.accountType === 'parent' ? 'badge-gold' : 'badge-blue'}`}>
+                            {m.accountType === 'parent' ? 'Parent' : 'Student'}
+                        </span>
+                        <span className="text-xs text-ink-dim">{accountLabel(m)}</span>
+                        {parentMatch !== null && (
+                            <span className={`text-xs font-semibold ${parentMatch ? 'text-electric-400' : 'text-gold-500'}`}>
+                                {parentMatch ? '· Matches a current member' : '· No current member with that name, check before approving'}
+                            </span>
+                        )}
+                        {m.joinDate && <span className="text-xs text-ink-muted">· Requested {new Date(m.joinDate + 'T00:00:00').toLocaleDateString()}</span>}
+                    </div>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                    <button onClick={() => approve(m)} className={`${buttonClass} bg-electric-500 text-white hover:bg-electric-600`}>
+                        <UserCheck size={16} /> Approve
+                    </button>
+                    {!declinedRow && (
+                        <button onClick={() => decline(m)} className={`${buttonClass} btn-secondary !py-2 !px-4 !text-sm`}>
+                            <UserX size={16} /> Decline
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    };
 
-    const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div className={cardClass}>
+                <h3 className="font-bold text-ink mb-1">Awaiting approval ({pending.length})</h3>
+                <p className="text-sm text-ink-muted mb-5">
+                    New accounts can't use the member portal until approved. Parents may only join as the parent of a
+                    current member, so check the name they gave. Passwords are never visible to officers.
+                </p>
+                <div className="space-y-3">
+                    {pending.length === 0 && <p className="text-ink-muted text-sm">No accounts are waiting. You're all caught up.</p>}
+                    {pending.map(m => <Row key={m.id} m={m} />)}
+                </div>
+            </div>
+
+            {declined.length > 0 && (
+                <div className={cardClass}>
+                    <h3 className="font-bold text-ink mb-1">Declined or deactivated ({declined.length})</h3>
+                    <p className="text-sm text-ink-muted mb-5">These accounts are locked out. Approve one to restore access.</p>
+                    <div className="space-y-3">
+                        {declined.map(m => <Row key={m.id} m={m} declinedRow />)}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const MembersTab: React.FC = () => {
+    const { user } = useAuth();
+    const { members, updateMemberRole, deleteMember } = useData();
+    const { confirm } = useModal();
     const [editingMember, setEditingMember] = useState<User | null>(null);
 
     const canManage = user?.role === 'advisor' || user?.role === 'officer';
     const isAdvisor = user?.role === 'advisor';
 
-    const handleGenerate = async (role: 'member' | 'officer') => {
-        try {
-            const code = await generateAccessCode(role);
-            setGeneratedCode(code);
-        } catch {
-            setGeneratedCode(null);
-            await showAlert('Code not saved', 'The access code could not be saved to the database, so it was discarded. Check your connection and permissions, then try again.');
-        }
-    };
-
-    const handleRegenerate = async (code: any) => {
-        if (!code.assignedUid || !code.assignedTo) {
-            await showAlert("Error", "Cannot regenerate code: User data missing.");
-            return;
-        }
-        if (await confirm('Regenerate Code', `Generate a NEW access code for ${code.assignedTo}?\n\nThe old code (${code.id}) will be deleted and the user's profile will be updated with the new code.`, true, 'Regenerate')) {
-            const newCode = await regenerateMemberAccessCode(code.id, code.assignedUid, code.assignedTo, code.role);
-            if (newCode) {
-                setGeneratedCode(newCode);
-                await showAlert('Success', `New code generated: ${newCode}\n\nPlease share this with ${code.assignedTo}.`);
-            } else {
-                await showAlert('Error', "Failed to regenerate code.");
-            }
-        }
-    };
-
     return (
         <div className="space-y-6 animate-fade-in">
-            <div className="flex space-x-4 mb-6">
-                <button onClick={() => setActiveSection('directory')} className={`pb-2 px-1 border-b-2 font-bold text-sm transition-colors ${activeSection === 'directory' ? 'border-electric-500 text-electric-400' : 'border-transparent text-ink-muted hover:text-ink'}`}>Member Directory</button>
-                {/* Advisor-only: a member's password is the access code issued to
-                    them, so officers must not be able to read codes. */}
-                {isAdvisor && (
-                  <button onClick={() => setActiveSection('codes')} className={`pb-2 px-1 border-b-2 font-bold text-sm transition-colors ${activeSection === 'codes' ? 'border-electric-500 text-electric-400' : 'border-transparent text-ink-muted hover:text-ink'}`}>Access Codes</button>
-                )}
-            </div>
+            <div className={cardClass}>
+                <h3 className="font-bold text-ink mb-4">All Members ({members.length})</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-space-700/40 text-ink-muted">
+                            <tr>
+                                <th className="p-3 rounded-tl-lg">Name</th>
+                                <th className="p-3">Email</th>
+                                <th className="p-3">Role</th>
+                                <th className="p-3">Status</th>
+                                <th className="p-3 rounded-tr-lg">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-space-500/20">
+                            {members.map(m => (
+                                <tr key={m.id} className="hover:bg-space-700/30">
+                                    <td className="p-3">
+                                        <span className="font-medium text-ink">{m.name}</span>
+                                        {m.accountType === 'parent' && (
+                                            <span className="block text-xs text-ink-muted">{accountLabel(m)}</span>
+                                        )}
+                                    </td>
+                                    <td className="p-3 text-xs text-ink-muted">{m.email}</td>
+                                    <td className="p-3">
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${m.role === 'advisor' ? 'bg-gold-100 text-gold-600' : 'bg-electric-100 text-electric-500'}`}>
+                                            {m.role}
+                                        </span>
+                                    </td>
+                                    <td className="p-3">
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${isApprovedMember(m) ? 'bg-electric-50 text-electric-500' : 'bg-space-700 text-ink-muted'}`}>
+                                            {isApprovedMember(m) ? 'active' : m.status === 'archived' ? 'declined' : m.status}
+                                        </span>
+                                    </td>
+                                    <td className="p-3 flex gap-2 items-center">
+                                        {canManage ? (
+                                            <>
+                                                <button
+                                                    onClick={() => setEditingMember(m)}
+                                                    className="p-1.5 hover:bg-electric-500/10 text-electric-400 rounded transition-colors"
+                                                    title="Edit Details"
+                                                >
+                                                    <Edit2 size={14} />
+                                                </button>
 
-            {(activeSection === 'directory' || !isAdvisor) ? (
-                <div className={cardClass}>
-                    <h3 className="font-bold text-ink mb-4">All Members ({members.length})</h3>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-space-700/40 text-ink-muted">
-                                <tr>
-                                    <th className="p-3 rounded-tl-lg">Name</th>
-                                    <th className="p-3">Email</th>
-                                    <th className="p-3">Role</th>
-                                    <th className="p-3">Status</th>
-                                    <th className="p-3 rounded-tr-lg">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-space-500/20">
-                                {members.map(m => (
-                                    <tr key={m.id} className="hover:bg-space-700/30">
-                                        <td className="p-3 font-medium text-ink">{m.name}</td>
-                                        <td className="p-3 text-xs text-ink-muted">{m.email}</td>
-                                        <td className="p-3">
-                                            <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${m.role === 'officer' ? 'bg-electric-100 text-electric-500' : m.role === 'advisor' ? 'bg-gold-100 text-gold-600' : 'bg-electric-100 text-electric-500'}`}>
-                                                {m.role}
-                                            </span>
-                                        </td>
-                                        <td className="p-3">
-                                            <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${m.status === 'active' ? 'bg-electric-50 text-electric-500' : 'bg-space-700 text-ink-muted'}`}>
-                                                {!m.status || m.status === 'active' ? 'member' : m.status}
-                                            </span>
-                                        </td>
-                                        <td className="p-3 flex gap-2 items-center">
-                                            {canManage ? (
-                                                <>
-                                                    <button
-                                                        onClick={() => setEditingMember(m)}
-                                                        className="p-1.5 hover:bg-electric-500/10 text-electric-400 rounded transition-colors"
-                                                        title="Edit Details"
+                                                {isAdvisor && (
+                                                    <select
+                                                        value={m.role}
+                                                        onChange={(e) => updateMemberRole(m.id, e.target.value as any)}
+                                                        className="bg-space-900 border border-space-500/50 rounded px-2 py-1 text-xs text-ink outline-none focus:border-electric-500 cursor-pointer"
                                                     >
-                                                        <Edit2 size={14} />
+                                                        <option value="member">Member</option>
+                                                        <option value="officer">Officer</option>
+                                                        <option value="advisor">Advisor</option>
+                                                    </select>
+                                                )}
+
+                                                {isAdvisor && user?.id !== m.id && (
+                                                    <button
+                                                        onClick={async () => {
+                                                            if (await confirm('Delete Member', `Are you sure you want to delete ${m.name}? This action cannot be undone.`, true, 'Delete')) {
+                                                                deleteMember(m.id);
+                                                            }
+                                                        }}
+                                                        className="p-1.5 hover:bg-gold-500/10 text-gold-500 rounded ml-1 transition-colors"
+                                                        title="Remove Member"
+                                                    >
+                                                        <Trash2 size={14} />
                                                     </button>
-
-                                                    {isAdvisor && (
-                                                        <select
-                                                            value={m.role}
-                                                            onChange={(e) => updateMemberRole(m.id, e.target.value as any)}
-                                                            className="bg-space-900 border border-space-500/50 rounded px-2 py-1 text-xs text-ink outline-none focus:border-electric-500 cursor-pointer"
-                                                        >
-                                                            <option value="member">Member</option>
-                                                            <option value="officer">Officer</option>
-                                                            <option value="advisor">Advisor</option>
-                                                        </select>
-                                                    )}
-
-                                                    {isAdvisor && user?.id !== m.id && (
-                                                        <button
-                                                            onClick={async () => {
-                                                                if (await confirm('Delete Member', `Are you sure you want to delete ${m.name}? This action cannot be undone.`, true, 'Delete')) {
-                                                                    deleteMember(m.id);
-                                                                }
-                                                            }}
-                                                            className="p-1.5 hover:bg-gold-500/10 text-gold-500 rounded ml-1 transition-colors"
-                                                            title="Remove Member"
-                                                        >
-                                                            <Trash2 size={14} />
-                                                        </button>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <span className="text-xs text-ink-muted italic">View Only</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                                {members.length === 0 && <tr><td colSpan={5} className="p-4 text-center text-ink-muted">No members found.</td></tr>}
-                            </tbody>
-                        </table>
-                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <span className="text-xs text-ink-muted italic">View Only</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                            {members.length === 0 && <tr><td colSpan={5} className="p-4 text-center text-ink-muted">No members found.</td></tr>}
+                        </tbody>
+                    </table>
                 </div>
-            ) : (
-                <div className="grid md:grid-cols-2 gap-6">
-                    {staleProfiles > 0 && (
-                      <div className={`${cardClass} md:col-span-2 border-gold-300`}>
-                        <h3 className="font-bold text-ink mb-2">Clear access codes from member profiles</h3>
-                        <p className="text-sm text-ink-muted mb-4">
-                          {staleProfiles} member {staleProfiles === 1 ? 'profile still stores' : 'profiles still store'} the raw
-                          access code it signed up with. That code is also the member's password, and every signed-in member can
-                          read every profile, so those passwords are readable by the whole chapter. This replaces the stored code
-                          with a derived ID. Access codes themselves are left alone, and the code stays linked to its member.
-                          Run once; it is safe to run again.
-                        </p>
-                        <button onClick={handlePurge} disabled={purging}
-                          className={`${buttonClass} bg-gold-500 text-white hover:bg-gold-400 transition-colors disabled:opacity-50`}>
-                          <Shield size={18} /> {purging ? 'Clearing...' : `Clear ${staleProfiles} profile${staleProfiles === 1 ? '' : 's'}`}
-                        </button>
-                      </div>
-                    )}
-                    <div className={cardClass}>
-                        <h3 className="font-bold text-ink mb-4">Generate New Code</h3>
-                        <p className="text-sm text-ink-muted mb-6">Create a one-time use code for new members to sign up.</p>
-                        <div className="flex gap-4">
-                            <button onClick={() => handleGenerate('member')} className={`${buttonClass} bg-electric-500 text-white hover:bg-electric-400 transition-colors`}>
-                                <UserPlus size={18} /> Member Code
-                            </button>
-                            <button onClick={() => handleGenerate('officer')} className={`${buttonClass} bg-gold-500 text-white hover:bg-gold-400 transition-colors`}>
-                                <Shield size={18} /> Officer Code
-                            </button>
-                        </div>
-                        {generatedCode && (
-                            <div className="mt-6 p-4 bg-electric-50 border border-electric-200 rounded-lg text-center animate-fade-in">
-                                <p className="text-xs text-electric-500 font-bold uppercase mb-1">Code Generated</p>
-                                <p className="text-3xl font-mono font-bold text-electric-500 tracking-wider">{generatedCode}</p>
-                                <p className="text-xs text-ink-muted mt-2">Share this with the new member.</p>
-                            </div>
-                        )}
-                    </div>
-                    <div className="space-y-6">
-                        <div className={cardClass}>
-                            <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><UserPlus size={18} className="text-electric-400"/> Member Codes</h3>
-                            <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
-                                {accessCodes.filter(c => c.role === 'member' && c.status !== 'archived').length === 0 && <p className="text-ink-muted text-sm">No member codes.</p>}
-                                {accessCodes.filter(c => c.role === 'member' && c.status !== 'archived').map(code => (
-                                    <div key={code.id} className={`flex justify-between items-center p-3 rounded-lg border ${code.status === 'used' ? 'bg-electric-50 border-electric-200' : 'bg-space-700/50 border-space-500/30'}`}>
-                                        <div>
-                                            <p className="font-mono font-bold text-ink">{code.id}</p>
-                                            <div className="flex items-center gap-2">
-                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${code.status === 'used' ? 'bg-electric-100 text-electric-500' : 'bg-space-600 text-ink-muted'}`}>
-                                                    {code.status}
-                                                </span>
-                                                <p className="text-xs text-ink-muted">{new Date(code.createdDate).toLocaleDateString()}</p>
-                                            </div>
-                                            {code.assignedTo && (
-                                                <p className="text-xs text-electric-400 font-medium mt-1">Assigned to: {code.assignedTo}</p>
-                                            )}
-                                        </div>
-                                        <div className="flex gap-1">
-                                            {code.status === 'used' && (
-                                                <button onClick={() => handleRegenerate(code)} className="text-electric-500 hover:bg-electric-50 p-1.5 rounded transition-colors" title="Regenerate Code">
-                                                    <Activity size={14} />
-                                                </button>
-                                            )}
-                                            {code.status !== 'archived' && (
-                                                <button onClick={async () => {
-                                                    if (await confirm('Archive Code', `Archive this code? It will no longer be visible in the main list.`, false, 'Archive')) {
-                                                        archiveAccessCode(code.id);
-                                                    }
-                                                }} className="text-ink-muted hover:bg-space-700/60 p-1.5 rounded transition-colors" title="Archive Code">
-                                                    <Archive size={14} />
-                                                </button>
-                                            )}
-                                            <button onClick={async () => {
-                                                if (code.status === 'used') {
-                                                    if (await confirm('Delete Assigned Code', `This code is currently assigned to ${code.assignedTo || 'a user'}.\n\nClick Confirm to DELETE this code permanently (User will lose access).\nClick Cancel to keep it.`, true, 'Delete Permanently')) {
-                                                        deleteAccessCode(code.id);
-                                                    }
-                                                } else {
-                                                    if (await confirm('Delete Code', 'Delete this unused member code?', true, 'Delete')) {
-                                                        deleteAccessCode(code.id);
-                                                    }
-                                                }
-                                            }} className="text-gold-500 hover:bg-gold-500/10 p-1.5 rounded transition-colors" title="Delete Code"><Trash2 size={14} /></button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className={cardClass}>
-                            <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><Shield size={18} className="text-gold-500"/> Officer Codes</h3>
-                            <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
-                                {accessCodes.filter(c => c.role === 'officer' && c.status !== 'archived').length === 0 && <p className="text-ink-muted text-sm">No officer codes.</p>}
-                                {accessCodes.filter(c => c.role === 'officer' && c.status !== 'archived').map(code => (
-                                    <div key={code.id} className={`flex justify-between items-center p-3 rounded-lg border ${code.status === 'used' ? 'bg-gold-50 border-gold-200' : 'bg-space-700/50 border-space-500/30'}`}>
-                                        <div>
-                                            <p className="font-mono font-bold text-ink">{code.id}</p>
-                                            <div className="flex items-center gap-2">
-                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${code.status === 'used' ? 'bg-gold-100 text-gold-600' : 'bg-space-600 text-ink-muted'}`}>
-                                                    {code.status}
-                                                </span>
-                                                <p className="text-xs text-ink-muted">{new Date(code.createdDate).toLocaleDateString()}</p>
-                                            </div>
-                                            {code.assignedTo && (
-                                                <p className="text-xs text-gold-500 font-medium mt-1">Assigned to: {code.assignedTo}</p>
-                                            )}
-                                        </div>
-                                        <div className="flex gap-1">
-                                            {code.status === 'used' && (
-                                                <button onClick={() => handleRegenerate(code)} className="text-gold-500 hover:bg-gold-500/10 p-1.5 rounded transition-colors" title="Regenerate Code">
-                                                    <Activity size={14} />
-                                                </button>
-                                            )}
-                                            {code.status !== 'archived' && (
-                                                <button onClick={async () => {
-                                                    if (await confirm('Archive Code', `Archive this code? It will no longer be visible in the main list.`, false, 'Archive')) {
-                                                        archiveAccessCode(code.id);
-                                                    }
-                                                }} className="text-ink-muted hover:bg-space-700/60 p-1.5 rounded transition-colors" title="Archive Code">
-                                                    <Archive size={14} />
-                                                </button>
-                                            )}
-                                            <button onClick={async () => {
-                                                if (code.status === 'used') {
-                                                    if (await confirm('Delete Assigned Code', `This code is currently assigned to ${code.assignedTo || 'a user'}.\n\nClick Confirm to DELETE this code permanently (User will lose access).\nClick Cancel to keep it.`, true, 'Delete Permanently')) {
-                                                        deleteAccessCode(code.id);
-                                                    }
-                                                } else {
-                                                    if (await confirm('Delete Code', 'Delete this unused officer code?', true, 'Delete')) {
-                                                        deleteAccessCode(code.id);
-                                                    }
-                                                }
-                                            }} className="text-gold-500 hover:bg-gold-500/10 p-1.5 rounded transition-colors" title="Delete Code"><Trash2 size={14} /></button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className={cardClass}>
-                            <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><Archive size={18} className="text-ink-muted"/> Archived Codes</h3>
-                            <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
-                                {accessCodes.filter(c => c.status === 'archived').length === 0 && <p className="text-ink-muted text-sm">No archived codes.</p>}
-                                {accessCodes.filter(c => c.status === 'archived').map(code => (
-                                    <div key={code.id} className="flex justify-between items-center p-3 rounded-lg border bg-space-700/30 border-space-500/20 opacity-70">
-                                        <div>
-                                            <p className="font-mono font-bold text-ink-dim line-through">{code.id}</p>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-space-600 text-ink-muted">
-                                                    {code.role}
-                                                </span>
-                                                <p className="text-xs text-ink-muted">{new Date(code.createdDate).toLocaleDateString()}</p>
-                                            </div>
-                                            {code.assignedTo && (
-                                                <p className="text-xs text-ink-muted font-medium mt-1">Assigned to: {code.assignedTo}</p>
-                                            )}
-                                        </div>
-                                        <div className="flex gap-1">
-                                            <button onClick={async () => {
-                                                if (await confirm('Delete Archived Code', 'Delete this archived code permanently?', true, 'Delete')) {
-                                                    deleteAccessCode(code.id);
-                                                }
-                                            }} className="text-gold-500 hover:bg-gold-500/10 p-1.5 rounded transition-colors" title="Delete Code"><Trash2 size={14} /></button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
 
             {editingMember && (
                 <MemberEditor

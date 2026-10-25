@@ -8,16 +8,34 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, sendPasswordReset } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
 
+  const handleForgotPassword = async () => {
+    setError('');
+    setNotice('');
+    if (!email.trim()) {
+      setError('Enter your email above, then select "Forgot password?" again.');
+      return;
+    }
+    try {
+      await sendPasswordReset(email.trim());
+    } catch {
+      // Deliberately ignored: the same message shows whether or not the
+      // address has an account, so this can't be used to probe emails.
+    }
+    setNotice(`If ${email.trim()} has an account, a password reset link is on its way.`);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setNotice('');
     setIsSubmitting(true);
 
     if (!email.trim()) {
@@ -69,6 +87,10 @@ const Login: React.FC = () => {
             <p className="text-ink-dim text-sm">Sign in to access resources</p>
           </div>
 
+          {notice && (
+            <p className="p-3 rounded-xl mb-5 text-sm bg-electric-500/10 text-ink" role="status">{notice}</p>
+          )}
+
           {/* Error */}
           {error && (
             <div className="flex items-start gap-2 p-3 rounded-xl mb-5 text-sm"
@@ -110,9 +132,15 @@ const Login: React.FC = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="login-password" className="block text-xs font-bold text-ink-dim mb-2 tracking-tight">
-                Access Code (or Password)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="login-password" className="block text-xs font-bold text-ink-dim tracking-tight">
+                  Password
+                </label>
+                <button type="button" onClick={handleForgotPassword}
+                  className="text-xs font-semibold text-electric-400 hover:underline">
+                  Forgot password?
+                </button>
+              </div>
               <div className="relative">
                 <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
                 <input
@@ -120,7 +148,7 @@ const Login: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Access Code"
+                  placeholder="Enter your password"
                   className="w-full rounded-xl pl-10 pr-4 py-3 text-sm text-ink placeholder-ink-ghost outline-none transition-all duration-150 border"
                   style={{
                     background: 'var(--login-input-bg)',
@@ -132,7 +160,7 @@ const Login: React.FC = () => {
                 />
               </div>
               <p className="text-[10px] text-ink-muted mt-2 font-mono">
-                New accounts use the Access Code as the password.
+                Joined with an access code? It's still your password until you change it.
               </p>
             </div>
 
@@ -156,10 +184,9 @@ const Login: React.FC = () => {
             <p className="text-ink-dim text-sm">
               Need an account?{' '}
               <Link to="/signup" className="text-electric-400 font-semibold hover:text-electric-400/80 transition-colors">
-                Join with Code
+                Sign up
               </Link>
             </p>
-            <p className="text-[10px] text-ink-muted mt-4 font-mono">v1.2 (Recovery Mode)</p>
           </div>
         </div>
       </div>

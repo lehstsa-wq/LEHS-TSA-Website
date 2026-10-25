@@ -264,8 +264,9 @@ export const Navbar: React.FC = () => {
                 </kbd>
               </button>
 
-              {/* Auth */}
-              {isAuthenticated ? (
+              {/* Auth: any signed-in account, including one awaiting approval,
+                  gets Dashboard (which shows its status) and Sign out. */}
+              {user ? (
                 <div className="flex items-center gap-3 ml-1 pl-3 border-l border-space-500/50">
                   <Link
                     to="/dashboard"
@@ -395,7 +396,7 @@ export const Navbar: React.FC = () => {
 
               {/* Mobile auth */}
               <div className="p-4 border-t border-space-500/50 space-y-2">
-                {isAuthenticated ? (
+                {user ? (
                   <>
                     <Link to="/dashboard" onClick={() => setMobileOpen(false)}
                       className="relative btn-primary w-full justify-center text-sm py-2.5">

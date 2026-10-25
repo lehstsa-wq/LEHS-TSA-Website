@@ -567,7 +567,7 @@ const Settings: React.FC = () => {
         <div className="bg-space-800 rounded-2xl shadow-card border border-gold-500/20 px-6 py-5 flex items-center justify-between">
           <div>
             <p className="font-bold text-ink text-sm">Sign Out</p>
-            <p className="text-xs text-ink-muted mt-0.5">You'll need your access code to sign back in.</p>
+            <p className="text-xs text-ink-muted mt-0.5">You'll need your email and password to sign back in.</p>
           </div>
           <button
             onClick={logout}
