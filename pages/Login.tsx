@@ -50,28 +50,18 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ marginTop: -64 }}>
       <SEO title="Login" description="Sign in to the Little Elm High School TSA Member Portal." />
 
-      {/* Subtle background orbs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.08]"
-          style={{ background: 'radial-gradient(ellipse, #005DAA, transparent 70%)' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] rounded-full opacity-[0.06]"
-          style={{ background: 'radial-gradient(ellipse, #574E8F, transparent 70%)' }} />
-      </div>
-
       <div className="relative w-full max-w-[440px] animate-fade-in">
         {/* Card */}
         <div className="login-card rounded-2xl p-10 border border-space-500/60"
           style={{
             background: 'var(--login-card-bg)',
-            backdropFilter: 'blur(16px)',
-            boxShadow: 'var(--shadow-elevated)',
           }}>
 
           {/* Logo + title */}
           <div className="text-center mb-7">
             <div className="brand-mark w-14 h-14 rounded-[14px] mx-auto mb-4 flex items-center justify-center"
               style={{
-                background: '#005DAA',
+                background: 'var(--accent)',
                 boxShadow: 'none',
               }}>
             </div>
@@ -83,9 +73,9 @@ const Login: React.FC = () => {
           {error && (
             <div className="flex items-start gap-2 p-3 rounded-xl mb-5 text-sm"
               style={{
-                background: 'rgba(239,68,68,0.1)',
-                border: '1px solid rgba(239,68,68,0.2)',
-                color: '#fca5a5',
+                background: 'var(--c-bg)',
+                border: '2px solid var(--alert)',
+                color: 'var(--alert)',
               }}>
               <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />
               <span>{error}</span>
@@ -111,7 +101,7 @@ const Login: React.FC = () => {
                     background: 'var(--login-input-bg)',
                     borderColor: 'var(--login-input-border)',
                   }}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(0,93,170,0.65)'; }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--login-input-border)'; }}
                   required
                 />
@@ -136,7 +126,7 @@ const Login: React.FC = () => {
                     background: 'var(--login-input-bg)',
                     borderColor: 'var(--login-input-border)',
                   }}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(0,93,170,0.65)'; }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--login-input-border)'; }}
                   required
                 />

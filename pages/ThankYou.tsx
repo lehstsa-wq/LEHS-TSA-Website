@@ -24,7 +24,7 @@ const ThankYou: React.FC = () => (
         <div className="flex justify-center mb-5">
           <span
             className="grid h-14 w-14 place-items-center rounded-full"
-            style={{ background: 'color-mix(in srgb, var(--c-green) 18%, transparent)', color: 'var(--c-green)' }}
+            style={{ background: 'color-mix(in srgb, var(--c-green) 18%, var(--c-bg))', color: 'var(--c-green)' }}
           >
             <CheckCircle size={28} />
           </span>

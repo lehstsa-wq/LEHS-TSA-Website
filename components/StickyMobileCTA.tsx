@@ -23,7 +23,7 @@ export const StickyMobileCTA: React.FC = () => {
     <div
       className="lg:hidden fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3"
       style={{
-        background: 'linear-gradient(to top, var(--c-bg) 62%, transparent)',
+        background: 'var(--c-bg)',
       }}
     >
       <Link

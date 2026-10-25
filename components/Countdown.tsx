@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
-/* This panel keeps its dark gradient in both themes, so its text is colored
+/* This panel is Deep Space Blue in both themes, so its text is colored
    inline rather than with `text-white` utilities: light mode rewrites those
    utilities to dark ink, which would make the countdown unreadable here. */
 
@@ -36,21 +36,19 @@ export const Countdown: React.FC = () => {
   const TimeBox = ({ val, label }: { val: number; label: string }) => (
     <div className="flex flex-col items-center gap-2">
       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center relative overflow-hidden"
-        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}>
-        {/* Shine */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)' }} />
-        <span className="relative font-mono font-black text-3xl sm:text-4xl tabular-nums" style={{ color: '#ffffff' }}>
+        style={{ background: 'var(--p-navy)', border: '2px solid var(--p-steel)' }}>
+        <span className="relative font-heading text-5xl sm:text-6xl tabular-nums" style={{ color: 'var(--p-smoke)' }}>
           {String(val).padStart(2, '0')}
         </span>
       </div>
-      <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.60)' }}>{label}</span>
+      <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--p-steel)' }}>{label}</span>
     </div>
   );
 
   return (
-    <div className="countdown-panel relative py-20 px-4 overflow-hidden">
+    <div className="countdown-panel relative py-12 px-4 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e3a5f, #07111e 40%, #2d1f4f)' }} />
+      <div className="absolute inset-0" style={{ background: 'var(--p-deep)' }} />
 
       <div className="relative max-w-3xl mx-auto text-center">
         <motion.div
@@ -58,11 +56,11 @@ export const Countdown: React.FC = () => {
           viewport={{ once: true }} transition={{ duration: 0.6 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-bold uppercase tracking-widest"
-            style={{ background: 'rgba(0,93,170,0.20)', border: '1px solid rgba(0,93,170,0.30)', color: '#4E8AC9' }}>
+            style={{ background: 'var(--p-navy)', border: '2px solid var(--p-steel)', color: 'var(--p-steel)' }}>
             Next Major Event
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-black mb-10 text-balance" style={{ color: '#ffffff' }}>{nextEvent.title}</h2>
+          <h2 className="text-5xl md:text-6xl mb-10 text-balance" style={{ color: 'var(--p-smoke)' }}>{nextEvent.title}</h2>
 
           <div className="flex justify-center gap-6 sm:gap-10 mb-8">
             <TimeBox val={timeLeft.days}    label="Days" />
@@ -71,7 +69,7 @@ export const Countdown: React.FC = () => {
             <TimeBox val={timeLeft.seconds} label="Sec" />
           </div>
 
-          <p className="flex items-center justify-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.60)' }}>
+          <p className="flex items-center justify-center gap-2 text-sm" style={{ color: 'var(--p-steel)' }}>
             {new Date(targetDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </motion.div>

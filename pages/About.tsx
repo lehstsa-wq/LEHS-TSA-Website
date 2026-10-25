@@ -6,6 +6,7 @@ import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
 import { MILESTONES as TIMELINE, CHAPTER_YEARS } from '../data/milestones';
 import { SectionHeader, StatCard, Reveal } from '../components/sections';
+import { tint } from '../lib/color';
 
 /* ─────────────────────────────────────────────────────────────
    TIMELINE DATA
@@ -84,10 +85,10 @@ const About: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: 50,  label: 'Members',             color: '#6a9bcc' },
-              { val: 20,  label: 'State Qualifiers',    color: '#d97757' },
-              { val: 14,  label: 'National Qualifiers', color: '#6a9bcc' },
-              { val: CHAPTER_YEARS, label: 'Years of Excellence', color: '#788c5d' },
+              { val: 50,  label: 'Members',             color: 'var(--accent)' },
+              { val: 20,  label: 'State Qualifiers',    color: 'var(--cta)' },
+              { val: 14,  label: 'National Qualifiers', color: 'var(--accent)' },
+              { val: CHAPTER_YEARS, label: 'Years of Excellence', color: 'var(--accent)' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 80}>
                 <StatCard value={s.val} label={s.label} accent={s.color} />
@@ -111,17 +112,17 @@ const About: React.FC = () => {
               {
                 title: 'Mission',
                 body: 'To foster personal growth, leadership, and opportunities in technology, innovation, design, and engineering for every student at Little Elm High School.',
-                accent: '#6a9bcc',
+                accent: 'var(--accent)',
               },
               {
                 title: 'Vision',
                 body: 'A world where every student has the technical skills, leadership experience, and competitive edge to shape the future of technology.',
-                accent: '#d97757',
+                accent: 'var(--cta)',
               },
               {
                 title: 'Values',
                 body: 'Excellence in competition. Integrity in everything. Community above individual. Innovation as a mindset. Inclusion for every aspiring engineer and creator.',
-                accent: '#6a9bcc',
+                accent: 'var(--accent)',
               },
             ].map((v, i) => (
               <motion.div
@@ -150,7 +151,7 @@ const About: React.FC = () => {
 
         <div className="relative">
           {/* Center line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-electric-500/40 via-electric-500/20 to-transparent -translate-x-1/2 hidden md:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-electric-500/40 -translate-x-1/2 hidden md:block" />
 
           <div className="space-y-12">
             {TIMELINE.map((item, i) => (
@@ -166,7 +167,7 @@ const About: React.FC = () => {
                 <div className="flex-1 card group">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="font-mono text-sm font-bold px-3 py-1 rounded-full"
-                      style={{ background: `${item.accent}20`, color: item.accent }}>
+                      style={{ background: tint(item.accent, 13), color: item.accent }}>
                       {item.year}
                     </div>
                   </div>
@@ -176,7 +177,7 @@ const About: React.FC = () => {
 
                 {/* Center dot (desktop) */}
                 <div className="hidden md:flex flex-shrink-0 w-8 h-8 rounded-full border-2 z-10 items-center justify-center mt-4"
-                  style={{ background: `${item.accent}20`, borderColor: item.accent }}>
+                  style={{ background: tint(item.accent, 13), borderColor: item.accent }}>
                   <div className="w-2 h-2 rounded-full" style={{ background: item.accent }} />
                 </div>
 

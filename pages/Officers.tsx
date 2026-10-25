@@ -88,7 +88,7 @@ const Officers: React.FC = () => {
               <motion.div key={officer.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (i % 6) * 0.08 }}
                 className="card group overflow-hidden">
                 {/* Color accent bar */}
-                <div className="h-1 -mx-6 -mt-6 mb-6" style={{ background: officer.category === 'Executive' ? 'linear-gradient(to right, #EE2624, #9C1D20)' : officer.category === 'Advisor' ? 'linear-gradient(to right, #574E8F, #3f3870)' : 'linear-gradient(to right, #005DAA, #004e91)' }} />
+                <div className="h-1 -mx-6 -mt-6 mb-6" style={{ background: officer.category === 'Executive' ? 'var(--cta)' : officer.category === 'Advisor' ? 'var(--alert)' : 'var(--accent)' }} />
 
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-space-500/60 group-hover:border-electric-300/50 transition-all flex-shrink-0">

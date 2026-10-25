@@ -23,7 +23,7 @@ export const Section: React.FC<SectionProps> = ({
     style={{
       paddingTop: 'var(--section-py)',
       paddingBottom: 'var(--section-py)',
-      borderTop: bordered ? '1px solid var(--c-hairline)' : undefined,
+      borderTop: bordered ? '2px solid var(--c-hairline)' : undefined,
     }}
   >
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>

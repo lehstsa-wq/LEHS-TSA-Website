@@ -55,7 +55,6 @@ export const StatCard: React.FC<StatCardProps> = ({
       style={{
         borderRadius: 'var(--stat-radius)',
         padding: 'var(--stat-pad)',
-        border: `1px solid color-mix(in srgb, ${accent} 32%, transparent)`,
         background: 'var(--c-card)',
         boxShadow: 'var(--shadow-card)',
       }}

@@ -194,7 +194,7 @@ const MemberDirectory: React.FC = () => {
       <SEO title="Member Directory" description="Browse the Little Elm TSA member directory, find teammates and connect with chapter members." />
 
       {/* Hero */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-16 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="section-label inline-flex mb-4">Chapter Members</div>
@@ -325,7 +325,7 @@ const MemberDirectory: React.FC = () => {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {filtered.length === 0 ? (
-          <div className="text-center py-24">
+          <div className="text-center py-14">
             <Users size={40} className="mx-auto mb-4 text-ink-muted opacity-40" />
             <p className="text-ink-muted font-semibold">No members match your filters.</p>
             <button onClick={() => { setSearch(''); setGradeFilter('All'); setRoleFilter('All'); setSkillFilter(''); }}

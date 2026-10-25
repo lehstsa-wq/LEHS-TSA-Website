@@ -78,7 +78,6 @@ export const StageScene: React.FC<StageSceneProps> = ({
       className="relative overflow-hidden w-full"
       style={{
         borderRadius: 'var(--card-radius)',
-        border: '1px solid var(--c-hairline)',
         background: 'var(--c-card)',
         aspectRatio: '4 / 3',
       }}
@@ -115,11 +114,12 @@ export const StageScene: React.FC<StageSceneProps> = ({
     );
 
     const style: React.CSSProperties = {
-      opacity: isActive ? 1 : 0.45,
+      // Inactive steps are muted by color, not faded: nothing is see-through.
+      color: isActive ? undefined : 'var(--c-text-muted)',
       borderRadius: 'var(--card-radius)',
       padding: '0.85rem 1.1rem',
       background: isActive ? 'var(--c-card)' : 'transparent',
-      border: `1px solid ${isActive ? stage.accent + '55' : 'transparent'}`,
+      border: `2px solid ${isActive ? stage.accent : 'transparent'}`,
     };
 
     // Static list under reduced motion; otherwise each step is selectable.

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { SectionHeader } from '../components/sections';
+import { tint } from '../lib/color';
 
 /* ─────────────────────────────────────────────────────────────
    BENEFITS
@@ -23,22 +24,22 @@ const BENEFITS = [
 ───────────────────────────────────────────────────────────── */
 const STEPS = [
   {
-    num: '01', icon: FileCheck, color: '#3b82f6',
+    num: '01', icon: FileCheck, color: 'var(--accent)',
     title: 'Join Remind',
     body: 'Join our Remind class to get real-time announcements, meeting reminders, and competition updates directly on your phone.',
   },
   {
-    num: '02', icon: FileCheck, color: '#e05c5c',
+    num: '02', icon: FileCheck, color: 'var(--cta)',
     title: 'Complete the Application',
     body: 'Fill out the official TSA membership application through JotForm. Takes about 5 minutes. Have your student ID and email ready.',
   },
   {
-    num: '03', icon: CreditCard, color: '#8b5cf6',
+    num: '03', icon: CreditCard, color: 'var(--alert)',
     title: 'Pay Dues',
     body: 'TSA dues cover your national membership, state conference fees, and chapter resources. Payment is made through the district portal.',
   },
   {
-    num: '04', icon: FileCheck, color: '#22c55e',
+    num: '04', icon: FileCheck, color: 'var(--accent)',
     title: 'Submit District Paperwork',
     body: "Complete the district permission form so you're cleared for all off-campus competitions and events.",
   },
@@ -100,28 +101,28 @@ const Join: React.FC = () => {
       desc:  'Get real-time updates straight to your phone',
       url:   siteSettings.remindLink,
       icon:  MessageSquare,
-      color: '#3b82f6',
+      color: 'var(--accent)',
     },
     {
       label: 'TSA Application',
       desc:  'Official membership form, takes 5 minutes',
       url:   siteSettings.jotformLink,
       icon:  FileCheck,
-      color: '#e05c5c',
+      color: 'var(--cta)',
     },
     {
       label: 'District Paperwork',
       desc:  'Required permission slip for off-campus events',
       url:   siteSettings.districtAppLink,
       icon:  FileCheck,
-      color: '#8b5cf6',
+      color: 'var(--alert)',
     },
     {
       label: 'Pay Dues',
       desc:  'Secure payment through the district portal',
       url:   siteSettings.successFundLink,
       icon:  CreditCard,
-      color: '#22c55e',
+      color: 'var(--accent)',
     },
   ];
 
@@ -180,7 +181,7 @@ const Join: React.FC = () => {
               return (
                 <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
                   className="card flex items-start gap-5 group">
-                  <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center" style={{ background: `${step.color}20`, color: step.color }}>
+                  <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center" style={{ background: tint(step.color, 13), color: step.color }}>
                     <Icon size={22} />
                   </div>
                   <div className="flex-1">
@@ -215,7 +216,7 @@ const Join: React.FC = () => {
                 {isPlaceholder ? (
                   <div className="card opacity-60 cursor-not-allowed">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${link.color}20`, color: link.color }}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: tint(link.color, 13), color: link.color }}>
                         <Icon size={22} />
                       </div>
                       <div>
@@ -228,7 +229,7 @@ const Join: React.FC = () => {
                 ) : (
                   <a href={link.url} target="_blank" rel="noopener noreferrer"
                     className="card flex items-center gap-4 group hover:border-electric-300/40">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${link.color}20`, color: link.color }}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: tint(link.color, 13), color: link.color }}>
                       <Icon size={22} />
                     </div>
                     <div className="flex-1">

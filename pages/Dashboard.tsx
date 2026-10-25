@@ -8,12 +8,13 @@ import {
 import { useAuth, avatarColorOf, avatarPhotoOf } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
+import { tint } from '../lib/color';
 
 const STAT_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
-  blue:   { fg: '#005DAA', bg: 'rgba(0,93,170,0.10)',    border: 'rgba(0,93,170,0.20)'   },
-  violet: { fg: '#574E8F', bg: 'rgba(87,78,143,0.10)',   border: 'rgba(87,78,143,0.20)'  },
-  green:  { fg: '#5a8f22', bg: 'rgba(134,187,80,0.12)',  border: 'rgba(134,187,80,0.22)' },
-  amber:  { fg: '#b86200', bg: 'rgba(236,136,29,0.10)',  border: 'rgba(236,136,29,0.20)' },
+  blue:   { fg: 'var(--accent)',  bg: tint('var(--accent)', 10),  border: tint('var(--accent)', 25)  },
+  violet: { fg: 'var(--accent)',  bg: tint('var(--accent)', 10),  border: tint('var(--accent)', 25)  },
+  green:  { fg: 'var(--accent)', bg: tint('var(--accent)', 12), border: tint('var(--accent)', 30) },
+  amber:  { fg: 'var(--alert)',   bg: tint('var(--alert)', 10),   border: tint('var(--alert)', 25)   },
 };
 
 const Dashboard: React.FC = () => {
@@ -27,13 +28,13 @@ const Dashboard: React.FC = () => {
   const photo = avatarPhotoOf(user);
 
   const UPDATE_DOT_COLORS: Record<string, string> = {
-    Announcement: '#EE2624',
-    Resource:     '#005DAA',
-    Event:        '#EC881D',
+    Announcement: 'var(--cta)',
+    Resource:     'var(--accent)',
+    Event:        'var(--alert)',
   };
 
   return (
-    <div className="min-h-screen animate-fade-in pb-20">
+    <div className="min-h-screen animate-fade-in pb-12">
       <SEO title="Dashboard" description="Member dashboard for Little Elm High School TSA." />
 
       {/* ── Welcome header ── */}
@@ -103,7 +104,7 @@ const Dashboard: React.FC = () => {
               className="flex items-center gap-4 p-4 rounded-2xl border border-electric-300/30 transition-all group bg-electric-100 hover:bg-electric-200"
             >
               <div className="brand-mark w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: '#005DAA' }}>
+                style={{ background: 'var(--accent)' }}>
                 <QrCode size={22} />
               </div>
               <div className="flex-1 min-w-0">
@@ -129,7 +130,7 @@ const Dashboard: React.FC = () => {
                     className="card group transition-all hover:-translate-y-0.5 p-5"
                   >
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                      style={{ background: clr.bg, color: clr.fg, border: `1px solid ${clr.border}` }}>
+                      style={{ background: clr.bg, color: clr.fg, border: `2px solid ${clr.border}` }}>
                       <item.icon size={20} />
                     </div>
                     <div className="text-sm font-bold text-ink">{item.label}</div>
@@ -157,7 +158,7 @@ const Dashboard: React.FC = () => {
                     <div key={update.id}
                       className={`flex items-start gap-3 px-5 py-4 transition-colors hover:bg-space-800/40 ${i > 0 ? 'border-t border-space-500/30' : ''}`}>
                       <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                        style={{ background: UPDATE_DOT_COLORS[update.type] ?? '#3b82f6' }} />
+                        style={{ background: UPDATE_DOT_COLORS[update.type] ?? 'var(--accent)' }} />
                       <div className="flex-1 min-w-0">
                         <h3 className="text-sm font-semibold text-ink mb-0.5 truncate">{update.title}</h3>
                         <p className="text-xs text-ink-dim line-clamp-2 leading-relaxed">{update.content}</p>
@@ -180,7 +181,7 @@ const Dashboard: React.FC = () => {
                     <div key={i}
                       className="flex items-center gap-3 p-3 rounded-xl border border-space-500/40 bg-space-950/40">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'rgba(0,93,170,0.12)', color: '#005DAA' }}>
+                        style={{ background: tint('var(--accent)', 12), color: 'var(--accent)' }}>
                         <Code size={14} />
                       </div>
                       <span className="text-sm font-semibold text-ink flex-1 truncate">{interest.competitionName}</span>
@@ -215,19 +216,9 @@ const Dashboard: React.FC = () => {
             {/* Member card */}
             <div className="member-card rounded-2xl overflow-hidden relative text-white"
               style={{
-                background: 'linear-gradient(135deg, #005DAA 0%, #003d71 60%, #002d55 100%)',
-                boxShadow: 'none',
-                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'var(--p-deep)',
+                border: '2px solid var(--p-steel)',
               }}>
-              {/* Dot-grid texture */}
-              <div className="absolute inset-0 pointer-events-none" style={{
-                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
-                backgroundSize: '18px 18px',
-              }} />
-              {/* Red radial glow, top right corner */}
-              <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none" style={{
-                background: 'radial-gradient(circle at top right, rgba(238,38,36,0.22), transparent 70%)',
-              }} />
 
               <div className="relative p-6">
                 {/* Header */}
@@ -238,8 +229,8 @@ const Dashboard: React.FC = () => {
                     </p>
                     <p className="text-base font-bold tracking-wide">LEHS Chapter</p>
                   </div>
-                  <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.18)' }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'var(--p-navy)', border: '2px solid var(--p-steel)' }}>
                     <Cpu size={17} />
                   </div>
                 </div>
@@ -255,7 +246,7 @@ const Dashboard: React.FC = () => {
                   <div>
                     <p className="text-[9px] text-white/40 font-mono uppercase tracking-widest mb-0.5">Member ID</p>
                     <p className="text-sm font-mono font-bold px-2 py-0.5 rounded-md"
-                      style={{ background: 'rgba(255,255,255,0.10)' }}>
+                      style={{ background: 'var(--p-navy)' }}>
                       {user?.memberId ?? '··· PENDING ···'}
                     </p>
                   </div>
@@ -267,7 +258,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Footer strip */}
                 <div className="mt-5 pt-4 flex items-center justify-between"
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+                  style={{ borderTop: '2px solid var(--p-steel)' }}>
                   <span className="text-[9px] text-white/35 font-mono uppercase tracking-widest">2026-2027 Season</span>
                 </div>
               </div>

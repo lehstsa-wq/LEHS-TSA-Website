@@ -47,7 +47,7 @@ const CheckIn: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-space-900 flex flex-col items-center justify-center px-4 py-20">
+    <div className="min-h-screen bg-space-900 flex flex-col items-center justify-center px-4 py-12">
       <SEO title="Meeting Check-In" description="Check in to your TSA meeting." />
 
       <motion.div

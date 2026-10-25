@@ -72,7 +72,7 @@ const StudentUpdates: React.FC = () => {
         <div className="space-y-6">
             {sortedUpdates.map(update => (
                 <div key={update.id} className={`card border ${update.isPinned ? 'border-electric-500/30' : 'border-space-500/30'} rounded-xl p-6 sm:p-8 animate-fade-in hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group`}>
-                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-electric-500 to-electric-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-0 left-0 w-1 h-full bg-electric-500 hidden group-hover:block duration-300"></div>
                     <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center gap-3">
                             <span className={`text-[10px] font-bold px-2.5 py-1 rounded uppercase tracking-wide border ${
@@ -124,7 +124,7 @@ const StudentUpdates: React.FC = () => {
             ))}
 
             {sortedUpdates.length === 0 && (
-                <div className="text-center py-20 border border-space-500/30 border-dashed rounded-xl">
+                <div className="text-center py-12 border border-space-500/30 border-dashed rounded-xl">
                     <p className="text-ink-muted">No updates found matching your filter.</p>
                 </div>
             )}

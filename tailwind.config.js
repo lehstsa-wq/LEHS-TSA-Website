@@ -1,169 +1,143 @@
+/** A theme color backed by the CSS variable --<name>. */
+const v = (name) => ({ opacityValue }) => {
+  const n = Number(opacityValue);
+  if (opacityValue === undefined || Number.isNaN(n) || n >= 1) return `var(--${name})`;
+  return `color-mix(in srgb, var(--${name}) ${Math.round(n * 100)}%, var(--c-bg))`;
+};
+
+/** The shade scale an accent family exposes, all mapped onto one accent. */
+const scale = (name) => ({
+  DEFAULT: v(name),
+  50:  ({ opacityValue }) => v(name)({ opacityValue: 0.05 * (Number(opacityValue) || 1) }),
+  100: ({ opacityValue }) => v(name)({ opacityValue: 0.10 * (Number(opacityValue) || 1) }),
+  200: ({ opacityValue }) => v(name)({ opacityValue: 0.20 * (Number(opacityValue) || 1) }),
+  300: v(name),
+  400: v(name),
+  500: v(name),
+  600: v(`${name}-hover`),
+  700: v(`${name}-hover`),
+});
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Only the app's own source. A bare `./**/*` glob also crawled node_modules
+  // and ruflo/, which made every CSS rebuild take 30s+ and stalled dev.
   content: [
     "./index.html",
-    "./**/*.{js,ts,jsx,tsx}",
+    "./*.{ts,tsx}",
+    "./{components,pages,context,lib,data}/**/*.{ts,tsx}",
   ],
   darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
-        // TSA: Source Sans Pro for body copy in all applications
-        sans:    ['"Source Sans 3"', '"Source Sans Pro"', '"Franklin Gothic Book"', 'Arial', 'sans-serif'],
-        body:    ['"Source Sans 3"', '"Source Sans Pro"', '"Franklin Gothic Book"', 'Arial', 'sans-serif'],
-        // TSA: Proxima Nova for headings/subheads/accents; Franklin Gothic as fallback
-        heading: ['"Proxima Nova"', '"Franklin Gothic Medium"', '"Franklin Gothic"', '"Source Sans 3"', 'Arial', 'sans-serif'],
-        mono:    ['JetBrains Mono', 'Fira Code', 'Cascadia Code', 'monospace'],
+        // Gurajada for display/headings, Source Sans 3 for body and UI.
+        sans:    ['"Source Sans 3"', '"Source Sans Pro"', 'Arial', 'sans-serif'],
+        body:    ['"Source Sans 3"', '"Source Sans Pro"', 'Arial', 'sans-serif'],
+        heading: ['Gurajada', '"Source Sans 3"', 'Arial', 'sans-serif'],
+        mono:    ['"Source Sans 3"', '"Source Sans Pro"', 'Arial', 'sans-serif'],
       },
+      // Every color resolves to a per-theme CSS variable (see index.css).
+      // The site is fully opaque: an opacity modifier such as `bg-x/30` is
+      // rendered as a solid color-mix of x into the page background, which
+      // looks like the old tint without letting anything show through.
       colors: {
-        // ── TSA PRIMARY PALETTE ──────────────────────────────
-        // Pantone 286 — TSA Blue
-        'tsa-blue': {
-          DEFAULT: '#005DAA',
-          50:  'rgba(0,93,170,0.05)',
-          100: 'rgba(0,93,170,0.10)',
-          200: 'rgba(0,93,170,0.20)',
-          300: 'rgba(0,93,170,0.35)',
-          400: '#0069c0',
-          500: '#005DAA',
-          600: '#004e91',
-          700: '#003d71',
-        },
-        // Pantone 1795 — TSA Red
-        'tsa-red': {
-          DEFAULT: '#EE2624',
-          50:  'rgba(238,38,36,0.05)',
-          100: 'rgba(238,38,36,0.10)',
-          200: 'rgba(238,38,36,0.20)',
-          300: 'rgba(238,38,36,0.35)',
-          400: '#f03c3a',
-          500: '#EE2624',
-          600: '#d41f1d',
-          700: '#9C1D20',
-        },
+        'tsa-blue': scale('accent'),
+        'tsa-red':  scale('cta'),
+        'tsa-green':    v('p-steel'),
+        'tsa-sky':      v('p-steel'),
+        'tsa-pink':     v('cta'),
+        'tsa-orange':   v('alert'),
+        'tsa-purple':   v('accent'),
+        'tsa-yellow':   v('cta'),
+        'tsa-maroon':   v('alert'),
+        'tsa-cobalt':   v('accent'),
+        'tsa-sage':     v('p-steel'),
+        'tsa-navy':     v('p-deep'),
+        'tsa-charcoal': v('p-charcoal'),
+        'tsa-silver':   v('p-smoke'),
 
-        // ── TSA SECONDARY PALETTE ────────────────────────────
-        'tsa-green':    '#86BB50',
-        'tsa-sky':      '#4E8AC9',
-        'tsa-pink':     '#D0539E',
-        'tsa-orange':   '#EC881D',
-        'tsa-purple':   '#574E8F',
-        'tsa-yellow':   '#FFC425',
-        'tsa-maroon':   '#9C1D20',
-        'tsa-cobalt':   '#006FA6',
-        'tsa-sage':     '#A2BBB2',
-        'tsa-navy':     '#324659',
-        'tsa-charcoal': '#4D4D4F',
-        'tsa-silver':   '#D5DCE0',
-
-        // ── DARK BG SCALE (derived from TSA navy) ────────────
         space: {
-          950: '#0a1220',
-          900: '#0d1a2e',
-          800: '#122238',
-          700: '#172a44',
-          600: '#1d3352',
-          500: '#243d62',
-          400: '#2e4f7a',
-          300: '#3d6599',
+          950: v('space-950'),
+          900: v('space-900'),
+          800: v('space-800'),
+          700: v('space-700'),
+          600: v('space-600'),
+          500: v('space-500'),
+          400: v('space-500'),
+          300: v('space-500'),
         },
 
-        // ── ALIASES (backward compat) ────────────────────────
-        electric: {
-          DEFAULT: '#005DAA',
-          50:  'rgba(0,93,170,0.05)',
-          100: 'rgba(0,93,170,0.10)',
-          200: 'rgba(0,93,170,0.20)',
-          300: 'rgba(0,93,170,0.35)',
-          400: '#0069c0',
-          500: '#005DAA',
-          600: '#004e91',
-          700: '#003d71',
-          glow: '0 0 24px rgba(0,93,170,0.5)',
-        },
-        gold: {
-          DEFAULT: '#EE2624',
-          50:  'rgba(238,38,36,0.05)',
-          100: 'rgba(238,38,36,0.10)',
-          200: 'rgba(238,38,36,0.20)',
-          300: '#f06e6c',
-          400: '#f03c3a',
-          500: '#EE2624',
-          600: '#d41f1d',
-          700: '#9C1D20',
-          glow: '0 0 24px rgba(238,38,36,0.4)',
-        },
-        amber: {
-          DEFAULT: '#EC881D',
-          50:  'rgba(236,136,29,0.05)',
-          100: 'rgba(236,136,29,0.10)',
-          200: 'rgba(236,136,29,0.20)',
-          300: '#f0a04a',
-          400: '#ee9433',
-          500: '#EC881D',
-          600: '#d07416',
-          glow: '0 0 24px rgba(236,136,29,0.4)',
-        },
-        violet: {
-          DEFAULT: '#574E8F',
-          400: '#6b62a3',
-          500: '#574E8F',
-          600: '#453c7a',
-          glow: '0 0 24px rgba(87,78,143,0.4)',
-        },
+        electric: scale('accent'),
+        gold:     scale('cta'),
+        amber:    scale('alert'),
+        violet:   scale('accent'),
+        green:    scale('p-steel'),
+        red:      scale('alert'),
         ink: {
-          DEFAULT: '#FFFFFF',
-          dim:     'rgba(255,255,255,0.80)',
-          muted:   '#D5DCE0',
-          ghost:   'rgba(213,220,224,0.50)',
+          DEFAULT: v('c-text'),
+          dim:     v('c-text-dim'),
+          muted:   v('c-text-muted'),
+          ghost:   v('c-text-ghost'),
         },
         brand: {
-          blue:    '#005DAA',
-          red:     '#EE2624',
-          white:   '#FFFFFF',
-          navy:    '#324659',
-          charcoal:'#4D4D4F',
-          silver:  '#D5DCE0',
-          sky:     '#4E8AC9',
-          green:   '#86BB50',
-          yellow:  '#FFC425',
-          orange:  '#EC881D',
-          purple:  '#574E8F',
-          maroon:  '#9C1D20',
+          blue:    v('accent'),
+          red:     v('cta'),
+          white:   v('p-smoke'),
+          navy:    v('p-deep'),
+          charcoal:v('p-charcoal'),
+          silver:  v('p-smoke'),
+          sky:     v('p-steel'),
+          green:   v('p-steel'),
+          yellow:  v('cta'),
+          orange:  v('alert'),
+          purple:  v('accent'),
+          maroon:  v('alert'),
         },
         dark: {
-          bg:      '#0d1a2e',
-          surface: '#122238',
-          border:  '#1d3352',
+          bg:      v('c-bg'),
+          surface: v('c-surface'),
+          border:  v('c-border'),
         },
         accent: {
-          blue:  '#005DAA',
-          hover: '#0069c0',
-          red:   '#EE2624',
-          gold:  '#EE2624',
+          blue:  v('accent'),
+          hover: v('accent-hover'),
+          red:   v('cta'),
+          gold:  v('cta'),
         },
         text: {
-          main:  '#FFFFFF',
-          muted: '#D5DCE0',
+          main:  v('c-text'),
+          muted: v('c-text-muted'),
         },
+        white: v('p-smoke'),
+        black: v('p-charcoal'),
       },
+      // Outlines that remain are 2px so they read clearly; filled surfaces
+      // (cards, panels) carry no outline at all, see index.css.
+      borderWidth: { DEFAULT: '2px' },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':  'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'hero-mesh': 'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0,93,170,0.30), transparent), radial-gradient(ellipse 60% 80% at 80% 50%, rgba(238,38,36,0.15), transparent), radial-gradient(ellipse 60% 50% at 20% 80%, rgba(78,138,201,0.12), transparent)',
-        'card-shine': 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(255,255,255,0.02) 100%)',
-        'noise': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E\")",
+        'hero-mesh':  'none',
+        'card-shine': 'none',
+        'noise':      'none',
       },
+      // Flat and solid: no glows, no translucent drop shadows.
       boxShadow: {
-        'glow-blue':   '0 0 20px rgba(0,93,170,0.40),   0 0 60px rgba(0,93,170,0.12)',
-        'glow-red':    '0 0 20px rgba(238,38,36,0.40),   0 0 60px rgba(238,38,36,0.12)',
-        'glow-gold':   '0 0 20px rgba(238,38,36,0.35),   0 0 60px rgba(238,38,36,0.10)',
-        'glow-amber':  '0 0 20px rgba(236,136,29,0.30),  0 0 60px rgba(236,136,29,0.08)',
-        'glow-purple': '0 0 20px rgba(87,78,143,0.30),   0 0 60px rgba(87,78,143,0.08)',
-        'card':        '0 4px 24px rgba(0,0,0,0.22)',
-        'card-hover':  '0 12px 40px rgba(0,0,0,0.28)',
-        'nav':         '0 1px 0 rgba(213,220,224,0.18), 0 4px 24px rgba(0,0,0,0.25)',
-        'modal':       '0 24px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,93,170,0.20)',
+        'glow-blue':   'none',
+        'glow-red':    'none',
+        'glow-gold':   'none',
+        'glow-amber':  'none',
+        'glow-purple': 'none',
+        'card':        'none',
+        'card-hover':  'none',
+        'nav':         'none',
+        'modal':       'none',
+        sm:   'none',
+        DEFAULT: 'none',
+        md:   'none',
+        lg:   'none',
+        xl:   'none',
+        '2xl': 'none',
+        inner: 'none',
       },
       animation: {
         'fade-in':        'fadeIn 0.5s ease-out forwards',
@@ -191,7 +165,7 @@ export default {
         slideLeft:      { '0%': { opacity: '0', transform: 'translateX(24px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
         scaleIn:        { '0%': { opacity: '0', transform: 'scale(0.92)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
         float:          { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-12px)' } },
-        pulseGlow:      { '0%, 100%': { boxShadow: '0 0 20px rgba(0,93,170,0.3)' }, '50%': { boxShadow: '0 0 40px rgba(0,93,170,0.55), 0 0 80px rgba(0,93,170,0.18)' } },
+        pulseGlow:      { '0%, 100%': { boxShadow: 'none' } },
         gradientShift:  { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
         gradientX:      { '0%, 100%': { backgroundSize: '200% 200%', backgroundPosition: 'left center' }, '50%': { backgroundSize: '200% 200%', backgroundPosition: 'right center' } },
         shimmer:        { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' } },
@@ -208,5 +182,16 @@ export default {
       },
     }
   },
-  plugins: [],
+  // Nothing on the site is see-through. The stock `opacity-*` utility is
+  // replaced so an element is either hidden (0) or fully shown: classes such
+  // as `opacity-60` or `disabled:opacity-50` no longer fade anything. The
+  // opacity scale itself is untouched because color modifiers (`bg-x/30`)
+  // read it to build their solid color-mix.
+  corePlugins: { opacity: false },
+  plugins: [
+    ({ matchUtilities, theme }) => matchUtilities(
+      { opacity: (value) => ({ opacity: String(value) === '0' ? '0' : '1' }) },
+      { values: theme('opacity') },
+    ),
+  ],
 }

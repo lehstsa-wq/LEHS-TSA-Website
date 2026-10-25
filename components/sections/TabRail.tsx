@@ -79,7 +79,7 @@ export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {
                 borderRadius: 'var(--card-radius)',
                 padding: '1rem 1.25rem',
                 background: selected ? 'var(--c-card)' : 'transparent',
-                border: `1px solid ${selected ? 'var(--c-blue)' : 'var(--c-hairline)'}`,
+                border: `2px solid ${selected ? 'var(--c-blue)' : 'var(--c-hairline)'}`,
                 boxShadow: selected ? 'var(--shadow-card)' : 'none',
               }}
             >
@@ -103,7 +103,6 @@ export const TabRail: React.FC<TabRailProps> = ({ items, className = '' }) => {
           className={`relative overflow-hidden ${i === active ? 'flex flex-col' : ''}`}
           style={{
             borderRadius: 'var(--card-radius)',
-            border: '1px solid var(--c-hairline)',
             background: 'var(--c-card)',
             boxShadow: 'var(--shadow-card)',
           }}

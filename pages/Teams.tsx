@@ -270,7 +270,7 @@ const TeamCard: React.FC<{ team: Team }> = ({ team }) => {
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${(team.memberIds.length / team.maxSize) * 100}%`,
-                background: team.memberIds.length >= team.maxSize ? '#d97757' : '#6a9bcc',
+                background: team.memberIds.length >= team.maxSize ? 'var(--cta)' : 'var(--accent)',
               }}
             />
           </div>
@@ -406,7 +406,7 @@ const Teams: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen animate-fade-in pb-24">
+    <div className="min-h-screen animate-fade-in pb-14">
       <SEO title="Teams" description="Find or form a competition team with LEHS TSA members." />
 
       {/* ── Hero ── */}
@@ -524,7 +524,7 @@ const Teams: React.FC = () => {
             {user && myTeams.length > 0 ? 'Other Teams' : 'All Teams'}, {communityTeams.length} result{communityTeams.length !== 1 ? 's' : ''}
           </p>
           {communityTeams.length === 0 ? (
-            <div className="text-center py-16 border border-dashed border-space-500/30 rounded-2xl">
+            <div className="text-center py-10 border border-dashed border-space-500/30 rounded-2xl">
               <Users size={44} className="mx-auto text-ink-muted opacity-30 mb-3" />
               <h3 className="font-bold text-ink mb-1">No teams found</h3>
               <p className="text-sm text-ink-muted">

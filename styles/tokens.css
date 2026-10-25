@@ -12,29 +12,30 @@
 
 :root {
   /* ── DEPTH / CANVAS ──────────────────────────────────────────────── */
-  --sr-void:        #000000;                 /* the stage, not a "dark theme" */
-  --sr-void-lift:   #0a0a0a;                 /* tier-B panel fill, barely off-void */
-  --sr-hairline:    rgba(255, 255, 255, 0.12);   /* the ONLY border weight     */
-  --sr-hairline-hi: rgba(255, 255, 255, 0.28);   /* hover / focus rule         */
+  /* Follows the site palette (index.css); all opaque. */
+  --sr-void:        var(--c-bg);
+  --sr-void-lift:   var(--c-surface);
+  --sr-hairline:    var(--c-border-muted);   /* the ONLY border weight     */
+  --sr-hairline-hi: var(--c-border);         /* hover / focus rule         */
 
   /* ── INK (typography) ────────────────────────────────────────────── */
-  --sr-ink:       #ffffff;
-  --sr-ink-dim:   rgba(255, 255, 255, 0.64);
-  --sr-ink-ghost: rgba(255, 255, 255, 0.38);     /* micro-labels at rest       */
+  --sr-ink:       var(--c-text);
+  --sr-ink-dim:   var(--c-text-dim);
+  --sr-ink-ghost: var(--c-text-muted);           /* micro-labels at rest       */
 
-  /* ── CHROMA: spectral studio palette (technology × art print) ──── */
-  --sr-blue:    #005daa;
-  --sr-blue-hi: #3b9eff;                     /* electric                       */
-  --sr-red:     #e93d82;                     /* magenta: rules, indices       */
-  --sr-magenta: #e93d82;
-  --sr-amber:   #ffb224;
-  --sr-violet:  #8250ff;
-  --sr-teal:    #12c6a2;
-  --sr-spectral: linear-gradient(100deg, #3b9eff 0%, #8250ff 32%, #e93d82 62%, #ffb224 100%);
-  --sr-ghost-stroke: rgba(255, 255, 255, 0.06);
+  /* ── CHROMA: site palette accents ──────────────────────────────── */
+  --sr-blue:    var(--accent);
+  --sr-blue-hi: var(--accent);
+  --sr-red:     var(--cta);                  /* rules, indices                */
+  --sr-magenta: var(--cta);
+  --sr-amber:   var(--alert);
+  --sr-violet:  var(--accent);
+  --sr-teal:    var(--p-steel);
+  --sr-spectral: var(--cta);
+  --sr-ghost-stroke: var(--c-border-muted);
 
   /* ── TYPE REGISTER 1 · DISPLAY (literary) ────────────────────────── */
-  --sr-font-display: "Proxima Nova", "Franklin Gothic Medium", "Source Sans 3", Arial, sans-serif;
+  --sr-font-display: "Gurajada", "Source Sans 3", Arial, sans-serif;
   --sr-display-xl: clamp(4rem, 12vw, 11.5rem);   /* one word per viewport      */
   --sr-display-lg: clamp(3rem, 8vw, 7rem);
   --sr-display-md: clamp(2rem, 4.5vw, 3.75rem);
@@ -43,7 +44,7 @@
 
   /* ── TYPE REGISTER 2 · MICRO (functional anchors) ────────────────── */
   --sr-font-body: "Source Sans 3", "Source Sans Pro", Arial, sans-serif;
-  --sr-font-mono: "JetBrains Mono", monospace;   /* coordinates, indices       */
+  --sr-font-mono: "Source Sans 3", "Source Sans Pro", Arial, sans-serif;   /* coordinates, indices       */
   --sr-micro:    0.6875rem;                   /* 11px: nav, breadcrumb anchors */
   --sr-micro-xs: 0.625rem;                    /* 10px: chapter №, HUD readouts */
   --sr-micro-tracking: 0.22em;                /* always uppercase               */
@@ -54,8 +55,8 @@
   /* ── SPATIAL SYSTEM (viewport-relative, no container grid) ────────── */
   --sr-stage-h:   100dvh;
   --sr-edge:      clamp(1.25rem, 4vw, 4rem);  /* HUD inset from viewport edge   */
-  --sr-stack-gap: clamp(3rem, 8vh, 5.5rem);   /* between sections: tight, no dead air */
-  --sr-chapter-pad: clamp(3.5rem, 9vh, 6.5rem); /* vertical padding of non-hero chapters */
+  --sr-stack-gap: clamp(2rem, 5vh, 3.5rem);   /* between sections: tight, no dead air */
+  --sr-chapter-pad: clamp(2.25rem, 6vh, 4rem); /* vertical padding of non-hero chapters */
   --sr-radius:    0px;                         /* rounded SaaS cards abolished   */
   --sr-measure:   34em;
 
@@ -106,46 +107,12 @@
   overflow: clip;
 }
 
-/* ── LIGHT MODE: warm paper studio; same system, inverted ink ──────── */
-html.light .sr,
-html.light .sr-cursor-scope {
-  --sr-void:        #faf7f1;                 /* warm paper                     */
-  --sr-void-lift:   #f1ece1;
-  --sr-hairline:    rgba(20, 20, 26, 0.14);
-  --sr-hairline-hi: rgba(20, 20, 26, 0.32);
-  --sr-ink:         #14141a;
-  --sr-ink-dim:     rgba(20, 20, 26, 0.68);
-  --sr-ink-ghost:   rgba(20, 20, 26, 0.40);
-  --sr-ghost-stroke: rgba(20, 20, 26, 0.09);
-}
-
 /* ── AURORA: localized chromatic field behind art clusters. Deliberately
    tight and placed, never a full-page wash: that's the anti-slop rule. ── */
-.sr-aurora {
-  position: absolute;
-  inset: -12%;
-  pointer-events: none;
-  background:
-    radial-gradient(34% 42% at 24% 30%, rgba(233, 61, 130, 0.50), transparent 70%),
-    radial-gradient(38% 46% at 76% 26%, rgba(59, 158, 255, 0.48), transparent 70%),
-    radial-gradient(36% 40% at 60% 80%, rgba(255, 178, 36, 0.38), transparent 72%),
-    radial-gradient(26% 34% at 40% 62%, rgba(130, 80, 255, 0.34), transparent 70%);
-  opacity: 0.14;
-  filter: blur(52px) saturate(1.25);
-  /* Deliberately unanimated: animating a blur this large across a fixed
-     full-viewport layer repaints the screen every frame and wrecks scrolling. */
-  transform: translateZ(0);
-}
-html.light .sr-aurora { opacity: 0.07; }
+.sr-aurora { display: none; }
 
 /* ── SPECTRAL TEXT: gradient-filled display words ──────────────────── */
-.sr-grad-text {
-  background: var(--sr-spectral);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
+.sr-grad-text { color: var(--cta); }
 
 /* ── ENTRANCE RISE: hero elements assemble on mount, staggered ─────── */
 .sr-rise {
@@ -195,7 +162,7 @@ html.light .sr-aurora { opacity: 0.07; }
 /* ── TYPOGRAPHY ─────────────────────────────────────────────────────── */
 .sr-display {
   font-family: var(--sr-font-display);
-  font-weight: 800;
+  font-weight: 400;
   line-height: var(--sr-display-leading);
   letter-spacing: var(--sr-display-tracking);
   text-transform: uppercase;
@@ -268,7 +235,7 @@ html.light .sr-aurora { opacity: 0.07; }
   color: var(--sr-ink);
   text-decoration: none;
   padding-bottom: 0.35rem;
-  border-bottom: 1px solid var(--sr-hairline);
+  border-bottom: 2px solid var(--sr-hairline);
   transition: border-color var(--sr-dur-ui) var(--sr-ease-out-expo),
               color var(--sr-dur-ui) var(--sr-ease-out-expo);
 }
@@ -278,11 +245,11 @@ html.light .sr-aurora { opacity: 0.07; }
 
 /* ── EDITORIAL ROW (Tier B: Obscure-derived hover, no cards) ───────── */
 .sr-rows > * {
-  transition: opacity var(--sr-dur-ui) ease, color var(--sr-dur-ui) ease;
+  transition: color var(--sr-dur-ui) ease;
 }
-.sr-rows:hover > * { opacity: 0.5; }
+.sr-rows:hover > * { color: var(--sr-ink-ghost); }
 .sr-rows:hover > *:hover {
-  opacity: 1;
+  color: var(--sr-ink);
   border-left: 2px solid var(--sr-red);
 }
 
@@ -303,7 +270,7 @@ html.light .sr-aurora { opacity: 0.07; }
 
 /* ── CARD (hairline frame, no radius, no glow) ──────────────────────── */
 .sr-card {
-  border: 1px solid var(--sr-hairline);
+  border: 2px solid var(--sr-hairline);
   background: var(--sr-void);
   transition: border-color var(--sr-dur-ui) var(--sr-ease-out-expo);
 }
@@ -319,7 +286,7 @@ html.light .sr-aurora { opacity: 0.07; }
   text-transform: uppercase;
   color: var(--sr-ink-ghost);
   background: none;
-  border: 1px solid var(--sr-hairline);
+  border: 2px solid var(--sr-hairline);
   padding: 0.4rem 0.9rem;
   cursor: pointer;
   white-space: nowrap;
@@ -332,7 +299,7 @@ html.light .sr-aurora { opacity: 0.07; }
 .sr-field {
   width: 100%;
   background: var(--sr-void-lift);
-  border: 1px solid var(--sr-hairline);
+  border: 2px solid var(--sr-hairline);
   color: var(--sr-ink);
   font-family: var(--sr-font-body);
   font-size: var(--sr-body);
@@ -368,7 +335,7 @@ html.light .sr-aurora { opacity: 0.07; }
 .sr-cursor-ring {
   width: 34px; height: 34px;
   margin: -17px 0 0 -17px;
-  border: 1px solid rgba(255,255,255,0.7);
+  border: 1px solid #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -380,7 +347,7 @@ html.light .sr-aurora { opacity: 0.07; }
 .sr-cursor-ring[data-state="labeled"] {
   width: 72px; height: 72px;
   margin: -36px 0 0 -36px;
-  background: rgba(255,255,255,0.96);
+  background: #fff;
   border-color: transparent;
 }
 .sr-cursor-ring.is-pressed { transform-origin: center; scale: 0.8; }
@@ -402,20 +369,19 @@ html.light .sr-aurora { opacity: 0.07; }
 .sr-art {
   position: absolute;
   pointer-events: none;
-  color: var(--sr-ink);
-  opacity: 0.5;
+  color: var(--sr-ink-ghost);
 }
 .sr-art--blue { color: var(--sr-blue-hi); }
-.sr-art--faint { opacity: 0.25; }
+.sr-art--faint { color: var(--sr-hairline); }
 
 /* ── SCROLL CUE ─────────────────────────────────────────────────────── */
 .sr-cue {
   width: 1px;
   height: 3rem;
-  background: linear-gradient(var(--sr-ink-ghost), transparent);
+  background: var(--sr-ink-ghost);
   animation: sr-cue 2.4s var(--sr-ease-out-expo) infinite;
 }
 @keyframes sr-cue {
-  0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.3; }
-  50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; }
+  50%      { transform: scaleY(1);   transform-origin: top; }
 }

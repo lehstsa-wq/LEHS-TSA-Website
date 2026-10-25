@@ -26,7 +26,6 @@ export const AnnouncementPill: React.FC<AnnouncementPillProps> = ({
     to={href}
     className={`group inline-flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full px-4 py-2 transition-all hover:-translate-y-0.5 ${className}`}
     style={{
-      border: '1px solid var(--c-hairline)',
       background: 'var(--c-card)',
       boxShadow: 'var(--shadow-card)',
     }}

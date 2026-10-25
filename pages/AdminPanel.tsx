@@ -20,6 +20,7 @@ import { Officer, Announcement, User } from '../types';
 import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
+import { tint } from '../lib/color';
 
 type Tab = 'overview' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
@@ -189,7 +190,7 @@ const OverviewTab: React.FC = () => {
                 </div>
                 <div className={`${cardClass} ${openIssues > 0 ? 'border-gold-500/30 bg-gold-50/10' : ''}`}>
                     <p className="text-ink-muted text-xs font-bold uppercase tracking-wider">Open Issues</p>
-                    <h3 className={`text-3xl font-bold mt-1 ${openIssues > 0 ? 'text-gold-500' : ''}`} style={openIssues === 0 ? { color: '#788c5d' } : {}}>{openIssues}</h3>
+                    <h3 className={`text-3xl font-bold mt-1 ${openIssues > 0 ? 'text-gold-500' : ''}`} style={openIssues === 0 ? { color: 'var(--accent)' } : {}}>{openIssues}</h3>
                     <p className="text-xs text-ink-muted font-medium mt-1">Reported Problems</p>
                 </div>
             </div>
@@ -292,7 +293,7 @@ const IssuesTab: React.FC = () => {
                     </div>
                 )) : (
                     <div className="text-center py-10 bg-space-800 rounded-xl border border-dashed border-space-500/40">
-                        <CheckCircle size={32} className="mx-auto mb-2 opacity-50" style={{ color: '#788c5d' }} />
+                        <CheckCircle size={32} className="mx-auto mb-2 opacity-50" style={{ color: 'var(--accent)' }} />
                         <p className="text-ink-muted">No issues reported. Great job!</p>
                     </div>
                 )}
@@ -1234,7 +1235,7 @@ const GalleryTab: React.FC = () => {
                                 if (await confirm('Delete Image', 'Delete this image?', true, 'Delete')) {
                                     deleteGalleryItem(item.id);
                                 }
-                            }} className="text-white hover:text-gold-400"><Trash2 size={24}/></button>
+                            }} className="hover:text-gold-400" style={{ color: 'var(--p-smoke)' }}><Trash2 size={24}/></button>
                         </div>
                     </div>
                 ))}
@@ -1383,7 +1384,7 @@ const InterestsTab: React.FC = () => {
 
             {/* Grouped Tables */}
             {Object.keys(grouped).length === 0 ? (
-                <div className="text-center py-16 bg-space-800 border border-dashed border-space-500/30 rounded-xl text-ink-muted">No interests found.</div>
+                <div className="text-center py-10 bg-space-800 border border-dashed border-space-500/30 rounded-xl text-ink-muted">No interests found.</div>
             ) : (
                 Object.entries(grouped).map(([compName, entries]) => (
                     <div key={compName} className="bg-space-800 border border-space-500/30 rounded-xl overflow-hidden shadow-sm">
@@ -1444,15 +1445,15 @@ const InterestsTab: React.FC = () => {
 // ─── COMPETITIONS TAB ────────────────────────────────────────────────────────
 
 const COMP_CATEGORY_META: Record<string, { label: string; color: string; icon: React.ElementType }> = {
-    stem:       { label: 'STEM',           color: '#3b82f6', icon: Cpu       },
-    arch:       { label: 'Architecture',   color: '#f59e0b', icon: Hammer    },
-    man:        { label: 'Manufacturing',  color: '#8b5cf6', icon: Layers    },
-    trans:      { label: 'Transportation', color: '#06b6d4', icon: Plane     },
-    energy:     { label: 'Energy',         color: '#e05c5c', icon: Zap       },
-    ict:        { label: 'ICT',            color: '#60a5fa', icon: Cpu       },
-    design:     { label: 'Design',         color: '#ec4899', icon: PenTool   },
-    leadership: { label: 'Leadership',     color: '#22c55e', icon: Briefcase },
-    teams:      { label: 'TEAMS',          color: '#f97316', icon: Star      },
+    stem:       { label: 'STEM',           color: 'var(--accent)', icon: Cpu       },
+    arch:       { label: 'Architecture',   color: 'var(--alert)', icon: Hammer    },
+    man:        { label: 'Manufacturing',  color: 'var(--alert)', icon: Layers    },
+    trans:      { label: 'Transportation', color: 'var(--accent)', icon: Plane     },
+    energy:     { label: 'Energy',         color: 'var(--cta)', icon: Zap       },
+    ict:        { label: 'ICT',            color: 'var(--accent)', icon: Cpu       },
+    design:     { label: 'Design',         color: 'var(--cta)', icon: PenTool   },
+    leadership: { label: 'Leadership',     color: 'var(--accent)', icon: Briefcase },
+    teams:      { label: 'TEAMS',          color: 'var(--alert)', icon: Star      },
 };
 
 const COMP_CATEGORY_FILTERS = [
@@ -1631,7 +1632,7 @@ const CompetitionsTab: React.FC = () => {
                                 >
                                     <div
                                         className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                                        style={{ background: `${compMeta?.color}22` }}
+                                        style={{ background: tint(compMeta?.color, 13) }}
                                     >
                                         {compMeta && <compMeta.icon size={13} style={{ color: compMeta.color }} />}
                                     </div>
@@ -1664,7 +1665,7 @@ const CompetitionsTab: React.FC = () => {
                         <div className="flex items-start gap-3">
                             <div
                                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                style={{ background: `${meta.color}22` }}
+                                style={{ background: tint(meta.color, 13) }}
                             >
                                 <meta.icon size={20} style={{ color: meta.color }} />
                             </div>
@@ -1673,7 +1674,7 @@ const CompetitionsTab: React.FC = () => {
                                     <h3 className="text-lg font-bold text-ink leading-tight">{selected.title}</h3>
                                     <span
                                         className="text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0"
-                                        style={{ background: `${meta.color}20`, color: meta.color }}
+                                        style={{ background: tint(meta.color, 13), color: meta.color }}
                                     >
                                         {meta.label}
                                     </span>
@@ -1714,7 +1715,7 @@ const CompetitionsTab: React.FC = () => {
 
                         {/* Empty state */}
                         {links.length === 0 && !showAdd && (
-                            <div className="text-center py-16">
+                            <div className="text-center py-10">
                                 <div className="w-14 h-14 bg-space-700/40 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                     <LinkIcon size={24} className="text-ink-muted" />
                                 </div>
@@ -2087,7 +2088,7 @@ function doPost(e) {
 
             {/* Meeting list */}
             {meetings.length === 0 ? (
-                <div className="text-center py-16 text-ink-muted text-sm">No meetings yet. Create one above.</div>
+                <div className="text-center py-10 text-ink-muted text-sm">No meetings yet. Create one above.</div>
             ) : (
                 <div className="space-y-3">
                     {meetings.map(m => {
@@ -2293,7 +2294,7 @@ const ResultsTab: React.FC = () => {
 
             {/* Results grouped by level */}
             {filtered.length === 0 ? (
-                <div className="text-center py-16 text-ink-muted text-sm">No results recorded yet.</div>
+                <div className="text-center py-10 text-ink-muted text-sm">No results recorded yet.</div>
             ) : (
                 <div className="space-y-6">
                     {([['National', nationals], ['State', state], ['Regional', regional]] as [string, typeof filtered][]).map(([level, items]) =>
@@ -2428,7 +2429,7 @@ const SettingsTab: React.FC = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6 animate-fade-in pb-20">
+        <div className="max-w-2xl mx-auto space-y-6 animate-fade-in pb-12">
             <div className={cardClass}>
                 <h3 className="font-bold text-ink mb-4 flex items-center gap-2">
                     <Calendar size={18} /> Next Major Event

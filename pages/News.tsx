@@ -82,7 +82,7 @@ const News: React.FC = () => {
               <motion.div key={item.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}
                 className="card border-gold-300/30 relative group overflow-hidden">
                 {/* Pinned stripe */}
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-gold-500 to-gold-600" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gold-500" />
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-3 flex-wrap">

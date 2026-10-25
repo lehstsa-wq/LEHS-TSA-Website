@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
+import { tint } from '../lib/color';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -56,7 +57,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => (
   <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-space-500/30">
     <div className="flex items-center gap-3">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}18` }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint(color, 9) }}>
         <Icon size={18} style={{ color }} />
       </div>
       <div>
@@ -66,7 +67,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
     </div>
     <div className="flex items-center gap-2 shrink-0">
       {saved && !editing && (
-        <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: '#788c5d' }}>
+        <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--accent)' }}>
           <CheckCircle size={12} /> Saved
         </span>
       )}
@@ -146,7 +147,7 @@ const IdentitySection: React.FC = () => {
     <div className={card}>
       <SectionHeader
         title="Identity" subtitle="Display name, photo, and avatar color"
-        icon={UserIcon} color="#6a9bcc"
+        icon={UserIcon} color="var(--accent)"
         editing={editing} saving={saving} saved={saved}
         onEdit={() => setEditing(true)} onSave={save} onCancel={reset}
       />
@@ -257,7 +258,7 @@ const PersonalSection: React.FC = () => {
     <div className={card}>
       <SectionHeader
         title="Personal Info" subtitle="Grade, contact, and bio"
-        icon={Info} color="#6a9bcc"
+        icon={Info} color="var(--accent)"
         editing={editing} saving={saving} saved={saved}
         onEdit={() => setEditing(true)} onSave={save} onCancel={reset}
       />
@@ -370,7 +371,7 @@ const TsaProfileSection: React.FC = () => {
     <div className={card}>
       <SectionHeader
         title="TSA Profile" subtitle="Skills, interests, and achievements"
-        icon={Star} color="#d97757"
+        icon={Star} color="var(--cta)"
         editing={editing} saving={saving} saved={saved}
         onEdit={() => setEditing(true)} onSave={save} onCancel={reset}
       />
@@ -548,7 +549,7 @@ const Settings: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-space-900 pt-24 pb-16 px-4 sm:px-6 lg:px-8 animate-fade-in">
+    <div className="min-h-screen bg-space-900 pt-24 pb-10 px-4 sm:px-6 lg:px-8 animate-fade-in">
       <SEO title="Settings" description="Manage your Little Elm High School TSA account settings." />
 
       <div className="max-w-2xl mx-auto space-y-5">

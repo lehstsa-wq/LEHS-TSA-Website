@@ -43,7 +43,7 @@ const HOW_IT_WORKS: Stage[] = [
     num: '01',
     title: 'Apply',
     body: 'Fill out the membership form and submit your dues. Takes less than 5 minutes.',
-    accent: '#005DAA',
+    accent: 'var(--accent)',
     image: '/assets/photos/step-apply.jpg',
     imageAlt: 'Illuminated TSA marquee letters at a chapter event',
   },
@@ -51,7 +51,7 @@ const HOW_IT_WORKS: Stage[] = [
     num: '02',
     title: 'Pick Events',
     body: 'Browse 30+ competitive events across engineering, coding, design, and leadership.',
-    accent: '#EC881D',
+    accent: 'var(--alert)',
     image: '/assets/photos/step-pick.jpg',
     imageAlt: 'A member choosing and preparing a glider for competition',
   },
@@ -59,7 +59,7 @@ const HOW_IT_WORKS: Stage[] = [
     num: '03',
     title: 'Compete & Win',
     body: 'Train, collaborate, and compete at regional, state, and national conferences.',
-    accent: '#574E8F',
+    accent: 'var(--accent)',
     image: '/assets/photos/step-win.jpg',
     imageAlt: 'Chapter members holding a competition trophy',
   },
@@ -73,12 +73,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Compete in 30+ Events',
     image: '/assets/photos/compete.jpg',
     imageAlt: 'Four chapter members in TSA blazers posing together at a conference',
-    accent: '#005DAA',
+    accent: 'var(--accent)',
     description: 'From Software Development to Architectural Design, TSA competitions build real-world skills across engineering, coding, design, and leadership disciplines.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Compete in 30+ Events</h3>
-        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#005DAA' }}>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -88,12 +88,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Lead & Grow',
     image: '/assets/photos/lead.jpg',
     imageAlt: 'A member reacting on stage as Photographic Technology finalists are announced',
-    accent: '#EC881D',
+    accent: 'var(--alert)',
     description: 'Run for officer positions, organize events, and develop the leadership skills that colleges and employers value.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Lead & Grow</h3>
-        <Link to="/officers" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EE2624' }}>
+        <Link to="/officers" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--cta)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -103,12 +103,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Connect Nationally',
     image: '/assets/photos/connect.jpg',
     imageAlt: 'A member holding a collector pin map at the national conference',
-    accent: '#EE2624',
+    accent: 'var(--cta)',
     description: 'Compete at regional, state, and national TSA conferences alongside thousands of STEM students from across the country.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Connect Nationally</h3>
-        <Link to="/events" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#86BB50' }}>
+        <Link to="/events" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -118,12 +118,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Code & Build',
     image: '/assets/photos/build.jpg',
     imageAlt: 'Members setting up their competition builds at the event tables',
-    accent: '#574E8F',
+    accent: 'var(--accent)',
     description: 'Sharpen your software skills with coding competitions, hackathons, and collaborative build nights.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Code & Build</h3>
-        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#574E8F' }}>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -133,12 +133,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Design & Create',
     image: '/assets/photos/design.jpg',
     imageAlt: 'Two members examining an architectural scale model',
-    accent: '#86BB50',
+    accent: 'var(--accent)',
     description: 'Graphic design, video game design, architectural modeling, fashion design. TSA rewards every kind of creative talent.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Design & Create</h3>
-        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#EC881D' }}>
+        <Link to="/competitions" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--alert)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -148,12 +148,12 @@ const WHAT_WE_DO: TabItem[] = [
     label: 'Study & Prepare',
     image: '/assets/photos/study.jpg',
     imageAlt: 'Members preparing a balsa glider together before an event',
-    accent: '#4E8AC9',
+    accent: 'var(--accent)',
     description: 'Access competition guides, past results, and expert prep materials, everything you need to walk into any event confident.',
     panel: (
       <div>
         <h3 className="section-h2 text-2xl md:text-3xl mb-3">Study & Prepare</h3>
-        <Link to="/resources" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: '#4E8AC9' }}>
+        <Link to="/resources" className="inline-flex items-center gap-1.5 mt-6 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           Learn more <ArrowRight size={14} />
         </Link>
       </div>
@@ -185,8 +185,8 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════════════════
           HERO
       ═══════════════════════════════════════════════════ */}
-      <section className="relative min-h-[78vh] flex items-center overflow-hidden">
-        {/* Chapter photo backdrop, dimmed so the headline keeps its contrast */}
+      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
+        {/* Chapter photo backdrop; the copy sits on a solid panel above it */}
         <img
           src="/assets/photos/hero-chapter.jpg"
           alt=""
@@ -194,9 +194,8 @@ const Home: React.FC = () => {
           className="absolute inset-0 h-full w-full object-cover"
           fetchPriority="high"
         />
-        <div aria-hidden="true" className="hero-scrim absolute inset-0" />
-
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-7 w-full text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full text-center">
+          <div className="hero-panel px-6 py-6 sm:px-10 sm:py-7">
           {/* Announcement */}
           {nextEvent && (
             <motion.div
@@ -222,10 +221,10 @@ const Home: React.FC = () => {
             className="hero-title mb-6 text-balance"
           >
             Where{' '}
-            <span style={{ color: '#4E8AC9' }}>Technology</span>
+            <span style={{ color: 'var(--accent)' }}>Technology</span>
             <br />
             Meets{' '}
-            <span style={{ color: '#EE2624' }}>Ambition.</span>
+            <span style={{ color: 'var(--cta)' }}>Ambition.</span>
           </motion.h1>
 
           <motion.p
@@ -298,6 +297,7 @@ const Home: React.FC = () => {
               </div>
             ))}
           </motion.div>
+          </div>
         </div>
 
       </section>
@@ -327,7 +327,7 @@ const Home: React.FC = () => {
                 className="text-sm font-medium px-4 py-2 rounded-full"
                 style={{
                   background: 'var(--c-card)',
-                  border: '1px solid var(--c-amber)',
+                  border: '2px solid var(--c-amber)',
                   color: 'var(--c-text)',
                 }}
               >
@@ -382,8 +382,6 @@ const Home: React.FC = () => {
           STATS SECTION
       ═══════════════════════════════════════════════════ */}
       <section className="py-7 overflow-hidden relative bg-space-950/60 border-y border-space-500/20">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-violet-500/5 to-gold-500/5" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -542,7 +540,6 @@ const Home: React.FC = () => {
                     borderRadius: 'var(--card-radius)',
                     padding: 'var(--card-pad)',
                     background: 'var(--c-card)',
-                    border: '1px solid var(--c-hairline)',
                     boxShadow: 'var(--shadow-card)',
                   }}
                 >

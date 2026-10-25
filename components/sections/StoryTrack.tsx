@@ -51,7 +51,7 @@ export const StoryTrack: React.FC<StoryTrackProps> = ({ children, className = ''
       disabled={disabled}
       aria-label={dir === 1 ? 'Scroll right' : 'Scroll left'}
       className="grid h-9 w-9 place-items-center rounded-full transition-all disabled:opacity-30"
-      style={{ border: '1px solid var(--c-hairline)', background: 'var(--c-card)' }}
+      style={{ border: '2px solid var(--c-hairline)', background: 'var(--c-card)' }}
     >
       {dir === 1 ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
     </button>

@@ -209,7 +209,7 @@ const Contact: React.FC = () => {
           <h2 className="section-h2 text-2xl md:text-3xl mb-6 text-center">Find us</h2>
           <div
             className="overflow-hidden"
-            style={{ borderRadius: 'var(--card-radius)', border: '1px solid var(--c-hairline)' }}
+            style={{ borderRadius: 'var(--card-radius)', border: '2px solid var(--c-hairline)' }}
           >
             <iframe
               title="Map showing Little Elm High School"

@@ -53,7 +53,7 @@ export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
     <div
       role="radiogroup"
       className={`inline-flex flex-wrap gap-1 rounded-full p-1 ${className}`}
-      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-hairline)' }}
+      style={{ background: 'var(--c-surface)' }}
     >
       {options.map((option, i) => {
         const selected = option === value;
@@ -67,9 +67,10 @@ export const SegmentedToggle: React.FC<SegmentedToggleProps> = ({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(option)}
             onKeyDown={e => handleKeyDown(e, i)}
-            className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-              selected ? 'bg-electric-500 text-white' : 'text-ink-muted hover:text-ink'
+            className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+              selected ? '' : 'text-ink-muted hover:text-ink'
             }`}
+            style={selected ? { background: 'var(--accent)', color: 'var(--c-on-accent)' } : undefined}
           >
             {option}
           </button>

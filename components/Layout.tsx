@@ -168,12 +168,12 @@ export const Navbar: React.FC = () => {
 
             {/* ── Logo ── */}
             <Link to="/" className="flex items-center gap-3 group shrink-0">
-              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: '#005DAA' }}>
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105" style={{ backgroundColor: 'var(--accent)' }}>
                 <Cpu size={18} />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
-                <span className="font-bold text-sm text-ink tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
-                <span className="text-[10px] text-ink-muted mt-0.5 tracking-wide uppercase" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600 }}>Little Elm, TX</span>
+                <span className="font-bold text-sm text-ink tracking-tight" style={{ fontFamily: 'var(--font-body)' }}>LEHS TSA</span>
+                <span className="text-[10px] text-ink-muted mt-0.5 tracking-wide uppercase" style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}>Little Elm, TX</span>
               </div>
             </Link>
 
@@ -347,15 +347,15 @@ export const Navbar: React.FC = () => {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed top-0 right-0 bottom-0 w-80 z-50 lg:hidden flex flex-col"
-              style={{ background: 'var(--c-surface)', borderLeft: '1px solid var(--c-border)' }}
+              style={{ background: 'var(--c-surface)', borderLeft: '2px solid var(--c-border)' }}
             >
               {/* Mobile nav header */}
               <div className="flex items-center justify-between p-5 border-b border-space-500/50">
                 <div className="flex items-center gap-3">
-                  <div className="brand-mark w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#005DAA' }}>
+                  <div className="brand-mark w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
                     <Cpu size={16} />
                   </div>
-                  <span className="font-bold text-ink" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</span>
+                  <span className="font-bold text-ink" style={{ fontFamily: 'var(--font-body)' }}>LEHS TSA</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-lg hover:bg-space-600/50 text-ink-muted">
                   <X size={20} />
@@ -445,7 +445,7 @@ export const Navbar: React.FC = () => {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.18, ease: 'easeOut' }}
               className="w-full max-w-xl rounded-2xl overflow-hidden shadow-modal"
-              style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
+              style={{ background: 'var(--c-surface)', border: '2px solid var(--c-border)' }}
               onClick={e => e.stopPropagation()}
             >
               {/* Search input */}
@@ -542,12 +542,12 @@ export const Footer: React.FC = () => {
           {/* Brand column (2 cols on lg) */}
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#005DAA' }}>
+              <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }}>
                 <Cpu size={18} />
               </div>
               <div>
-                <div className="font-bold text-ink text-sm" style={{ fontFamily: 'var(--font-heading)' }}>LEHS TSA</div>
-                <div className="text-[10px] tracking-wide uppercase mt-0.5 text-ink-muted" style={{ fontFamily: 'var(--font-heading)', fontWeight: 600 }}>Little Elm High School</div>
+                <div className="font-bold text-ink text-sm" style={{ fontFamily: 'var(--font-body)' }}>LEHS TSA</div>
+                <div className="text-[10px] tracking-wide uppercase mt-0.5 text-ink-muted" style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}>Little Elm High School</div>
               </div>
             </div>
             <p className="text-ink-dim text-sm leading-relaxed mb-6 max-w-xs">

@@ -17,17 +17,18 @@ import {
 import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
 import { SegmentedToggle } from '../components/sections';
+import { tint } from '../lib/color';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
-  stem:       { label: 'STEM',           color: '#6a9bcc', bg: 'rgba(106,155,204,0.32)', icon: Cpu      },
-  arch:       { label: 'Architecture',   color: '#d97757', bg: 'rgba(217,119,87,0.32)',  icon: Hammer   },
-  man:        { label: 'Manufacturing',  color: '#6a9bcc', bg: 'rgba(106,155,204,0.32)', icon: Layers   },
-  trans:      { label: 'Transportation', color: '#6a9bcc', bg: 'rgba(106,155,204,0.32)', icon: Plane    },
-  energy:     { label: 'Energy',         color: '#d97757', bg: 'rgba(217,119,87,0.32)',  icon: Zap      },
-  ict:        { label: 'ICT',            color: '#6a9bcc', bg: 'rgba(106,155,204,0.32)', icon: Cpu      },
-  design:     { label: 'Design',         color: '#d97757', bg: 'rgba(217,119,87,0.32)',  icon: PenTool  },
-  leadership: { label: 'Leadership',     color: '#788c5d', bg: 'rgba(120,140,93,0.32)',  icon: Briefcase},
+  stem:       { label: 'STEM',           color: 'var(--accent)', bg: tint('var(--accent)', 32), icon: Cpu      },
+  arch:       { label: 'Architecture',   color: 'var(--cta)', bg: tint('var(--cta)', 32),  icon: Hammer   },
+  man:        { label: 'Manufacturing',  color: 'var(--accent)', bg: tint('var(--accent)', 32), icon: Layers   },
+  trans:      { label: 'Transportation', color: 'var(--accent)', bg: tint('var(--accent)', 32), icon: Plane    },
+  energy:     { label: 'Energy',         color: 'var(--cta)', bg: tint('var(--cta)', 32),  icon: Zap      },
+  ict:        { label: 'ICT',            color: 'var(--accent)', bg: tint('var(--accent)', 32), icon: Cpu      },
+  design:     { label: 'Design',         color: 'var(--cta)', bg: tint('var(--cta)', 32),  icon: PenTool  },
+  leadership: { label: 'Leadership',     color: 'var(--accent)', bg: tint('var(--accent)', 32),  icon: Briefcase},
 };
 
 const CATEGORIES = [
@@ -49,32 +50,32 @@ const TEAMS_COMPONENTS = [
     title: 'Design / Build',
     description: 'Teams design and construct a physical solution to an engineering challenge based on the annual theme. Judged on creativity, functionality, and engineering principles.',
     icon: Hammer,
-    color: '#d97757',
-    bg: 'rgba(217,119,87,0.25)',
+    color: 'var(--cta)',
+    bg: tint('var(--cta)', 25),
   },
   {
     id: 'multiple-choice',
     title: 'Multiple Choice',
     description: 'An individual written exam covering engineering aptitude, mathematics, and science concepts relevant to the annual theme.',
     icon: FileText,
-    color: '#6a9bcc',
-    bg: 'rgba(106,155,204,0.25)',
+    color: 'var(--accent)',
+    bg: tint('var(--accent)', 25),
   },
   {
     id: 'math-modeling',
     title: 'Mathematical Modeling',
     description: 'Teams apply mathematical and scientific reasoning to model and solve an open-ended engineering problem tied to the year\'s theme.',
     icon: Layers,
-    color: '#6a9bcc',
-    bg: 'rgba(106,155,204,0.25)',
+    color: 'var(--accent)',
+    bg: tint('var(--accent)', 25),
   },
   {
     id: 'essay',
     title: 'Essay',
     description: 'A written response analyzing a real-world engineering issue connected to the annual theme, evaluated on depth of understanding and communication.',
     icon: PenTool,
-    color: '#788c5d',
-    bg: 'rgba(120,140,93,0.25)',
+    color: 'var(--accent)',
+    bg: tint('var(--accent)', 25),
   },
 ];
 
@@ -193,7 +194,7 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           HERO
       ════════════════════════════════════════ */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-20 overflow-hidden">
 
         {/* Orbs */}
 
@@ -212,9 +213,9 @@ const Competitions: React.FC = () => {
 
             <h1 className="hero-title mb-6 text-balance">
               Compete.{' '}
-              <span style={{ color: '#4E8AC9' }}>Build.</span>
+              <span style={{ color: 'var(--accent)' }}>Build.</span>
               <br />
-              <span style={{ color: '#EE2624' }}>Win.</span>
+              <span style={{ color: 'var(--cta)' }}>Win.</span>
             </h1>
 
             <p className="section-dek mx-auto mb-7">
@@ -225,10 +226,10 @@ const Competitions: React.FC = () => {
             {/* Quick-stat chips */}
             <div className="flex flex-wrap gap-3 mb-7 justify-center">
               {[
-                { val: String(TOTAL_COMPETITIONS),        label: 'Total Events',        color: '#6a9bcc' },
-                { val: String(COMPETITION_CATEGORIES),    label: 'Categories',          color: '#d97757' },
-                { val: String(NQE_COMPETITIONS),          label: 'National Qualifying',  color: '#d97757' },
-                { val: String(UTE_COMPETITIONS),          label: 'Texas-Only (UTE)',     color: '#6a9bcc' },
+                { val: String(TOTAL_COMPETITIONS),        label: 'Total Events',        color: 'var(--accent)' },
+                { val: String(COMPETITION_CATEGORIES),    label: 'Categories',          color: 'var(--cta)' },
+                { val: String(NQE_COMPETITIONS),          label: 'National Qualifying',  color: 'var(--cta)' },
+                { val: String(UTE_COMPETITIONS),          label: 'Texas-Only (UTE)',     color: 'var(--accent)' },
               ].map((chip, i) => (
                 <motion.div
                   key={i}
@@ -245,7 +246,7 @@ const Competitions: React.FC = () => {
 
             {/* NQE / UTE info cards */}
             <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
-              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4" style={{ borderTop: '1px solid rgba(78,138,201,0.25)', borderRight: '1px solid rgba(78,138,201,0.25)', borderBottom: '1px solid rgba(78,138,201,0.25)' }}>
+              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
                   <ChevronRight size={18} />
                 </div>
@@ -256,7 +257,7 @@ const Competitions: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4" style={{ borderTop: '1px solid rgba(78,138,201,0.25)', borderRight: '1px solid rgba(78,138,201,0.25)', borderBottom: '1px solid rgba(78,138,201,0.25)' }}>
+              <div className="bg-space-800 border-l-4 border-electric-500 rounded-2xl p-5 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-xl bg-electric-500/20 text-electric-400 flex items-center justify-center flex-shrink-0">
                   <MapPin size={18} />
                 </div>
@@ -292,7 +293,7 @@ const Competitions: React.FC = () => {
       {/* ════════════════════════════════════════
           STICKY FILTER BAR
       ════════════════════════════════════════ */}
-      <div className="sticky top-16 z-30 border-b border-space-500/40 py-3">
+      <div className="sticky top-16 z-30 border-b border-space-500/40 py-3" style={{ background: 'var(--c-surface)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
 
           {/* Row 1: Type filters + TEAMS button + Search */}
@@ -341,7 +342,7 @@ const Competitions: React.FC = () => {
           {/* Row 2: Category pills with visible thin scrollbar */}
           <div
             className="flex gap-1.5 overflow-x-auto pb-1"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(106,155,204,0.35) transparent' }}
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--p-steel) var(--c-bg)' }}
           >
             {CATEGORIES.map(cat => {
               const catMeta = CATEGORY_META[cat.id];
@@ -353,12 +354,12 @@ const Competitions: React.FC = () => {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap border ${
                     active
-                      ? 'text-white border-transparent'
+                      ? 'border-transparent'
                       : 'bg-space-700/50 text-ink-muted hover:text-ink border-space-500/50'
                   }`}
                   style={active ? {
-                    background: catMeta?.color ?? '#6a9bcc',
-                    boxShadow: `0 0 12px ${catMeta?.color ?? '#6a9bcc'}50`,
+                    background: catMeta?.color ?? 'var(--accent)',
+                    color: 'var(--c-on-accent)',
                   } : {}}
                 >
                   {catMeta && <CatIcon size={11} />}
@@ -408,20 +409,17 @@ const Competitions: React.FC = () => {
                   transition={{ duration: 0.45, delay: Math.min(i * 0.035, 0.35) }}
                   onClick={() => setSelectedEvent(comp)}
                   className="group relative rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all duration-300 bg-space-800/50 border border-space-500/50"
-                  style={{ boxShadow: 'var(--shadow-card)' }}
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = `${catMeta.color}50`;
-                    (e.currentTarget as HTMLElement).style.boxShadow = `var(--shadow-card-hover), 0 0 0 1px ${catMeta.color}30`;
+                    (e.currentTarget as HTMLElement).style.borderColor = catMeta.color;
                   }}
                   onMouseLeave={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = '';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-card)';
                   }}
                 >
-                  {/* Top gradient stripe: category color */}
+                  {/* Top stripe: category color */}
                   <div
-                    className="absolute top-0 left-0 right-0 h-0.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: `linear-gradient(to right, ${catMeta.color}, transparent)` }}
+                    className="absolute top-0 left-0 right-0 h-0.5 z-10 hidden group-hover:block"
+                    style={{ background: catMeta.color }}
                   />
 
                   {/* Image */}
@@ -432,22 +430,14 @@ const Competitions: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500"
                     />
 
-                    {/* Gradient overlay: tinted with category color */}
-                    <div
-                      className="absolute inset-0 transition-opacity duration-300"
-                      style={{
-                        background: `linear-gradient(to top, ${catMeta.color}60 0%, rgba(7,17,30,0.5) 50%, transparent 100%)`,
-                      }}
-                    />
-
                     {/* Category + UTE badges */}
                     <div className="absolute top-3 left-3 flex items-center gap-2">
                       <span
                         className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border"
                         style={{
-                          background: 'rgba(4, 8, 15, 0.65)',
+                          background: 'var(--c-bg)',
                           color: catMeta.color,
-                          borderColor: `${catMeta.color}55`,
+                          borderColor: catMeta.color,
                         }}
                       >
                         {catMeta.label}
@@ -459,9 +449,12 @@ const Competitions: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Title on image */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="font-black text-white text-base leading-tight drop-shadow-lg">
+                    {/* Title on a solid plate over the image */}
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <h3
+                        className="inline-block font-bold text-base leading-tight px-3 py-1.5 rounded-lg"
+                        style={{ background: 'var(--p-deep)', color: 'var(--p-smoke)' }}
+                      >
                         {comp.title}
                       </h3>
                     </div>
@@ -509,9 +502,6 @@ const Competitions: React.FC = () => {
           TEAMS COMPETITION SECTION
       ════════════════════════════════════════ */}
       <section ref={teamsSectionRef} className="relative py-8 border-t border-space-500/30 overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-space-900/0 via-space-800/40 to-space-900/0 pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section header */}
@@ -525,7 +515,7 @@ const Competitions: React.FC = () => {
             <div className="section-label inline-flex mb-4">TSA TEAMS Program</div>
             <div className="flex flex-wrap items-end gap-4 mb-5">
               <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-                <span style={{ color: '#4E8AC9' }}>TEAMS</span>
+                <span style={{ color: 'var(--accent)' }}>TEAMS</span>
               </h2>
               <span className="text-ink-muted text-base font-medium mb-1 leading-snug">
                 Tests of Engineering Aptitude,<br className="hidden sm:block" /> Mathematics &amp; Science
@@ -673,7 +663,6 @@ const Competitions: React.FC = () => {
               exit={{ opacity: 0, scale: 0.94, y: 24 }}
               transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
               className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-space-800 border border-space-500/60"
-              style={{ boxShadow: `var(--shadow-elevated), 0 0 0 1px ${meta?.color ?? '#6a9bcc'}25` }}
             >
               {/* Close button */}
               <button
@@ -690,19 +679,12 @@ const Competitions: React.FC = () => {
                   alt={selectedEvent.title}
                   className="w-full h-full object-cover"
                 />
-                {/* Color-tinted overlay */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(to top, ${meta?.color ?? '#6a9bcc'}40 0%, rgba(12,26,46,0.6) 50%, transparent 100%)`,
-                  }}
-                />
-                {/* Bottom content */}
-                <div className="absolute bottom-0 left-0 right-0 p-8">
+                {/* Bottom content, on a solid panel */}
+                <div className="absolute bottom-0 left-0 right-0 p-8" style={{ background: 'var(--p-deep)' }}>
                   <div className="flex gap-2 mb-3 flex-wrap">
                     <span
                       className="text-[10px] font-bold uppercase px-3 py-1 rounded-lg border"
-                      style={{ background: 'rgba(4, 8, 15, 0.65)', color: meta?.color, borderColor: `${meta?.color}55` }}
+                      style={{ background: 'var(--p-navy)', color: 'var(--p-smoke)', borderColor: 'var(--accent)' }}
                     >
                       {meta?.label}
                     </span>
@@ -710,7 +692,7 @@ const Competitions: React.FC = () => {
                       <span className="badge badge-blue text-[10px]">Texas UTE</span>
                     )}
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-black text-white leading-tight drop-shadow-xl">
+                  <h2 className="text-4xl md:text-5xl leading-tight" style={{ color: 'var(--p-smoke)' }}>
                     {selectedEvent.title}
                   </h2>
                 </div>
@@ -718,7 +700,7 @@ const Competitions: React.FC = () => {
                 {/* Bottom category color line */}
                 <div
                   className="absolute bottom-0 left-0 right-0 h-1"
-                  style={{ background: `linear-gradient(to right, ${meta?.color}, transparent)` }}
+                  style={{ background: meta?.color }}
                 />
               </div>
 
@@ -730,7 +712,7 @@ const Competitions: React.FC = () => {
                     className="mb-6 rounded-xl p-5"
                     style={{
                       background: 'var(--c-card)',
-                      border: '1px solid color-mix(in srgb, var(--c-amber) 34%, transparent)',
+                      border: '2px solid var(--c-amber)',
                     }}
                   >
                     <h4 className="font-bold text-sm mb-2 flex items-center gap-2" style={{ color: 'var(--c-amber)' }}>
@@ -746,7 +728,7 @@ const Competitions: React.FC = () => {
                     className="mb-6 rounded-xl p-4 flex items-start gap-3"
                     style={{
                       background: 'var(--c-card)',
-                      border: '1px solid color-mix(in srgb, var(--c-red) 34%, transparent)',
+                      border: '2px solid var(--c-red)',
                     }}
                   >
                     <AlertTriangle size={15} className="mt-0.5 flex-shrink-0" style={{ color: 'var(--c-red)' }} />
@@ -821,7 +803,7 @@ const Competitions: React.FC = () => {
                         <span
                           key={req}
                           className="text-[11px] font-semibold px-3 py-1 rounded-lg border"
-                          style={{ background: meta?.bg, color: meta?.color, borderColor: `${meta?.color}35` }}
+                          style={{ background: meta?.bg, color: meta?.color, borderColor: tint(meta?.color ?? 'var(--accent)', 21) }}
                         >
                           {req}
                         </span>
@@ -833,7 +815,7 @@ const Competitions: React.FC = () => {
                 {/* Interest / Sign-in */}
                 <div
                   className="bg-space-800 border border-space-500/60 rounded-2xl p-6 border"
-                  style={{ borderColor: `${meta?.color}25` }}
+                  style={{ borderColor: tint(meta?.color ?? 'var(--accent)', 15) }}
                 >
                   <h3 className="font-bold text-ink mb-1">Express Interest</h3>
                   <p className="text-xs text-ink-muted mb-5">Let officers know you're interested, no commitment required.</p>
@@ -847,9 +829,9 @@ const Competitions: React.FC = () => {
                     /* ── Already submitted state ── */
                     <div className="space-y-4">
                       <div className="flex items-start gap-3 p-4 rounded-xl bg-brand-green/10 border border-brand-green/25">
-                        <CheckCircle size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#788c5d' }} />
+                        <CheckCircle size={18} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
                         <div>
-                          <p className="text-sm font-semibold" style={{ color: '#788c5d' }}>You've already expressed interest!</p>
+                          <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>You've already expressed interest!</p>
                           <p className="text-xs text-ink-muted mt-0.5">Submitted {new Date(existingInterest.timestamp).toLocaleDateString()}. Officers can see your submission.</p>
                         </div>
                       </div>
@@ -858,7 +840,7 @@ const Competitions: React.FC = () => {
                           <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Your Skills</p>
                           <div className="flex flex-wrap gap-2">
                             {existingInterest.skills.map(s => (
-                              <span key={s} className="px-3 py-1 rounded-xl text-xs font-semibold text-white border-transparent" style={{ background: meta?.color }}>{s}</span>
+                              <span key={s} className="px-3 py-1 rounded-xl text-xs font-semibold text-on-accent border-transparent" style={{ background: meta?.color }}>{s}</span>
                             ))}
                           </div>
                         </div>
@@ -881,7 +863,7 @@ const Competitions: React.FC = () => {
                         <button
                           onClick={handleWithdraw}
                           disabled={isWithdrawing}
-                          className="flex-1 py-3 rounded-xl font-semibold text-white bg-gold-700/80 hover:bg-gold-700 transition-all duration-200 disabled:opacity-50"
+                          className="flex-1 py-3 rounded-xl font-semibold text-on-accent bg-gold-700/80 hover:bg-gold-700 transition-all duration-200 disabled:opacity-50"
                         >
                           {isWithdrawing ? 'Withdrawing…' : 'Withdraw Interest'}
                         </button>
@@ -899,12 +881,12 @@ const Competitions: React.FC = () => {
                               onClick={() => toggleSkill(skill)}
                               className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                                 skills.includes(skill)
-                                  ? 'text-white border-transparent'
+                                  ? 'border-transparent'
                                   : 'bg-space-700/50 text-ink-muted border-space-500/50 hover:text-ink'
                               }`}
                               style={skills.includes(skill) ? {
                                 background: meta?.color,
-                                boxShadow: `0 0 10px ${meta?.color}50`,
+                                color: 'var(--c-on-accent)',
                               } : {}}
                             >
                               {skill}
@@ -955,11 +937,8 @@ const Competitions: React.FC = () => {
                         <button
                           onClick={handleInterestSubmit}
                           disabled={isSubmitting}
-                          className="flex-1 py-3 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-50"
-                          style={{
-                            background: `linear-gradient(135deg, ${meta?.color}, ${meta?.color}bb)`,
-                            boxShadow: `0 4px 15px ${meta?.color}40`,
-                          }}
+                          className="btn-primary flex-1 py-3 disabled:cursor-not-allowed"
+                          style={isSubmitting ? { background: 'var(--c-border-muted)' } : undefined}
                         >
                           {isSubmitting ? 'Submitting…' : 'Submit Interest'}
                         </button>

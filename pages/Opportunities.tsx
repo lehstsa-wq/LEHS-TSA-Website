@@ -8,18 +8,19 @@ import { motion } from 'motion/react';
 import { useData } from '../context/DataContext';
 import { OpportunityType, Opportunity } from '../types';
 import { SEO } from '../components/SEO';
+import { tint } from '../lib/color';
 
 /* ── Category config ─────────────────────────────────────────── */
 const TYPE_CONFIG: Record<OpportunityType | 'All', {
   label: string; color: string; icon: React.ElementType;
 }> = {
-  All:         { label: 'All',         color: '#b0aea5', icon: Globe       },
-  Scholarship: { label: 'Scholarship', color: '#d97757', icon: GraduationCap },
-  Internship:  { label: 'Internship',  color: '#6a9bcc', icon: Briefcase   },
-  Program:     { label: 'Program',     color: '#6a9bcc', icon: BookOpen    },
-  Competition: { label: 'Competition', color: '#d97757', icon: Briefcase   },
-  Workshop:    { label: 'Workshop',    color: '#788c5d', icon: BookOpen    },
-  Fellowship:  { label: 'Fellowship',  color: '#6a9bcc', icon: GraduationCap },
+  All:         { label: 'All',         color: 'var(--c-text-muted)', icon: Globe       },
+  Scholarship: { label: 'Scholarship', color: 'var(--cta)', icon: GraduationCap },
+  Internship:  { label: 'Internship',  color: 'var(--accent)', icon: Briefcase   },
+  Program:     { label: 'Program',     color: 'var(--accent)', icon: BookOpen    },
+  Competition: { label: 'Competition', color: 'var(--cta)', icon: Briefcase   },
+  Workshop:    { label: 'Workshop',    color: 'var(--accent)', icon: BookOpen    },
+  Fellowship:  { label: 'Fellowship',  color: 'var(--accent)', icon: GraduationCap },
 };
 
 const TYPES: (OpportunityType | 'All')[] = ['All', 'Scholarship', 'Internship', 'Program', 'Competition', 'Workshop', 'Fellowship'];
@@ -58,14 +59,14 @@ const OppCard: React.FC<{ opp: Opportunity; index: number }> = ({ opp, index }) 
         <div className="flex items-start justify-between gap-3 mb-4">
           <div
             className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${cfg.color}18`, color: cfg.color }}
+            style={{ background: tint(cfg.color, 9), color: cfg.color }}
           >
             <TypeIcon size={20} />
           </div>
           <div className="flex flex-col items-end gap-1.5">
             <span
               className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg"
-              style={{ background: `${cfg.color}18`, color: cfg.color }}
+              style={{ background: tint(cfg.color, 9), color: cfg.color }}
             >
               {cfg.label}
             </span>
@@ -144,17 +145,17 @@ const FeaturedSpotlight: React.FC<{ opp: Opportunity }> = ({ opp }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className="relative rounded-3xl overflow-hidden border border-space-500/30 shadow-card-hover mb-12"
-      style={{ background: `linear-gradient(135deg, ${cfg.color}18 0%, transparent 60%)` }}
+      style={{ background: tint(cfg.color, 9) }}
     >
       <div className="absolute top-0 left-0 right-0 h-1" style={{ background: cfg.color }} />
       <div className="p-8 sm:p-10">
         <div className="flex flex-col sm:flex-row gap-6 items-start">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0" style={{ background: `${cfg.color}20`, color: cfg.color }}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0" style={{ background: tint(cfg.color, 13), color: cfg.color }}>
             <TypeIcon size={28} />
           </div>
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg" style={{ background: `${cfg.color}18`, color: cfg.color }}>
+              <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg" style={{ background: tint(cfg.color, 9), color: cfg.color }}>
                 {cfg.label}
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg bg-gold-100 text-gold-600">
@@ -182,8 +183,8 @@ const FeaturedSpotlight: React.FC<{ opp: Opportunity }> = ({ opp }) => {
               href={opp.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 shrink-0 shadow-lg"
-              style={{ background: cfg.color, boxShadow: `0 8px 24px ${cfg.color}40` }}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-on-accent transition-all duration-200 hover:opacity-90 shrink-0"
+              style={{ background: cfg.color }}
             >
               Apply Now <ArrowRight size={16} />
             </a>
@@ -226,7 +227,6 @@ const Opportunities: React.FC = () => {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-space-800 border-b border-space-500/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-electric-500/5 via-transparent to-electric-500/5 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-14">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 text-xs font-bold tracking-wider text-electric-500 uppercase bg-electric-50 rounded-full border border-electric-200">
@@ -242,10 +242,10 @@ const Opportunities: React.FC = () => {
             {/* Stat chips */}
             <div className="flex flex-wrap gap-3">
               {[
-                { val: opportunities.length,                                                               label: 'Opportunities', color: '#6a9bcc' },
-                { val: opportunities.filter(o => o.type === 'Scholarship').length,                        label: 'Scholarships',  color: '#d97757' },
-                { val: opportunities.filter(o => o.type === 'Internship' || o.type === 'Program').length, label: 'Programs',      color: '#6a9bcc' },
-                { val: urgentCount,                                                                        label: 'Closing Soon',  color: '#d97757' },
+                { val: opportunities.length,                                                               label: 'Opportunities', color: 'var(--accent)' },
+                { val: opportunities.filter(o => o.type === 'Scholarship').length,                        label: 'Scholarships',  color: 'var(--cta)' },
+                { val: opportunities.filter(o => o.type === 'Internship' || o.type === 'Program').length, label: 'Programs',      color: 'var(--accent)' },
+                { val: urgentCount,                                                                        label: 'Closing Soon',  color: 'var(--cta)' },
               ].map((chip, i) => (
                 <motion.div
                   key={i}
@@ -298,14 +298,14 @@ const Opportunities: React.FC = () => {
                   onClick={() => setActiveType(type)}
                   className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
                     active
-                      ? 'text-white border-transparent shadow-md'
+                      ? 'text-on-accent border-transparent'
                       : 'bg-space-800 border-space-500/30 text-ink-dim hover:border-space-400/50'
                   }`}
-                  style={active ? { background: cfg.color, boxShadow: `0 4px 12px ${cfg.color}40` } : {}}
+                  style={active ? { background: cfg.color } : {}}
                 >
                   <Icon size={12} />
                   {cfg.label}
-                  <span className={`ml-0.5 px-1.5 py-0.5 rounded text-[10px] font-black ${active ? 'bg-white/25 text-white' : 'bg-space-700 text-ink-muted'}`}>
+                  <span className={`ml-0.5 px-1.5 py-0.5 rounded text-[10px] font-black ${active ? 'text-on-accent' : 'bg-space-700 text-ink-muted'}`}>
                     {count}
                   </span>
                 </button>
@@ -326,7 +326,7 @@ const Opportunities: React.FC = () => {
 
         {/* Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-20 bg-space-800 border border-dashed border-space-500/30 rounded-2xl">
+          <div className="text-center py-12 bg-space-800 border border-dashed border-space-500/30 rounded-2xl">
             <Globe size={44} className="mx-auto text-ink-muted mb-3" />
             <h3 className="font-bold text-ink mb-1">No opportunities found</h3>
             <p className="text-sm text-ink-dim">
@@ -347,7 +347,7 @@ const Opportunities: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-14 p-8 bg-gradient-to-br from-electric-500/10 via-transparent to-electric-500/5 border border-electric-500/20 rounded-3xl flex flex-col sm:flex-row items-center gap-6"
+          className="mt-14 p-8 bg-electric-500/10 border border-electric-500/20 rounded-3xl flex flex-col sm:flex-row items-center gap-6"
         >
           <div className="w-14 h-14 rounded-2xl bg-electric-100 flex items-center justify-center text-electric-500 shrink-0">
             <BookOpen size={24} />

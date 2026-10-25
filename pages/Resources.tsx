@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { SectionHeader } from '../components/sections';
+import { tint } from '../lib/color';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   competition: BookOpen,
@@ -15,11 +16,11 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  competition: '#d97757',
-  coding:      '#6a9bcc',
-  design:      '#d97757',
-  leadership:  '#6a9bcc',
-  general:     '#788c5d',
+  competition: 'var(--cta)',
+  coding:      'var(--accent)',
+  design:      'var(--cta)',
+  leadership:  'var(--accent)',
+  general:     'var(--accent)',
 };
 
 const QUICK_LINKS = [
@@ -134,12 +135,12 @@ const Resources: React.FC = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {pinned.map((r, i) => {
                 const CatIcon = CATEGORY_ICONS[r.category] || BookOpen;
-                const color   = CATEGORY_COLORS[r.category] || '#6a9bcc';
+                const color   = CATEGORY_COLORS[r.category] || 'var(--accent)';
                 return (
                   <motion.div key={r.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: i * 0.06 }}
                     className="card group border-gold-500/30 hover:border-gold-500/60 relative overflow-hidden">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color}20`, color }}>
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: tint(color, 13), color }}>
                         <CatIcon size={20} />
                       </div>
                       <span className="badge badge-gold text-[10px] mr-6">{r.type}</span>
@@ -175,13 +176,13 @@ const Resources: React.FC = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((r, i) => {
                 const CatIcon  = CATEGORY_ICONS[r.category] || BookOpen;
-                const color    = CATEGORY_COLORS[r.category] || '#3b82f6';
+                const color    = CATEGORY_COLORS[r.category] || 'var(--accent)';
                 const isLocked = r.accessLevel === 'officer' && !isAuthenticated;
                 return (
                   <motion.div key={r.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: (i % 6) * 0.06 }}
                     className={`card group ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color}20`, color }}>
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: tint(color, 13), color }}>
                         <CatIcon size={20} />
                       </div>
                       <div className="flex items-center gap-1.5">

@@ -10,7 +10,7 @@ export const Breadcrumbs: React.FC = () => {
   if (pathnames.length === 0) return null;
 
   return (
-    <div className="bg-space-800 border-b border-space-500/30 py-3">
+    <div className="border-b border-space-500/30 py-3" style={{ background: 'var(--c-surface)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2">

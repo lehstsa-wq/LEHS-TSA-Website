@@ -20,7 +20,6 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = ({ src, title, className = 
     style={{
       aspectRatio: '16 / 9',
       borderRadius: 'var(--card-radius)',
-      border: '1px solid var(--c-hairline)',
       background: '#000',
       boxShadow: 'var(--shadow-card)',
     }}

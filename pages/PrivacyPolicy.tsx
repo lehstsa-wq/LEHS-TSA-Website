@@ -39,7 +39,7 @@ const SECTIONS = [
 
 const PrivacyPolicy: React.FC = () => {
   return (
-    <div className="min-h-screen animate-fade-in pb-24">
+    <div className="min-h-screen animate-fade-in pb-14">
       <SEO title="Privacy Policy" description="LEHS TSA Privacy Policy. How we collect, use, and protect your information." />
 
       {/* Hero */}
@@ -77,8 +77,8 @@ const PrivacyPolicy: React.FC = () => {
             <div key={i} className="bg-space-800/50 border border-space-500/40 rounded-2xl p-6">
               <h2 className="text-base font-black text-ink mb-3 flex items-center gap-2">
                 <span
-                  className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white flex-shrink-0"
-                  style={{ background: '#6a9bcc' }}
+                  className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-on-accent flex-shrink-0"
+                  style={{ background: 'var(--accent)' }}
                 >
                   {i + 1}
                 </span>

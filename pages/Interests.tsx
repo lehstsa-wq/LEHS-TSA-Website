@@ -46,7 +46,7 @@ const Interests: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen animate-fade-in pb-20">
+    <div className="min-h-screen animate-fade-in pb-12">
       <SEO title="Member Interests" description="Find partners for your competitions based on their skills and interests at Little Elm High School TSA." />
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
