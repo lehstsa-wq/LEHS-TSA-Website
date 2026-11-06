@@ -165,6 +165,17 @@ service cloud.firestore {
       allow write: if isOfficer();
     }
 
+    // ── Documents uploaded to competition resources (chunked payloads) ──────
+    match /competition_files/{fileId} {
+      allow read: if true;
+      allow write: if isOfficer();
+
+      match /chunks/{chunkId} {
+        allow read: if true;
+        allow write: if isOfficer();
+      }
+    }
+
     // ── Newsletter subscribers ──────────────────────────────────────────────
     match /subscribers/{id} {
       allow read: if isOfficer();

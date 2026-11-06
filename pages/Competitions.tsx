@@ -18,6 +18,7 @@ import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
 import { SegmentedToggle } from '../components/sections';
 import { tint } from '../lib/color';
+import { isUploadedFile, openCompetitionFile } from '../lib/competitionFiles';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -92,6 +93,30 @@ const TYPE_LABELS = Object.values(TYPE_ID_TO_LABEL);
 const TYPE_LABEL_TO_ID = Object.fromEntries(
   Object.entries(TYPE_ID_TO_LABEL).map(([id, label]) => [label, id as FilterType]),
 ) as Record<string, FilterType>;
+
+const resourceBadgeClass = "inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs";
+
+/** A competition resource: an external link, or a document uploaded from the admin panel. */
+const ResourceLinkBadge: React.FC<{ link: { url: string; name: string }; fallback: string }> = ({ link, fallback }) => {
+  const { showToast } = useToast();
+  if (isUploadedFile(link.url)) {
+    return (
+      <button
+        type="button"
+        onClick={() => openCompetitionFile(link.url).catch(e =>
+          showToast(e instanceof Error ? e.message : 'Could not open that file.', 'error'))}
+        className={resourceBadgeClass}
+      >
+        <FileText size={11} /> {link.name || fallback}
+      </button>
+    );
+  }
+  return (
+    <a href={link.url} target="_blank" rel="noopener noreferrer" className={resourceBadgeClass}>
+      <FileText size={11} /> {link.name || fallback}
+    </a>
+  );
+};
 
 const Competitions: React.FC = () => {
   const { user } = useAuth();
@@ -599,15 +624,7 @@ const Competitions: React.FC = () => {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {(competitionLinks['teams'] ?? []).map((link, i) => (
-                  <a
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
-                  >
-                    <FileText size={11} /> {link.name || 'TEAMS Resource'}
-                  </a>
+                  <ResourceLinkBadge key={i} link={link} fallback="TEAMS Resource" />
                 ))}
               </div>
             </motion.div>
@@ -775,15 +792,7 @@ const Competitions: React.FC = () => {
                     {currentResourceLinks.length > 0 ? (
                       <div className="flex flex-col gap-2">
                         {currentResourceLinks.map((link, i) => (
-                          <a
-                            key={i}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 badge badge-blue hover:bg-electric-500/30 transition-colors text-xs"
-                          >
-                            <FileText size={11} /> {link.name || 'Download Official Guide'}
-                          </a>
+                          <ResourceLinkBadge key={i} link={link} fallback="Download Official Guide" />
                         ))}
                       </div>
                     ) : (

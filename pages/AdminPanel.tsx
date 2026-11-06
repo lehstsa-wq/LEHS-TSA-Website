@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Shield, Users, Bell, Calendar, Settings,
   Plus, Trash2, X, Search, Edit2,
@@ -8,7 +8,7 @@ import {
   Star, FileText, ExternalLink,
   Link as LinkIcon, Save, ChevronDown, ChevronUp,
   AlertOctagon, CheckCircle, UserCheck, UserX,
-  Cpu, Hammer, Layers, Plane, Zap, PenTool, Palette
+  Cpu, Hammer, Layers, Plane, Zap, PenTool, Palette, Upload, Loader2
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
@@ -21,6 +21,9 @@ import { COMPETITIONS } from '../data/competitions';
 import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
 import { tint } from '../lib/color';
+import {
+  uploadCompetitionFile, openCompetitionFile, deleteCompetitionFile, isUploadedFile, MAX_FILE_BYTES,
+} from '../lib/competitionFiles';
 
 type Tab = 'overview' | 'approvals' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
@@ -1402,6 +1405,9 @@ const CompetitionsTab: React.FC = () => {
     const [addUrl, setAddUrl] = useState('');
     const [showAdd, setShowAdd] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { showToast } = useToast();
 
     const filtered = ALL_COMP_ITEMS.filter(c => {
         const matchCat = categoryFilter === 'all' || c.category === categoryFilter;
@@ -1425,7 +1431,35 @@ const CompetitionsTab: React.FC = () => {
         setAddName(''); setAddUrl(''); setShowAdd(false);
     };
 
-    const removeLink = (i: number) => persist(links.filter((_, idx) => idx !== i));
+    const uploadFile = async (file: File) => {
+        const compId = selectedId;
+        setUploading(true);
+        try {
+            const url = await uploadCompetitionFile(file, compId);
+            const name = file.name.replace(/\.[^.]+$/, '') || file.name;
+            updateCompetitionLinks(compId, [...(competitionLinks[compId] ?? []), { url, name }]);
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
+            showToast(`${file.name} uploaded`, 'success');
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Upload failed.', 'error');
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
+
+    const openLink = (url: string) => {
+        openCompetitionFile(url).catch(e => showToast(e instanceof Error ? e.message : 'Could not open that file.', 'error'));
+    };
+
+    const removeLink = (i: number) => {
+        const url = links[i].url;
+        persist(links.filter((_, idx) => idx !== i));
+        if (isUploadedFile(url)) {
+            deleteCompetitionFile(url).catch(e => console.error('Error deleting competition file:', e));
+        }
+    };
 
     const startEdit = (i: number) => {
         setEditingIdx(i);
@@ -1436,7 +1470,7 @@ const CompetitionsTab: React.FC = () => {
     const saveEdit = () => {
         if (editingIdx === null || !editUrl.trim()) return;
         const updated = links.map((l, i) =>
-            i === editingIdx ? { url: editUrl.trim(), name: editName.trim() || editUrl.trim() } : l
+            i === editingIdx ? { url: editUrl.trim(), name: editName.trim() || l.name } : l
         );
         persist(updated);
         setEditingIdx(null);
@@ -1606,14 +1640,31 @@ const CompetitionsTab: React.FC = () => {
                                     <span className="ml-2 text-ink-muted font-normal text-xs">({links.length})</span>
                                 )}
                             </h4>
-                            {!showAdd && (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(f); }}
+                                />
                                 <button
-                                    onClick={() => { setShowAdd(true); setEditingIdx(null); }}
-                                    className="flex items-center gap-1.5 text-xs font-semibold text-white bg-electric-500 hover:bg-electric-400 px-3 py-1.5 rounded-lg transition-colors"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={uploading}
+                                    title={`Upload a document (max ${MAX_FILE_BYTES / 1024 / 1024} MB)`}
+                                    className="flex items-center gap-1.5 text-xs font-semibold text-ink bg-space-700/60 hover:bg-space-600/60 border border-space-500/40 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
                                 >
-                                    <Plus size={13} /> Add Link
+                                    {uploading ? <Loader2 size={13} className="animate-spin" /> : <Upload size={13} />}
+                                    {uploading ? 'Uploading...' : 'Upload File'}
                                 </button>
-                            )}
+                                {!showAdd && (
+                                    <button
+                                        onClick={() => { setShowAdd(true); setEditingIdx(null); }}
+                                        className="flex items-center gap-1.5 text-xs font-semibold text-white bg-electric-500 hover:bg-electric-400 px-3 py-1.5 rounded-lg transition-colors"
+                                    >
+                                        <Plus size={13} /> Add Link
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Empty state */}
@@ -1624,7 +1675,7 @@ const CompetitionsTab: React.FC = () => {
                                 </div>
                                 <p className="text-sm font-semibold text-ink-muted">No resources yet</p>
                                 <p className="text-xs text-ink-muted mt-1 max-w-xs mx-auto">
-                                    Add a rulebook, study guide, or any helpful link for members.
+                                    Upload a rulebook or study guide, or add any helpful link for members.
                                 </p>
                                 <button
                                     onClick={() => setShowAdd(true)}
@@ -1653,16 +1704,18 @@ const CompetitionsTab: React.FC = () => {
                                                 placeholder='Label  (e.g. "2026-2027 Rulebook")'
                                                 className={inputClass}
                                             />
-                                            <input
-                                                value={editUrl}
-                                                onChange={e => setEditUrl(e.target.value)}
-                                                placeholder="https://..."
-                                                className={`${inputClass} font-mono`}
-                                                onKeyDown={e => {
-                                                    if (e.key === 'Enter') saveEdit();
-                                                    if (e.key === 'Escape') setEditingIdx(null);
-                                                }}
-                                            />
+                                            {!isUploadedFile(editUrl) && (
+                                                <input
+                                                    value={editUrl}
+                                                    onChange={e => setEditUrl(e.target.value)}
+                                                    placeholder="https://..."
+                                                    className={`${inputClass} font-mono`}
+                                                    onKeyDown={e => {
+                                                        if (e.key === 'Enter') saveEdit();
+                                                        if (e.key === 'Escape') setEditingIdx(null);
+                                                    }}
+                                                />
+                                            )}
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={saveEdit}
@@ -1683,22 +1736,36 @@ const CompetitionsTab: React.FC = () => {
                                         /* Read-only row */
                                         <div className="flex items-center gap-3 px-4 py-3 hover:bg-space-700/40 transition-colors">
                                             <div className="w-8 h-8 rounded-lg bg-electric-500/10 flex items-center justify-center shrink-0">
-                                                <LinkIcon size={14} className="text-electric-400" />
+                                                {isUploadedFile(link.url)
+                                                    ? <FileText size={14} className="text-electric-400" />
+                                                    : <LinkIcon size={14} className="text-electric-400" />}
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-semibold text-ink truncate">{link.name}</p>
-                                                <p className="text-xs text-ink-muted truncate font-mono">{link.url}</p>
+                                                <p className="text-xs text-ink-muted truncate font-mono">
+                                                    {isUploadedFile(link.url) ? 'Uploaded file' : link.url}
+                                                </p>
                                             </div>
                                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                                                <a
-                                                    href={link.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="p-1.5 text-ink-muted hover:text-electric-400 hover:bg-electric-500/10 rounded-lg transition-colors"
-                                                    title="Open link"
-                                                >
-                                                    <ExternalLink size={13} />
-                                                </a>
+                                                {isUploadedFile(link.url) ? (
+                                                    <button
+                                                        onClick={() => openLink(link.url)}
+                                                        className="p-1.5 text-ink-muted hover:text-electric-400 hover:bg-electric-500/10 rounded-lg transition-colors"
+                                                        title="Open file"
+                                                    >
+                                                        <ExternalLink size={13} />
+                                                    </button>
+                                                ) : (
+                                                    <a
+                                                        href={link.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="p-1.5 text-ink-muted hover:text-electric-400 hover:bg-electric-500/10 rounded-lg transition-colors"
+                                                        title="Open link"
+                                                    >
+                                                        <ExternalLink size={13} />
+                                                    </a>
+                                                )}
                                                 <button
                                                     onClick={() => startEdit(i)}
                                                     className="p-1.5 text-ink-muted hover:text-ink hover:bg-space-600/60 rounded-lg transition-colors"
