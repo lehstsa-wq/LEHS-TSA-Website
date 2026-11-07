@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ShieldOff, KeyRound, Loader2, LogOut } from 'lucide-react';
 import { useAuth, MIN_PASSWORD_LENGTH } from '../context/AuthContext';
+import { pwnedPasswordCount, BREACHED_PASSWORD_MESSAGE } from '../lib/pwnedPassword';
 
 /** Shown instead of member pages while an account is pending or deactivated. */
 export const AccountStatusScreen: React.FC = () => {
@@ -75,6 +76,11 @@ export const PasswordChoicePrompt: React.FC = () => {
     }
     setBusy(true);
     try {
+      if (await pwnedPasswordCount(password)) {
+        setError(BREACHED_PASSWORD_MESSAGE);
+        setBusy(false);
+        return;
+      }
       await changePassword(password);
       await updateProfile({ passwordChoice: 'own' });
     } catch (err: any) {

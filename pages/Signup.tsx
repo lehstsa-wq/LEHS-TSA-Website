@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, User, GraduationCap, ChevronRight, AlertCircle, Loader2, UserPlus, Lock, Users, Info } from 'lucide-react';
 import { useAuth, MIN_PASSWORD_LENGTH } from '../context/AuthContext';
 import { SEO } from '../components/SEO';
+import { pwnedPasswordCount, BREACHED_PASSWORD_MESSAGE } from '../lib/pwnedPassword';
 
 const fieldClass = "w-full bg-space-700/60 border border-space-500/50 rounded-xl pl-10 pr-4 py-3 text-ink focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 outline-none transition-all placeholder-ink-muted";
 const labelClass = "text-xs font-bold text-ink-muted uppercase ml-1";
@@ -54,6 +55,10 @@ const Signup: React.FC = () => {
 
     setIsSubmitting(true);
     try {
+      if (await pwnedPasswordCount(password)) {
+        setError(BREACHED_PASSWORD_MESSAGE);
+        return;
+      }
       await signup({
         name: name.trim(),
         email: email.trim(),
