@@ -6,6 +6,8 @@ import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { SectionHeader } from '../components/sections';
 import { tint } from '../lib/color';
+import { linkProps } from '../lib/uploadedFiles';
+import { useToast } from '../context/ToastContext';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   competition: BookOpen,
@@ -35,6 +37,7 @@ const QUICK_LINKS = [
 ];
 
 const Resources: React.FC = () => {
+  const { showToast } = useToast();
   const { resources } = useData();
   const { isAuthenticated } = useAuth();
   const [search, setSearch]   = useState('');
@@ -149,7 +152,7 @@ const Resources: React.FC = () => {
                     {r.description && <p className="text-xs text-ink-muted mb-4 line-clamp-2">{r.description}</p>}
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] text-ink-muted">{r.dateAdded}</span>
-                      <a href={r.url} target="_blank" rel="noopener noreferrer"
+                      <a {...linkProps(r.url, msg => showToast(msg, 'error'))}
                         className="flex items-center gap-1.5 text-xs text-electric-500 hover:text-electric-400 font-semibold transition-colors">
                         {r.type === 'PDF' ? <><Download size={13} /> Download</> : <><ExternalLink size={13} /> Open</>}
                       </a>
@@ -195,7 +198,7 @@ const Resources: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] text-ink-muted">{r.dateAdded}</span>
                       {!isLocked && (
-                        <a href={r.url} target="_blank" rel="noopener noreferrer"
+                        <a {...linkProps(r.url, msg => showToast(msg, 'error'))}
                           className="flex items-center gap-1.5 text-xs text-electric-500 hover:text-electric-400 font-semibold transition-colors">
                           {r.type === 'PDF' ? <><Download size={13} /> Download</> : <><ExternalLink size={13} /> Open</>}
                         </a>

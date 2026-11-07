@@ -176,6 +176,23 @@ service cloud.firestore {
       }
     }
 
+    // ── Documents uploaded to the resource library. Readable by whoever can
+    //    see the resource: members for member files, officers for the rest.
+    function canReadResourceFile(fileId) {
+      return isOfficer() || (isMember() &&
+        get(/databases/$(database)/documents/resource_files/$(fileId)).data.accessLevel == 'member');
+    }
+
+    match /resource_files/{fileId} {
+      allow read: if canReadResourceFile(fileId);
+      allow write: if isOfficer();
+
+      match /chunks/{chunkId} {
+        allow read: if canReadResourceFile(fileId);
+        allow write: if isOfficer();
+      }
+    }
+
     // ── Newsletter subscribers ──────────────────────────────────────────────
     match /subscribers/{id} {
       allow read: if isOfficer();

@@ -22,8 +22,8 @@ import { SEO } from '../components/SEO';
 import { ImageUpload } from '../components/ImageUpload';
 import { tint } from '../lib/color';
 import {
-  uploadCompetitionFile, openCompetitionFile, deleteCompetitionFile, isUploadedFile, MAX_FILE_BYTES,
-} from '../lib/competitionFiles';
+  uploadFile, openUploadedFile, deleteUploadedFile, linkProps, isUploadedFile, MAX_FILE_BYTES,
+} from '../lib/uploadedFiles';
 
 type Tab = 'overview' | 'approvals' | 'members' | 'updates' | 'leadership' | 'events' | 'projects' | 'gallery' | 'competitions' | 'interests' | 'resources' | 'issues' | 'settings' | 'attendance' | 'results' | 'opportunities' | 'teams';
 
@@ -1431,11 +1431,11 @@ const CompetitionsTab: React.FC = () => {
         setAddName(''); setAddUrl(''); setShowAdd(false);
     };
 
-    const uploadFile = async (file: File) => {
+    const handleUpload = async (file: File) => {
         const compId = selectedId;
         setUploading(true);
         try {
-            const url = await uploadCompetitionFile(file, compId);
+            const url = await uploadFile(file, 'competition', { compId });
             const name = file.name.replace(/\.[^.]+$/, '') || file.name;
             updateCompetitionLinks(compId, [...(competitionLinks[compId] ?? []), { url, name }]);
             setSaved(true);
@@ -1450,14 +1450,14 @@ const CompetitionsTab: React.FC = () => {
     };
 
     const openLink = (url: string) => {
-        openCompetitionFile(url).catch(e => showToast(e instanceof Error ? e.message : 'Could not open that file.', 'error'));
+        openUploadedFile(url).catch(e => showToast(e instanceof Error ? e.message : 'Could not open that file.', 'error'));
     };
 
     const removeLink = (i: number) => {
         const url = links[i].url;
         persist(links.filter((_, idx) => idx !== i));
         if (isUploadedFile(url)) {
-            deleteCompetitionFile(url).catch(e => console.error('Error deleting competition file:', e));
+            deleteUploadedFile(url).catch(e => console.error('Error deleting competition file:', e));
         }
     };
 
@@ -1645,7 +1645,7 @@ const CompetitionsTab: React.FC = () => {
                                     ref={fileInputRef}
                                     type="file"
                                     className="hidden"
-                                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(f); }}
+                                    onChange={e => { const f = e.target.files?.[0]; if (f) handleUpload(f); }}
                                 />
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
@@ -2306,7 +2306,55 @@ const ResultsTab: React.FC = () => {
 const ResourcesTab: React.FC = () => {
     const { resources, addResource, deleteResource } = useData();
     const { confirm } = useModal();
+    const { showToast } = useToast();
     const [form, setForm] = useState({ title: '', url: '', category: 'general', description: '', type: 'Link' });
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const pickFile = (f: File | undefined) => {
+        if (!f) return;
+        if (f.size > MAX_FILE_BYTES) {
+            showToast(`That file is over ${MAX_FILE_BYTES / 1024 / 1024} MB. Try a smaller one or add it as a link.`, 'error');
+            return;
+        }
+        const ext = f.name.includes('.') ? f.name.split('.').pop()!.toUpperCase() : 'File';
+        setFile(f);
+        setForm(prev => ({
+            ...prev,
+            url: '',
+            title: prev.title || f.name.replace(/\.[^.]+$/, ''),
+            type: prev.type === 'Link' ? ext : prev.type,
+        }));
+    };
+
+    const clearFile = () => {
+        setFile(null);
+        setForm(prev => ({ ...prev, type: 'Link' }));
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const add = async () => {
+        if (!form.title || (!form.url && !file)) return;
+        const accessLevel = form.category === 'officer' ? 'officer' : 'member';
+        let url = form.url;
+        if (file) {
+            setUploading(true);
+            try {
+                url = await uploadFile(file, 'resource', { accessLevel });
+            } catch (e) {
+                showToast(e instanceof Error ? e.message : 'Upload failed.', 'error');
+                setUploading(false);
+                return;
+            }
+            setUploading(false);
+        }
+        addResource({ ...form, url, accessLevel });
+        setForm({ ...form, title: '', url: '', description: '', type: 'Link' });
+        setFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        showToast('Resource added', 'success');
+    };
 
     return (
         <div className="grid lg:grid-cols-3 gap-6 animate-fade-in">
@@ -2314,7 +2362,25 @@ const ResourcesTab: React.FC = () => {
                 <h3 className="font-bold text-ink mb-4">Add General Resource</h3>
                 <div className="space-y-3">
                     <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className={inputClass} placeholder="Title (e.g. Medical Form)" />
-                    <input value={form.url} onChange={e => setForm({...form, url: e.target.value})} className={inputClass} placeholder="URL" />
+                    {file ? (
+                        <div className="flex items-center gap-2 p-2.5 bg-space-900 border border-electric-500/40 rounded-lg text-sm">
+                            <FileText size={14} className="text-electric-400 shrink-0" />
+                            <span className="flex-1 min-w-0 truncate text-ink">{file.name}</span>
+                            <button onClick={clearFile} className="text-ink-muted hover:text-ink" title="Remove file"><X size={14} /></button>
+                        </div>
+                    ) : (
+                        <div className="flex gap-2">
+                            <input value={form.url} onChange={e => setForm({...form, url: e.target.value})} className={inputClass} placeholder="URL" />
+                            <input ref={fileInputRef} type="file" className="hidden" onChange={e => pickFile(e.target.files?.[0])} />
+                            <button
+                                onClick={() => fileInputRef.current?.click()}
+                                title={`Upload a document instead (max ${MAX_FILE_BYTES / 1024 / 1024} MB)`}
+                                className={`${buttonClass} bg-space-700/60 text-ink border border-space-500/40 hover:bg-space-600/60 shrink-0`}
+                            >
+                                <Upload size={14} /> File
+                            </button>
+                        </div>
+                    )}
                     <input value={form.type} onChange={e => setForm({...form, type: e.target.value})} className={inputClass} placeholder="Type (e.g. General comp resource, PDF, Guide)" />
                     <input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className={inputClass} placeholder="Description (optional)" />
                     <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className={inputClass}>
@@ -2326,14 +2392,11 @@ const ResourcesTab: React.FC = () => {
                         <option value="officer">Officer Tools (Restricted)</option>
                     </select>
                     <button
-                        onClick={() => {
-                            if(!form.title || !form.url) return;
-                            addResource({...form, accessLevel: form.category === 'officer' ? 'officer' : 'member'});
-                            setForm({ ...form, title: '', url: '', description: '', type: 'Link' });
-                        }}
-                        className={`${buttonClass} bg-electric-500 text-white w-full`}
+                        onClick={add}
+                        disabled={uploading}
+                        className={`${buttonClass} bg-electric-500 text-white w-full disabled:opacity-50`}
                     >
-                        Add Resource
+                        {uploading ? <><Loader2 size={14} className="animate-spin" /> Uploading...</> : 'Add Resource'}
                     </button>
                 </div>
             </div>
@@ -2349,12 +2412,17 @@ const ResourcesTab: React.FC = () => {
                                         <p className="font-bold text-ink text-sm">{r.title}</p>
                                         <span className="text-[10px] bg-space-600/60 text-ink-muted px-1.5 py-0.5 rounded uppercase">{r.type}</span>
                                     </div>
-                                    <a href={r.url} target="_blank" className="text-xs text-electric-400 hover:underline">{r.url}</a>
+                                    <a {...linkProps(r.url, msg => showToast(msg, 'error'))} className="text-xs text-electric-400 hover:underline">
+                                        {isUploadedFile(r.url) ? 'Uploaded file' : r.url}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={async () => {
                                 if (await confirm('Delete Resource', 'Delete this resource?', true, 'Delete')) {
                                     deleteResource(r.id);
+                                    if (isUploadedFile(r.url)) {
+                                        deleteUploadedFile(r.url).catch(e => console.error('Error deleting resource file:', e));
+                                    }
                                 }
                             }} className="text-ink-muted hover:text-gold-500"><Trash2 size={16}/></button>
                         </div>

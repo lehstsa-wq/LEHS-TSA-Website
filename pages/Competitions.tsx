@@ -18,7 +18,7 @@ import { LazyImage } from '../components/LazyImage';
 import { SEO } from '../components/SEO';
 import { SegmentedToggle } from '../components/sections';
 import { tint } from '../lib/color';
-import { isUploadedFile, openCompetitionFile } from '../lib/competitionFiles';
+import { isUploadedFile, openUploadedFile } from '../lib/uploadedFiles';
 
 /* ── Category metadata with per-category accent colors ── */
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -103,7 +103,7 @@ const ResourceLinkBadge: React.FC<{ link: { url: string; name: string }; fallbac
     return (
       <button
         type="button"
-        onClick={() => openCompetitionFile(link.url).catch(e =>
+        onClick={() => openUploadedFile(link.url).catch(e =>
           showToast(e instanceof Error ? e.message : 'Could not open that file.', 'error'))}
         className={resourceBadgeClass}
       >

@@ -9,6 +9,8 @@ import { useAuth, avatarColorOf, avatarPhotoOf } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 import { tint } from '../lib/color';
+import { linkProps } from '../lib/uploadedFiles';
+import { useToast } from '../context/ToastContext';
 
 const STAT_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
   blue:   { fg: 'var(--accent)',  bg: tint('var(--accent)', 10),  border: tint('var(--accent)', 25)  },
@@ -18,6 +20,7 @@ const STAT_COLORS: Record<string, { fg: string; bg: string; border: string }> = 
 };
 
 const Dashboard: React.FC = () => {
+  const { showToast } = useToast();
   const { user, isOfficer, logout } = useAuth();
   const { announcements, resources, competitionInterests, problemReports } = useData();
 
@@ -276,7 +279,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="space-y-2">
                 {recentResources.length > 0 ? recentResources.map((resource, i) => (
-                  <a key={i} href={resource.url} target="_blank" rel="noopener noreferrer"
+                  <a key={i} {...linkProps(resource.url, msg => showToast(msg, 'error'))}
                     className="flex items-center gap-3 p-3 rounded-xl border border-space-500/40 hover:border-electric-300/40 transition-all group bg-space-800/40">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border border-space-500/40 bg-space-700/60">
                       <FileText size={14} className="text-ink-muted group-hover:text-electric-400 transition-colors" />
